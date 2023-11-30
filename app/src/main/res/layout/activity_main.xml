@@ -34,7 +34,7 @@
             android:layout_marginEnd="177dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="41dp"
             android:layout_marginBottom="143dp" app:layout_constraintBottom_toTopOf="@+id/homeLogo"
-            tools:text="Fluent Friend" android:autoText="false"/>
+    />
     <TextView
             android:text="Your Mobile Language Café"
             android:textSize="20dp"
