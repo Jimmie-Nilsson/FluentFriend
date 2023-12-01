@@ -5,6 +5,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity2">
+        tools:context=".HomePage">
 
+    <TextView
+            android:text="TextView"
+            android:layout_width="178dp"
+            android:layout_height="64dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/textView" tools:layout_editor_absoluteY="549dp"
+            tools:text="Hjgjgjjge"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

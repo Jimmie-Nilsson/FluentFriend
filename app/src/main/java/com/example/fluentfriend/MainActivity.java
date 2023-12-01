@@ -13,9 +13,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        signInBtn = (Button) findViewById(R.id.signInBtn);
+        signInBtn = (Button) findViewById(R.id.button2);
         signInBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(MainActivity.this, MainActivity2.class);
+            Intent intent = new Intent(MainActivity.this, HomePage.class);
             startActivity(intent);
 
         });
