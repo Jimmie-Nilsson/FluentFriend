@@ -11,55 +11,63 @@ public class User {
     private boolean cityWalks;
     private boolean barChill;
 
-    public void registerNewUser(String firstname, String lastName, String eMail, String password) {
+    public User(String firstName, String lastName, String eMail, String password){
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.eMail = eMail;
+        this.password = password;
+    }
+    public static void main(String[] args){
+        User user = new User("test","guy1", "testguy1@hotmail.com", "abc123");
+    }
+
+    public void registerNewUser (String firstname, String lastName, String eMail, String password){
         setFirstName(firstname);
         setLastName(lastName);
         setEmail(eMail);
         setPassword(password);
     }
 
-    public void setUserInterests(boolean fika, boolean museum, boolean cityWalks, boolean barChill){
-        setFika(fika);
-        setMuseum(museum);
-        setCityWalks(cityWalks);
-        setBarChill(barChill);
-    }
+        public void setUserInterests ( boolean fika, boolean museum, boolean cityWalks, boolean barChill){
+            setFika(fika);
+            setMuseum(museum);
+            setCityWalks(cityWalks);
+            setBarChill(barChill);
+        }
 
-    public void setUserBio(String inputUserBio){
-        bio = inputUserBio;
-    }
-    public void setFirstName(String inputFirstName) {
-        firstName = inputFirstName;
-    }
+        public void setUserBio (String inputUserBio){
+            bio = inputUserBio;
+        }
+        public void setFirstName (String inputFirstName){
+            firstName = inputFirstName;
+        }
 
-    public void setLastName(String inputLastName) {
-        lastName = inputLastName;
-    }
+        public void setLastName (String inputLastName){
+            lastName = inputLastName;
+        }
 
-    public void setEmail(String inputEmail) {
-        eMail = inputEmail;
-    }
+        public void setEmail (String inputEmail){
+            eMail = inputEmail;
+        }
 
-    public void setPassword(String inputPassword){
-        password = inputPassword;
-    }
+        public void setPassword (String inputPassword){
+            password = inputPassword;
+        }
 
-    public void setFika(boolean inputFika){
-        fika = inputFika;
-    }
-    public void setMuseum(boolean inputMuseum){
-        museum = inputMuseum;
-    }
+        public void setFika ( boolean inputFika){
+            fika = inputFika;
+        }
+        public void setMuseum ( boolean inputMuseum){
+            museum = inputMuseum;
+        }
 
-    public void setCityWalks(boolean inputCityWalks) {
-        cityWalks = inputCityWalks;
-    }
+        public void setCityWalks ( boolean inputCityWalks){
+            cityWalks = inputCityWalks;
+        }
 
-    public void setBarChill(boolean inputBarChill) {
-        barChill = inputBarChill;
-    }
-
-
+        public void setBarChill ( boolean inputBarChill){
+            barChill = inputBarChill;
+        }
 
 
 }
