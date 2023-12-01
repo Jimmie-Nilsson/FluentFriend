@@ -17,11 +17,6 @@ public class User {
         this.eMail = eMail;
         this.password = password;
     }
-    public static void main(String[] args){
-        User user1 = new User("test","guy1", "testguy1@hotmail.com", "abc123");
-        System.out.println("Name: " + user1.firstName + user1.lastName);
-    }
-
     protected void setUserInterests ( boolean fika, boolean museum, boolean cityWalks, boolean barChill){
         setFika(fika);
         setMuseum(museum);
@@ -62,8 +57,4 @@ public class User {
     protected void setBarChill(boolean inputBarChill){
             barChill = inputBarChill;
         }
-
-
 }
-
-
