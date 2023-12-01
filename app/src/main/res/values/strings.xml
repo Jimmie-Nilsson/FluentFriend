@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<!-- first strings -->
+    <!-- first strings -->
 
-	<string name="app_name">Page 1</string>
-	<string name="ek_img_content">ExportKit Image</string>
-	<string name="fluent_friend__your_mobile_language_caf___string">Fluent FriendYour mobile language caf!</string>
-	<string name="match_string">Match</string>
+    <string name="app_name">Page 1</string>
+    <string name="ek_img_content">ExportKit Image</string>
+    <string name="fluent_friend__your_mobile_language_caf___string">Fluent FriendYour mobile language caf!</string>
+    <string name="match_string">Match</string>
 </resources>

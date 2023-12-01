@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         signInBtn = (Button) findViewById(R.id.signInBtn);
         signInBtn.setOnClickListener(view -> {
-            Intent intent = new Intent(this, HomeScreen.class);
+            Intent intent = new Intent(MainActivity.this, MainActivity2.class);
             startActivity(intent);
 
         });
