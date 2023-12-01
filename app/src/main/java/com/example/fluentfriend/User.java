@@ -18,7 +18,8 @@ public class User {
         this.password = password;
     }
     public static void main(String[] args){
-        User user = new User("test","guy1", "testguy1@hotmail.com", "abc123");
+        User user1 = new User("test","guy1", "testguy1@hotmail.com", "abc123");
+        System.out.println("Name: " + user1.firstName + user1.lastName);
     }
 
     public void registerNewUser (String firstname, String lastName, String eMail, String password){
