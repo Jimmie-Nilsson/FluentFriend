@@ -8,8 +8,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.android.material.textfield.TextInputEditText;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.HashMap;
 
+public class MainActivity extends AppCompatActivity {
+    private HashMap<String, User> userList = new HashMap<>();
     private Button btnLogIn;
     private Button btnCreateAccount;
     private TextView email;
@@ -20,6 +23,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        addUsers(); // Lägg till användare
+
         btnCreateAccount = (Button) findViewById(R.id.main_btnCreateAccount);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
         email = (TextView) findViewById(R.id.main_emailField);
@@ -31,18 +36,30 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnLogIn.setOnClickListener(view -> {
-            // Skriv kod för att verifera inloggingen.
             String inputEmail = email.getText().toString();
             String inputPassword = password.getText().toString();
+            user = userList.get(inputEmail);
 
-            if (inputEmail.equals("admin") && inputPassword.equals("123")) {
+            if (inputPassword.equals(user.getPassword())) {
                 Intent intent = new Intent(MainActivity.this, HomePage.class);
                 startActivity(intent);
             }
             else {
-                // Do somtehing
                 Toast.makeText(MainActivity.this, "LOGIN FAILED", Toast.LENGTH_LONG).show();
             }
         });
+    }
+    private void addUsers() {
+        User userOne = new User("admin", "admin", "admin", "123");
+        userList.put("admin", userOne);
+    }
+
+    public boolean addNewUser(String firstName, String lastname, String email, String password) {
+        if (userList.containsKey(email)) {
+            return false;
+        } else {
+            User user = new User(firstName,lastname,email,password);
+            return true;
+        }
     }
 }

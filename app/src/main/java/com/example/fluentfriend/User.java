@@ -57,4 +57,7 @@ public class User {
     protected void setBarChill(boolean inputBarChill){
             barChill = inputBarChill;
         }
+
+    public String getPassword() {return this.password;}
+
 }
