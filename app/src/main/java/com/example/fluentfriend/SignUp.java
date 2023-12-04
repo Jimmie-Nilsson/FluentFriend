@@ -43,7 +43,7 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    private boolean isInputCorrect() {
+    private boolean isInputCorrect() { // make a method for the toString().trim().isEmpty() checks
         if (firstName.getText().toString().trim().isEmpty() || lastName.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty() || repeatPassword.getText().toString().trim().isEmpty()) {
             return false;
         }
