@@ -46,6 +46,6 @@ public class SignUp extends AppCompatActivity {
         if (firstName.getText() == null || lastName.getText() == null || email.getText() == null || password.getText() == null || repeatPassword.getText() == null){
             return false;
         }
-        return password.getText().equals(repeatPassword.getText());
+        return password.getText().toString().equals(repeatPassword.getText().toString());
     }
 }
