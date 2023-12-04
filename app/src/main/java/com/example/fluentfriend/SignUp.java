@@ -43,14 +43,14 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    protected boolean isInputCorrect() {
+    private boolean isInputCorrect() {
         if (firstName.getText().toString().trim().isEmpty() || lastName.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty() || repeatPassword.getText().toString().trim().isEmpty()) {
             return false;
         }
         return password.getText().toString().equals(repeatPassword.getText().toString());
     }
 
-    protected void sendErrorMessage(String message) {
+    private void sendErrorMessage(String message) {
         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
     }
 }
