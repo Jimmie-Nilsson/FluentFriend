@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
-    private HashMap<String, User> userList = new HashMap<>();
+    private static HashMap<String, User> userList = new HashMap<>();
     private Button btnLogIn;
     private Button btnCreateAccount;
     private TextView email;
@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         userList.put("admin", userOne);
     }
 
-    public boolean addNewUser(String firstName, String lastname, String email, String password) {
+    public static boolean addNewUser(String firstName, String lastname, String email, String password) {
         if (userList.containsKey(email)) {
             return false;
         } else {
