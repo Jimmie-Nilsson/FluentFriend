@@ -56,7 +56,7 @@
             android:layout_height="wrap_content" android:id="@+id/signup_TitleText"
             android:layout_marginTop="45dp"
             android:layout_marginBottom="379dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/signup_btnSignUp" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/main_btnLogIn" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"/>
     <EditText
             android:layout_width="wrap_content"
@@ -119,7 +119,7 @@
             app:layout_constraintTop_toBottomOf="@+id/signup_RepeatPasswordText"
     />
     <Button
-            android:id="@+id/signup_btnSignUp"
+            android:id="@+id/main_btnLogIn"
             android:layout_width="210dp"
             android:layout_height="0dp"
             android:text="Sign Up"

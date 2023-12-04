@@ -3,23 +3,23 @@
     <item android:state_pressed="true" >
         <shape android:shape="rectangle"  >
             <corners android:radius="16dp" />
-            <stroke android:width="1dip" android:color="#5e7974" />
-            <gradient android:angle="-90" android:startColor="#345953" android:endColor="#689a92"  />
+            <stroke android:width="1dip" android:color="#0D99FF" />
+            <gradient android:angle="-90" android:startColor="#0D99FF" android:endColor="#0D99FF"  />
         </shape>
     </item>
     <!-- Change Colors to change color of button -->
     <item android:state_focused="true">
         <shape android:shape="rectangle"  >
             <corners android:radius="16dp" />
-            <stroke android:width="1dip" android:color="#5e7974" />
-            <solid android:color="#58857e"/>
+            <stroke android:width="1dip" android:color="#0D99FF" />
+            <solid android:color="#0D99FF"/>
         </shape>
     </item>
     <item >
         <shape android:shape="rectangle"  >
             <corners android:radius="16dp" />
-            <stroke android:width="1dip" android:color="#5e7974" />
-            <gradient android:angle="-90" android:startColor="#8dbab3" android:endColor="#58857e" />
+            <stroke android:width="1dip" android:color="#0D99FF" />
+            <gradient android:angle="-90" android:startColor="#0D99FF" android:endColor="#0D99FF" />
         </shape>
     </item>
 </selector>
