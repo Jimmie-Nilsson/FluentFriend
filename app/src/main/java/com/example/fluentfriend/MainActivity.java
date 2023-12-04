@@ -36,20 +36,31 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnLogIn.setOnClickListener(view -> {
+            if (email.getText().toString().trim().isEmpty()  || password.getText().toString().trim().isEmpty()){
+                wrongInputMessage("Empty field");
+                return;
+            }
+
             String inputEmail = email.getText().toString();
             String inputPassword = password.getText().toString();
+
+            if (!userList.containsKey(inputEmail)) {
+                wrongInputMessage("Email doesn't exsits");
+                return;
+            }
+
             user = userList.get(inputEmail);
 
-            if (inputPassword == null || inputPassword == null){
-                Toast.makeText(MainActivity.this, "Null", Toast.LENGTH_LONG).show();
-            }else if (inputPassword.equals(user.getPassword())) {
+            if (inputPassword.equals(user.getPassword())) {
                 Intent intent = new Intent(MainActivity.this, HomePage.class);
                 startActivity(intent);
-            }
-            else {
-                Toast.makeText(MainActivity.this, "LOGIN FAILED", Toast.LENGTH_LONG).show();
+            } else {
+                wrongInputMessage("Wrong password");
             }
         });
+    }
+    private void wrongInputMessage(String message ) {
+        Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
     private void addUsers() {
         User userOne = new User("admin", "admin", "admin", "123");
