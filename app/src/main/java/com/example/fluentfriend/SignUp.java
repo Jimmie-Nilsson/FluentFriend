@@ -43,7 +43,7 @@ public class SignUp extends AppCompatActivity {
         });
     }
     protected boolean isInputCorrect(){
-        if (firstName.getText() == null || lastName.getText() == null || email.getText() == null || password.getText() == null || repeatPassword.getText() == null){
+        if (firstName.getText().toString().trim().isEmpty() || lastName.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty() || repeatPassword.getText().toString().trim().isEmpty()){
             return false;
         }
         return password.getText().toString().equals(repeatPassword.getText().toString());
