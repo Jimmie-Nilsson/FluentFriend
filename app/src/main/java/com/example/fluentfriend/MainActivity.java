@@ -40,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
             String inputPassword = password.getText().toString();
             user = userList.get(inputEmail);
 
-            if (inputPassword.equals(user.getPassword())) {
+            if (inputPassword == null || inputPassword == null){
+                Toast.makeText(MainActivity.this, "Null", Toast.LENGTH_LONG).show();
+            }else if (inputPassword.equals(user.getPassword())) {
                 Intent intent = new Intent(MainActivity.this, HomePage.class);
                 startActivity(intent);
             }
