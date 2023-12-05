@@ -10,7 +10,9 @@ public class HomePage extends AppCompatActivity {
 
     private User user;
 
-    private Button btn;
+    private Button btnProfile;
+    private Button btnMessage;
+    private Button btnMatch;
     private TextView welcomeText;
 
     @Override
@@ -18,12 +20,15 @@ public class HomePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
 
-        btn = (Button) findViewById(R.id.btn_prfile);
+        btnProfile = (Button) findViewById(R.id.homepage_btn_profile);
         welcomeText = (TextView) findViewById(R.id.homepage_welcomeText);
+        btnMatch = (Button) findViewById(R.id.homepage_btnMatch);
+        btnMessage = (Button) findViewById(R.id.homepage_messagesbtn);
+
         Intent intent = getIntent();
         welcomeText.setText("Welcome " + intent.getStringExtra("firstName") + " " + intent.getStringExtra("lastName"));
 
-        btn.setOnClickListener(view -> {
+        btnProfile.setOnClickListener(view -> {
             Intent intentTwo = new Intent(HomePage.this, UserProfile.class);
             startActivity(intentTwo);
         });
