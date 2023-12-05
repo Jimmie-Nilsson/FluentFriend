@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView email;
     private  TextView password;
     private  User user;
+    private HomePage homePage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             user = userList.get(inputEmail);
 
             if (inputPassword.equals(user.getPassword())) {
+                homePage.setUser(user);
                 Intent intent = new Intent(MainActivity.this, HomePage.class);
                 startActivity(intent);
             } else {
