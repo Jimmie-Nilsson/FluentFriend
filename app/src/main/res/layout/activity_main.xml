@@ -17,35 +17,47 @@
             android:shadowRadius="2"
             android:textColor="@color/black"
             android:textAlignment="textStart"
-            android:layout_width="0dp"
+            android:layout_width="96dp"
             android:layout_height="0dp" android:id="@+id/textView"
-            android:layout_marginTop="445dp"
-            app:layout_constraintEnd_toStartOf="@+id/main_btnCreateAccount" android:layout_marginBottom="238dp"
-            app:layout_constraintBottom_toTopOf="@+id/main_btnLogIn" app:layout_constraintTop_toTopOf="parent"
+            android:fontFamily="monospace"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="16dp" android:layout_marginEnd="173dp"/>
+            android:layout_marginStart="16dp" app:layout_constraintTop_toBottomOf="@+id/homeLogo"
+            android:layout_marginBottom="6dp" app:layout_constraintBottom_toTopOf="@+id/main_emailField"/>
+    <TextView
+            android:text="Or "
+            android:textSize="20dp"
+            android:shadowColor="@color/text_shadow"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_width="97dp"
+            android:layout_height="0dp" android:id="@+id/textView3"
+            android:fontFamily="monospace"
+            android:layout_marginTop="670dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/main_btnCreateAccount"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"/>
     <Button
             android:id="@+id/main_btnLogIn"
             android:layout_width="221dp"
-            android:layout_height="0dp"
+            android:layout_height="56dp"
             android:text="Log in"
             android:background="@drawable/mybutton"
             android:textSize="16sp"
-            app:layout_constraintTop_toBottomOf="@+id/textView" android:layout_marginBottom="14dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@+id/main_passwordField" android:layout_marginBottom="51dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/main_btnCreateAccount"
+            app:layout_constraintStart_toStartOf="parent"/>
     <Button
             android:id="@+id/main_btnCreateAccount"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
+            android:layout_width="221dp"
+            android:layout_height="56dp"
             android:text="Create account"
-            android:background="@drawable/_bg__first_ek2_shape"
+            android:background="@drawable/mybutton"
             android:textSize="16sp"
-            android:textAllCaps="false"
-            app:layout_constraintTop_toBottomOf="@+id/homeLogo" app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="70dp"
-            app:layout_constraintBottom_toTopOf="@+id/main_emailField" android:layout_marginEnd="11dp"
-    />
+            app:layout_constraintTop_toBottomOf="@+id/textView3" android:layout_marginBottom="18dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
     <EditText
             android:layout_width="221dp"
             android:layout_height="0dp"
@@ -56,7 +68,7 @@
             android:backgroundTint="@color/white"
             android:background="@color/black" android:autoText="false"
             android:hint="Password"
-            app:layout_constraintTop_toBottomOf="@+id/main_emailField" android:layout_marginBottom="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/main_emailField" android:layout_marginBottom="20dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/main_btnLogIn"
             app:layout_constraintStart_toStartOf="parent"/>
     <ImageView
@@ -64,7 +76,7 @@
             android:layout_height="wrap_content" app:srcCompat="@drawable/__d2fc14ee_1f91_42de_97ae_da627959daaa_2"
             android:id="@+id/homeLogo"
             app:layout_constraintTop_toBottomOf="@+id/textView2" android:layout_marginBottom="25dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/main_btnCreateAccount"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/textView"
             app:layout_constraintStart_toStartOf="parent"/>
     <TextView
             android:text="Fluent Friend"
@@ -77,10 +89,9 @@
             android:textColor="@color/black"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/homeTitleText"
-            android:layout_marginTop="29dp"
-            android:layout_marginBottom="52dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/textView2" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="29dp" android:layout_marginEnd="29dp"
+            app:layout_constraintEnd_toEndOf="@+id/textView2"
+            app:layout_constraintBottom_toTopOf="@+id/textView2"/>
     <TextView
             android:text="Your Mobile Language Café"
             android:textSize="20dp"
@@ -105,7 +116,8 @@
 
             android:background="@color/_bg__match_button_ek1_color"
             android:hint="example@mail.com"
-            app:layout_constraintTop_toBottomOf="@+id/main_btnCreateAccount" android:layout_marginBottom="59dp"
+            android:textAlignment="textStart"
+            app:layout_constraintTop_toBottomOf="@+id/textView" android:layout_marginBottom="17dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/main_passwordField"
-            app:layout_constraintStart_toStartOf="parent" android:textAlignment="textStart"/>
+            app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
