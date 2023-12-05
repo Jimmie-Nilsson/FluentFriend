@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("firstName", user.getFirstName());
                 intent.putExtra("lastName", user.getLastName());
                 startActivity(intent);
+
             } else {
                 wrongInputMessage("Wrong password");
             }

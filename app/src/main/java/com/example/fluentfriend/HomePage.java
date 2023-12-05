@@ -30,7 +30,7 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-    public  void setUser(User user){
+    public void setUser(User user){
         this.user = user;
     }
 }
