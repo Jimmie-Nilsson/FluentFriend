@@ -19,7 +19,7 @@ public class HomePage extends AppCompatActivity {
         btn = (Button) findViewById(R.id.btn_prfile);
 
         btn.setOnClickListener(view -> {
-            Intent intent = new Intent(HomePage.this, UserProfil.class);
+            Intent intent = new Intent(HomePage.this, UserProfile.class);
             startActivity(intent);
         });
 
