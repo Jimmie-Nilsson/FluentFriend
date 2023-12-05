@@ -53,6 +53,8 @@ public class MainActivity extends AppCompatActivity {
             if (inputPassword.equals(user.getPassword())) {
                 homePage.setUser(user);
                 Intent intent = new Intent(MainActivity.this, HomePage.class);
+                intent.putExtra("firstName", user.getFirstName());
+                intent.putExtra("lastName", user.getLastName());
                 startActivity(intent);
             } else {
                 wrongInputMessage("Wrong password");

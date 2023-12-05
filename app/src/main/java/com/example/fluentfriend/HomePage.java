@@ -20,11 +20,12 @@ public class HomePage extends AppCompatActivity {
 
         btn = (Button) findViewById(R.id.btn_prfile);
         welcomeText = (TextView) findViewById(R.id.homepage_welcomeText);
-        welcomeText.setText("Welcome " + user.getFirstName() + " " + user.getLastName());
+        Intent intent = getIntent();
+        welcomeText.setText("Welcome " + intent.getStringExtra("firstName") + " " + intent.getStringExtra("lastName"));
 
         btn.setOnClickListener(view -> {
-            Intent intent = new Intent(HomePage.this, UserProfile.class);
-            startActivity(intent);
+            Intent intentTwo = new Intent(HomePage.this, UserProfile.class);
+            startActivity(intentTwo);
         });
 
     }
