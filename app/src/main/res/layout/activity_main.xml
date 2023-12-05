@@ -36,7 +36,7 @@
             android:layout_height="0dp" android:id="@+id/textView3"
             android:fontFamily="monospace"
             android:layout_marginTop="670dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/main_btnCreateAccount"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/btn_prfile"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"/>
     <Button
             android:id="@+id/main_btnLogIn"
@@ -46,10 +46,10 @@
             android:background="@drawable/mybutton"
             android:textSize="16sp"
             app:layout_constraintTop_toBottomOf="@+id/main_passwordField" android:layout_marginBottom="51dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/main_btnCreateAccount"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/btn_prfile"
             app:layout_constraintStart_toStartOf="parent"/>
     <Button
-            android:id="@+id/main_btnCreateAccount"
+            android:id="@+id/btn_prfile"
             android:layout_width="221dp"
             android:layout_height="56dp"
             android:text="Create account"

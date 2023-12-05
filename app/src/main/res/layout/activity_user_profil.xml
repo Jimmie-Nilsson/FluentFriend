@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".UserProfil" android:background="#BDE3FF" android:clickable="false"
+>
+
+
+    <ImageView
+            android:layout_width="230dp"
+            android:layout_height="0dp" app:srcCompat="@drawable/__d2fc14ee_1f91_42de_97ae_da627959daaa_2"
+            android:id="@+id/homeLogo"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" android:layout_marginBottom="276dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/btn_prfile"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+            android:text="Your Mobile Language Café"
+            android:textSize="20dp"
+            android:shadowColor="@color/text_shadow"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/textView2"
+            android:layout_marginTop="40dp"
+            android:layout_marginBottom="98dp" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/homeLogo" app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"/>
+    <Button
+            android:id="@+id/btn_prfile"
+            android:layout_width="210dp"
+            android:layout_height="65dp"
+            android:text="Create account"
+            android:background="@drawable/mybutton"
+            android:textSize="16sp"
+            app:layout_constraintTop_toBottomOf="@+id/homeLogo" android:layout_marginBottom="92dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

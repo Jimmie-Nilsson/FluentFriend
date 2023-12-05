@@ -6,9 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputEditText;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -25,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         addUsers(); // Lägg till användare
 
-        btnCreateAccount = (Button) findViewById(R.id.main_btnCreateAccount);
+        btnCreateAccount = (Button) findViewById(R.id.btn_prfile);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
         email = (TextView) findViewById(R.id.main_emailField);
         password = (TextView) findViewById(R.id.main_passwordField) ;
