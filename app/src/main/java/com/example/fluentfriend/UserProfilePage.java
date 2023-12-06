@@ -24,9 +24,10 @@ public class UserProfilePage extends AppCompatActivity {
         //loads the current user
         currentUser = UserManager.getCurrentUser();
 
+
         //displays the current user's name
         displayUserName = findViewById(R.id.displayUserNameTextView);
-        displayUserName.setText(currentUser.getFirstName() + currentUser.getLastName());
+        displayUserName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
 
         //loads the current user's biography
         editTextBiography = findViewById(R.id.bioEditText);
