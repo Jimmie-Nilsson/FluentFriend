@@ -8,9 +8,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
+
 
 import java.util.HashMap;
 
@@ -39,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp(this);
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         ref = FirebaseDatabase.getInstance().getReference();
-        // fix this refere
 
 
 
