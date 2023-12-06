@@ -5,7 +5,7 @@ public class User {
     private String lastName;
     private String email;
     private String password;
-    private String bio;
+    private String biography;
     private boolean fika;
     private boolean museum;
     private boolean cityWalks;
@@ -17,8 +17,8 @@ public class User {
         this.email = email;
         this.password = password;
     }
-    protected void setUserBio(String inputUserBio){
-            bio = inputUserBio;
+    protected void setUserBiography(String newBiography){
+            biography = newBiography;
         }
     protected void setFirstName(String inputFirstName){
             firstName = inputFirstName;
@@ -36,14 +36,14 @@ public class User {
     public String getFirstName() {return this.firstName;}
     public String getLastName(){return this.lastName;}
     public String getEmail(){return this.email;}
-    public String getBio() {
-        return this.bio;
+    public String getBiography() {
+        return this.biography;
     }
 
-    public void setFikaChecked(boolean checkBoxChecked){
+    protected void setFikaChecked(boolean checkBoxChecked){
         fika = checkBoxChecked;
     }
-    public void setMuseumChecked(boolean checkBoxChecked){
+    protected void setMuseumChecked(boolean checkBoxChecked){
         museum = checkBoxChecked;
     }
     protected void setCityWalksChecked(boolean checkBoxChecked){

@@ -20,7 +20,7 @@
                 android:name=".MatchPage"
                 android:exported="false"/>
         <activity
-                android:name=".UserProfile"
+                android:name=".UserProfilePage"
                 android:exported="false"/>
         <activity
                 android:name=".SignUp"
