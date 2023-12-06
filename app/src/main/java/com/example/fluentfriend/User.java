@@ -3,64 +3,59 @@ package com.example.fluentfriend;
 public class User {
     private String firstName;
     private String lastName;
-    private String eMail;
+    private String email;
     private String password;
     private String bio;
     private boolean fika;
     private boolean museum;
     private boolean cityWalks;
-    private boolean barChill;
+    private boolean bar;
 
-    public User(String firstName, String lastName, String eMail, String password){
+    public User(String firstName, String lastName, String email, String password){
         this.firstName = firstName;
         this.lastName = lastName;
-        this.eMail = eMail;
+        this.email = email;
         this.password = password;
     }
-    protected void setUserInterests ( boolean fika, boolean museum, boolean cityWalks, boolean barChill){
-        setFika(fika);
-        setMuseum(museum);
-        setCityWalks(cityWalks);
-        setBarChill(barChill);
-    }
-
     protected void setUserBio(String inputUserBio){
             bio = inputUserBio;
         }
     protected void setFirstName(String inputFirstName){
             firstName = inputFirstName;
         }
-
     protected void setLastName(String inputLastName){
             lastName = inputLastName;
         }
-
     protected void setEmail(String inputEmail){
-            eMail = inputEmail;
+            email = inputEmail;
         }
-
     protected void setPassword(String inputPassword){
             password = inputPassword;
         }
-
-    protected void setFika(boolean inputFika){
-            fika = inputFika;
-        }
-    protected void setMuseum(boolean inputMuseum){
-            museum = inputMuseum;
-        }
-
-    protected void setCityWalks(boolean inputCityWalks){
-            cityWalks = inputCityWalks;
-        }
-
-    protected void setBarChill(boolean inputBarChill){
-            barChill = inputBarChill;
-        }
-
     public String getPassword() {return this.password;}
-
     public String getFirstName() {return this.firstName;}
     public String getLastName(){return this.lastName;}
+    public String getEmail(){return this.email;}
+    public String getBio() {
+        return this.bio;
+    }
+
+    public void setFikaChecked(boolean checkBoxChecked){
+        fika = checkBoxChecked;
+    }
+    public void setMuseumChecked(boolean checkBoxChecked){
+        museum = checkBoxChecked;
+    }
+    protected void setCityWalksChecked(boolean checkBoxChecked){
+        cityWalks = checkBoxChecked;
+    }
+    protected void setBarChecked(boolean checkBoxChecked){
+        bar = checkBoxChecked;
+    }
+
+    public boolean isFikaChecked() {return this.fika;}
+    public boolean isMuseumChecked() {return this.museum;}
+    public boolean isBarChecked() {return this.bar;}
+    public boolean isCityWalksChecked() {return this.cityWalks;}
 
 }
