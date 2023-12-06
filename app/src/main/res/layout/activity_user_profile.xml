@@ -5,13 +5,13 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".UserProfile" android:background="#BDE3FF" android:clickable="false"
+        tools:context=".UserProfilePage" android:background="#BDE3FF" android:clickable="false"
 >
 
 
     <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent" tools:layout_editor_absoluteY="120dp"
+            android:layout_height="match_parent" tools:layout_editor_absoluteY="-16dp"
             tools:layout_editor_absoluteX="0dp">
         <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                            android:layout_height="wrap_content"
@@ -27,7 +27,7 @@
                     android:text="I want to learn..."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/languesWantToLearnTextView"
-                    tools:layout_editor_absoluteY="494dp" tools:layout_editor_absoluteX="44dp"/>
+                    tools:layout_editor_absoluteY="465dp" tools:layout_editor_absoluteX="46dp"/>
             <TextView
                     android:text="Profile Settings"
                     android:textSize="20dp"
@@ -78,22 +78,16 @@
                     android:layout_height="wrap_content" android:id="@+id/userNameTextView"
                     android:textSize="24sp"
                     tools:layout_editor_absoluteY="290dp" tools:layout_editor_absoluteX="44dp"/>
-            <TextView
-                    android:text="Gender:"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/genderTextView"
-                    android:textSize="24sp"
-                    tools:layout_editor_absoluteY="342dp" tools:layout_editor_absoluteX="45dp"/>
             <AutoCompleteTextView
                     android:text="I speak..."
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/languesSpokenTextView"
-                    tools:layout_editor_absoluteY="449dp" tools:layout_editor_absoluteX="44dp"/>
+                    tools:layout_editor_absoluteY="396dp" tools:layout_editor_absoluteX="44dp"/>
             <Button
-                    android:id="@+id/btn_prfile"
+                    android:id="@+id/saveSettingsButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="UPDATE SETTINGS"
+                    android:text="SAVE SETTINGS"
                     android:background="@drawable/mybutton"
                     android:textSize="16sp"
                     tools:layout_editor_absoluteY="977dp" tools:layout_editor_absoluteX="127dp"/>
@@ -102,34 +96,13 @@
                                                         android:id="@+id/guideline3"
                                                         android:orientation="vertical"
                                                         app:layout_constraintGuide_end="431dp"/>
-            <RadioGroup
-                    android:layout_width="145dp"
-                    android:layout_height="91dp"
-                    android:id="@+id/radioGroup2"
-                    tools:layout_editor_absoluteY="342dp" tools:layout_editor_absoluteX="147dp">
-                <RadioButton
-                        android:text="Male"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/maleRadioButton"
-                />
-                <RadioButton
-                        android:text="Female"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/femaleRadioButton"
-                />
-                <RadioButton
-                        android:text="Other / Private"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" android:id="@+id/otherRadioButton"
-                />
-            </RadioGroup>
             <EditText
                     android:layout_width="333dp"
                     android:layout_height="197dp"
                     android:inputType="text"
                     android:text="Biography..."
                     android:ems="10"
-                    android:id="@+id/bioEditTextText"
+                    android:id="@+id/bioEditText"
                     tools:layout_editor_absoluteY="579dp" tools:layout_editor_absoluteX="46dp"/>
             <ImageView
                     android:layout_width="178dp"

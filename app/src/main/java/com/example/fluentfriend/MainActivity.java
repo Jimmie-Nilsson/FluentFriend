@@ -6,9 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 
 import java.util.HashMap;
@@ -41,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        btnCreateAccount = (Button) findViewById(R.id.btn_prfile);
+        btnCreateAccount = (Button) findViewById(R.id.saveSettingsButton);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
         email = (TextView) findViewById(R.id.main_emailField);
         password = (TextView) findViewById(R.id.main_passwordField) ;

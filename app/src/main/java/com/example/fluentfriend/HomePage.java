@@ -29,7 +29,7 @@ public class HomePage extends AppCompatActivity {
         welcomeText.setText("Welcome " + intent.getStringExtra("firstName") + " " + intent.getStringExtra("lastName"));
 
         btnProfile.setOnClickListener(view -> {
-            Intent intentTwo = new Intent(HomePage.this, UserProfile.class);
+            Intent intentTwo = new Intent(HomePage.this, UserProfilePage.class);
             startActivity(intentTwo);
         });
 
