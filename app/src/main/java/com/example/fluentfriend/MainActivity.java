@@ -80,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void addUsers() {
         User userOne = new User("admin", "admin", "admin", "123");
+        User userTwo = new User("Bosse", "Nillson", "bosse", "123");
         userList.put("admin", userOne);
+        userList.put("bosse", userTwo);
     }
 
     public static boolean addNewUser(String firstName, String lastname, String email, String password) {
