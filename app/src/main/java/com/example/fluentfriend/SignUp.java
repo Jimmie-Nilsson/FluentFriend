@@ -9,9 +9,6 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
 public class SignUp extends AppCompatActivity {
 
     EditText firstName;
@@ -47,9 +44,7 @@ public class SignUp extends AppCompatActivity {
             Intent intent = new Intent(SignUp.this, HomePage.class);
             startActivity(intent);
         });
-        FirebaseApp.initializeApp(this);
-        DatabaseReference myref = FirebaseDatabase.getInstance("https://fluent-friend-4629d-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
-    }
+        }
 
     private boolean isInputCorrect() { // make a method for the toString().trim().isEmpty() checks
         if (firstName.getText().toString().trim().isEmpty() || lastName.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty() || repeatPassword.getText().toString().trim().isEmpty()) {
