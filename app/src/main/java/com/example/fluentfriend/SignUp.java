@@ -8,6 +8,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class SignUp extends AppCompatActivity {
 
@@ -17,6 +20,7 @@ public class SignUp extends AppCompatActivity {
     EditText password;
     EditText repeatPassword;
     Button signUpBtn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,14 +37,18 @@ public class SignUp extends AppCompatActivity {
                 sendErrorMessage("All fields must be filled");
                 return;
             }
+            User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
             boolean exists = MainActivity.addNewUser(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
             if (!exists) {
                 sendErrorMessage("An account with this Email already exists");
                 return;
             }
+            //myref.child("users").child(user.getEmail()).setValue(user);
             Intent intent = new Intent(SignUp.this, HomePage.class);
             startActivity(intent);
         });
+        FirebaseApp.initializeApp(this);
+        DatabaseReference myref = FirebaseDatabase.getInstance("https://fluent-friend-4629d-default-rtdb.europe-west1.firebasedatabase.app/").getReference();
     }
 
     private boolean isInputCorrect() { // make a method for the toString().trim().isEmpty() checks

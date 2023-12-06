@@ -34,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+        FirebaseApp.initializeApp(this);
         // learning DB stuff here
 //        FirebaseApp.initializeApp(this);
 //        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
