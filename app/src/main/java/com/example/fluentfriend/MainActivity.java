@@ -6,7 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import java.util.HashMap;
@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     private  User user;
 
     // test code here
-    private DatabaseReference ref;
+    FirebaseFirestore db;
 
 
 
@@ -31,12 +31,7 @@ public class MainActivity extends AppCompatActivity {
         addUsers(); // Lägg till användare
 
 
-
-        FirebaseApp.initializeApp(this);
-        // learning DB stuff here
-//        FirebaseApp.initializeApp(this);
-//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-//        ref = FirebaseDatabase.getInstance().getReference();
+        db = FirebaseFirestore.getInstance();
 
 
 
