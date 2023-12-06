@@ -33,6 +33,11 @@ public class HomePage extends AppCompatActivity {
             startActivity(intentTwo);
         });
 
+        btnMatch.setOnClickListener(view -> {
+            Intent intentTwo = new Intent(HomePage.this, MatchPage.class);
+            startActivity(intentTwo);
+        });
+
     }
 
     public void setUser(User user){
