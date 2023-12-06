@@ -13,6 +13,9 @@ public class UserProfilePage extends AppCompatActivity {
     private CheckBox museumCheckBox;
     private CheckBox barCheckBox;
     private CheckBox fikaCheckBox;
+    private CheckBox maleCheckBox;
+    private CheckBox femaleCheckBox;
+    private CheckBox otherCheckBox;
     private EditText editTextBiography;
     private Button buttonSave;
 
@@ -40,12 +43,47 @@ public class UserProfilePage extends AppCompatActivity {
         museumCheckBox = findViewById(R.id.museumCheckBox);
         barCheckBox = findViewById(R.id.barCheckBox);
         fikaCheckBox = findViewById(R.id.fikaCheckBox);
+        otherCheckBox = findViewById(R.id.otherCheckBox);
+        femaleCheckBox = findViewById(R.id.femaleCheckBox);
+        maleCheckBox = findViewById(R.id.maleCheckBox);
+
 
         //load current checkbox status from the user object
         cityWalksCheckBox.setChecked(currentUser.isCityWalksChecked());
         museumCheckBox.setChecked(currentUser.isMuseumChecked());
         barCheckBox.setChecked(currentUser.isBarChecked());
         fikaCheckBox.setChecked(currentUser.isFikaChecked());
+
+        otherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                maleCheckBox.setChecked(false);
+                femaleCheckBox.setChecked(false);
+                otherCheckBox.setChecked(isChecked);
+                // Set gender i User, antingen här eller om det finns en metod som sparar allt när trycker på knappen "save" knappen.
+                // Finns ingen gender var i User klassen ännu :)
+            }
+        });
+
+        femaleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                otherCheckBox.setChecked(false);
+                maleCheckBox.setChecked(false);
+                femaleCheckBox.setChecked(isChecked);
+                // Set gender i User, antingen här eller om det finns en metod som sparar allt när trycker på knappen "save" knappen.
+            }
+        });
+
+        maleCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                femaleCheckBox.setChecked(false);
+                otherCheckBox.setChecked(false);
+                maleCheckBox.setChecked(isChecked);
+                // Set gender i User, antingen här eller om det finns en metod som sparar allt när trycker på knappen "save" knappen.
+            }
+        });
 
         //if user changed status of this checkBox
         cityWalksCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
