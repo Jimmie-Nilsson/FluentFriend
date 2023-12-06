@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+
         btnCreateAccount = (Button) findViewById(R.id.saveSettingsButton);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
         email = (TextView) findViewById(R.id.main_emailField);
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, HomePage.class);
                 intent.putExtra("firstName", user.getFirstName());
                 intent.putExtra("lastName", user.getLastName());
+                UserManager.setCurrentUser(user);
                 startActivity(intent);
 
             } else {

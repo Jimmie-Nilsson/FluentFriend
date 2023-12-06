@@ -7,4 +7,8 @@ public class UserManager {
         return currentUser;
     }
 
+    public static void setCurrentUser(User user){
+        currentUser = user;
+    }
+
 }
