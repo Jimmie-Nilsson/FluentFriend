@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "984010347187",
+    "project_id": "fluent-friend-4629d",
+    "storage_bucket": "fluent-friend-4629d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984010347187:android:08766f33d2d8a2ad44d6c6",
+        "android_client_info": {
+          "package_name": "com.example.fluentfriend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaSuZlisSq5oMS8076NEBvNNjuGHk8i_c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

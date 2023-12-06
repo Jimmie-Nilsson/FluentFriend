@@ -6,6 +6,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 
@@ -17,11 +22,26 @@ public class MainActivity extends AppCompatActivity {
     private  TextView password;
     private  User user;
 
+    // test code here
+    private DatabaseReference ref;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         addUsers(); // Lägg till användare
+
+
+
+        // learning DB stuff here
+        FirebaseApp.initializeApp(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        ref = FirebaseDatabase.getInstance().getReference();
+        // fix this refere
+
+
 
         btnCreateAccount = (Button) findViewById(R.id.btn_prfile);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
@@ -76,4 +96,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
+
 }
