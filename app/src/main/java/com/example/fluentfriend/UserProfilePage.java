@@ -1,11 +1,17 @@
 package com.example.fluentfriend;
 
+import android.content.DialogInterface;
 import android.text.InputType;
 import android.view.Gravity;
 import android.widget.*;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class UserProfilePage extends AppCompatActivity {
 
@@ -20,6 +26,9 @@ public class UserProfilePage extends AppCompatActivity {
     private CheckBox otherCheckBox;
     private EditText editTextBiography;
     private Button buttonSave;
+    private Spinner languagesToLearnSpinner;
+    private Spinner languagesISpeakSPinner;
+    private boolean[] checkedItems;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +44,31 @@ public class UserProfilePage extends AppCompatActivity {
 
         //loads the current user's biography
         editTextBiography = findViewById(R.id.bioEditText);
-        buttonSave = findViewById(R.id.saveSettingsButton);
-
+        buttonSave = findViewById(R.id.saveSettingsButton); //vad gör denna /G
         loadBiography();
+
+        //finds spinner view
+        languagesToLearnSpinner = findViewById(R.id.languagesToLearnSpinner);
+        //creates arrayadapter using the string array and a default spinner layout
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, LanguageManager.AVAILABLE_LANGUAGES);
+        //specifies layout to use when list of choices appear
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //apply adapter to spinner
+        languagesToLearnSpinner.setAdapter(adapter);
+        //listener for when an item is selected
+        languagesToLearnSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+               //get select item
+               String selectedLanguage = (String) parent.getItemAtPosition(position);
+               //add code to handle select item /G
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         //connects the checkboxes graphic to variables in this class
         cityWalksCheckBox = findViewById(R.id.cityWalksCheckBox);
@@ -47,7 +78,6 @@ public class UserProfilePage extends AppCompatActivity {
         otherCheckBox = findViewById(R.id.otherCheckBox);
         femaleCheckBox = findViewById(R.id.femaleCheckBox);
         maleCheckBox = findViewById(R.id.maleCheckBox);
-
 
         //load current checkbox status from the user object
         cityWalksCheckBox.setChecked(currentUser.isCityWalksChecked());
@@ -123,6 +153,54 @@ public class UserProfilePage extends AppCompatActivity {
         });
 
     }
+
+    private void showLanguageList() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Choose languages");
+
+        //create array with as many slots as available languages
+        checkedItems = new boolean[LanguageManager.AVAILABLE_LANGUAGES.size()];
+        Arrays.fill(checkedItems, false);
+
+        builder.setMultiChoiceItems(LanguageManager.AVAILABLE_LANGUAGES.toArray(new String[0]), checkedItems,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                        //updates the checkedItems array
+                        checkedItems[which] = isChecked;
+                    }
+                });
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                handleLanguageSelection();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void handleLanguageSelection() {
+        List<String> selectedLanguages = new ArrayList<>();
+        for (int i = 0; i< checkedItems.length; i++) {
+            if (checkedItems[i]) {
+                //if the language is selected, add it to the list
+                selectedLanguages.add(LanguageManager.AVAILABLE_LANGUAGES.get(i));
+            }
+        }
+
+        saveSelectedLanguages(selectedLanguages);
+    }
+
+    private void saveSelectedLanguages(List<String> languages) {
+        //save to database
+        //save to user profile
+    }
+
+
     private void loadBiography() {
         String biography = currentUser.getBiography();
         editTextBiography.setText(biography);
@@ -134,7 +212,5 @@ public class UserProfilePage extends AppCompatActivity {
     }
 
     private void saveCheckBoxes() {
-
-
     }
 }
