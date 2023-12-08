@@ -10,6 +10,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.*;
 
@@ -22,7 +24,8 @@ public class SignUp extends AppCompatActivity {
     EditText repeatPassword;
     Button signUpBtn;
 
-
+    FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+    DatabaseReference myRef = db.getReference();
 
 
     @Override
@@ -36,40 +39,16 @@ public class SignUp extends AppCompatActivity {
         repeatPassword = findViewById(R.id.signup_RepeatPassword);
         signUpBtn = findViewById(R.id.signup_btnSignUp);
 
-        FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
-        DatabaseReference myRef =db.getReference("test");
-        //myRef.setValue("Hello Jimmie");
+
 
         // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String value = dataSnapshot.getValue(String.class);
-                lastName.setText(value);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                // Failed to read value
-                firstName.setText("Fail");
-            }
-        });
         signUpBtn.setOnClickListener(view -> {
             if (!isInputCorrect()) {
                 sendErrorMessage("All fields must be filled");
                 return;
             }
-            User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
-            boolean exists = MainActivity.addNewUser(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
-            if (!exists) {
-                sendErrorMessage("An account with this Email already exists");
-                return;
-            }
-            //myref.child("users").child(user.getEmail()).setValue(user);
-
-             Intent intent = new Intent(SignUp.this, HomePage.class);
+            writeNewUser();
+            Intent intent = new Intent(SignUp.this, HomePage.class);
             startActivity(intent);
         });
         }
@@ -83,6 +62,11 @@ public class SignUp extends AppCompatActivity {
 
     private void sendErrorMessage(String message) {
         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
+    }
+
+    private void writeNewUser() {
+        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
+        myRef.child("users").child(user.getEmail()).setValue(user);
     }
 
 

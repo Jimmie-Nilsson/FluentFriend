@@ -1,16 +1,21 @@
 package com.example.fluentfriend;
 
 import android.content.Intent;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.*;
 import com.google.firebase.firestore.FirebaseFirestore;
+import org.jetbrains.annotations.NotNull;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
@@ -18,13 +23,13 @@ public class MainActivity extends AppCompatActivity {
     private Button btnLogIn;
     private Button btnCreateAccount;
     private TextView email;
-    private  TextView password;
-    private  User user;
+    private TextView password;
+    private User user;
+
+    FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+    DatabaseReference userRef = db.getReference().child("users");
 
     // test code here
-    FirebaseFirestore db;
-    DatabaseReference myref;
-
 
 
     @Override
@@ -34,15 +39,13 @@ public class MainActivity extends AppCompatActivity {
         addUsers(); // Lägg till användare
 
 
-        //db = FirebaseFirestore.getInstance();
-         myref = FirebaseDatabase.getInstance().getReference();
-
+        fetchUsersAndCollectInList();
 
 
         btnCreateAccount = (Button) findViewById(R.id.saveSettingsButton);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
         email = (TextView) findViewById(R.id.main_emailField);
-        password = (TextView) findViewById(R.id.main_passwordField) ;
+        password = (TextView) findViewById(R.id.main_passwordField);
 
         btnCreateAccount.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SignUp.class);
@@ -50,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnLogIn.setOnClickListener(view -> {
-            if (email.getText().toString().trim().isEmpty()  || password.getText().toString().trim().isEmpty()){
+            if (email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty()) {
                 wrongInputMessage("Empty field");
                 return;
             }
@@ -77,9 +80,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-    private void wrongInputMessage(String message ) {
+
+    private void wrongInputMessage(String message) {
         Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
     }
+
     private void addUsers() {
         User userOne = new User("admin", "admin", "admin", "123");
         User userTwo = new User("Bosse", "Nillson", "bosse", "123");
@@ -91,11 +96,35 @@ public class MainActivity extends AppCompatActivity {
         if (userList.containsKey(email)) {
             return false;
         } else {
-            User user = new User(firstName,lastname,email,password);
+            User user = new User(firstName, lastname, email, password);
             return true;
         }
     }
 
+    private void fetchUsersAndCollectInList() {
+        ArrayList<String> emailList = new ArrayList<>();
+        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    User user = userSnapshot.getValue(User.class);
+                    if (userId != null) {
+                        //userList.put(userId, user);
+                        emailList.add(userId);
+                        email.setText(userId);
+                    }
+                }
 
+                // Now 'userHashMap' contains the users with "berg" and "hejhej" as keys
+                // You can use it as needed
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+                email.setText("FAILURE");
+            }
+        });
+    }
 }
