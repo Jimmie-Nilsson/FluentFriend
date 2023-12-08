@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static HashMap<String, User> userList = new HashMap<>();
@@ -110,19 +112,17 @@ public class MainActivity extends AppCompatActivity {
                     User user = userSnapshot.getValue(User.class);
                     if (userId != null && user != null) {
                         userList.put(userId, user);
-                        email.setText(userId);
                     }
                 }
-
-                // Now 'userHashMap' contains the users with "berg" and "hejhej" as keys
-                // You can use it as needed
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
-                email.setText("FAILURE");
             }
         });
+    }
+    protected static Set<String> getRegisteredUsers(){
+        return userList.keySet();
     }
 }
