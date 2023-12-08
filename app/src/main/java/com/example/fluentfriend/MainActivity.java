@@ -6,6 +6,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
@@ -21,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     // test code here
     FirebaseFirestore db;
+    DatabaseReference myref;
 
 
 
@@ -31,7 +34,9 @@ public class MainActivity extends AppCompatActivity {
         addUsers(); // Lägg till användare
 
 
-        db = FirebaseFirestore.getInstance();
+        //db = FirebaseFirestore.getInstance();
+         myref = FirebaseDatabase.getInstance().getReference();
+
 
 
 

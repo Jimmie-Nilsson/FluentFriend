@@ -1,6 +1,6 @@
 package com.example.fluentfriend;
 
-public class User {
+public class User implements java.io.Serializable {
     private String firstName;
     private String lastName;
     private String email;
