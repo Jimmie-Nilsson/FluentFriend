@@ -15,6 +15,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class SignUp extends AppCompatActivity {
 
     EditText firstName;
@@ -47,11 +50,12 @@ public class SignUp extends AppCompatActivity {
                 sendErrorMessage("All fields must be filled");
                 return;
             }
-            writeNewUser();
-            Intent intent = new Intent(SignUp.this, HomePage.class);
-            startActivity(intent);
+            if (writeNewUser()) {
+                Intent intent = new Intent(SignUp.this, MainActivity.class);
+                startActivity(intent);
+            }
         });
-        }
+    }
 
     private boolean isInputCorrect() { // make a method for the toString().trim().isEmpty() checks
         if (firstName.getText().toString().trim().isEmpty() || lastName.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty() || repeatPassword.getText().toString().trim().isEmpty()) {
@@ -64,9 +68,16 @@ public class SignUp extends AppCompatActivity {
         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
     }
 
-    private void writeNewUser() {
-        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
-        myRef.child("users").child(user.getEmail()).setValue(user);
+    private boolean writeNewUser() {
+        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString(), "test",false,false,false,false,"test");
+        Set<String> users = MainActivity.getRegisteredUsers();
+        if (!users.contains(user.getEmail())) {
+            myRef.child("users").child(user.getEmail()).setValue(user);
+            return true;
+        }else{
+            sendErrorMessage("A user with this email already exists, try logging in instead!");
+            return false;
+        }
     }
 
 

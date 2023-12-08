@@ -17,6 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private static HashMap<String, User> userList = new HashMap<>();
@@ -36,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        addUsers(); // Lägg till användare
+        //addUsers(); // Lägg till användare
 
 
         fetchUsersAndCollectInList();
@@ -102,29 +104,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchUsersAndCollectInList() {
-        ArrayList<String> emailList = new ArrayList<>();
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     User user = userSnapshot.getValue(User.class);
-                    if (userId != null) {
-                        //userList.put(userId, user);
-                        emailList.add(userId);
-                        email.setText(userId);
+                    if (userId != null && user != null) {
+                        userList.put(userId, user);
                     }
                 }
-
-                // Now 'userHashMap' contains the users with "berg" and "hejhej" as keys
-                // You can use it as needed
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
-                email.setText("FAILURE");
             }
         });
+    }
+    protected static Set<String> getRegisteredUsers(){
+        return userList.keySet();
     }
 }
