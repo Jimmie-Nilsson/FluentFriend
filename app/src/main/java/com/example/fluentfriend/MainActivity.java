@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        addUsers(); // Lägg till användare
+        //addUsers(); // Lägg till användare
 
 
         fetchUsersAndCollectInList();
@@ -102,16 +102,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchUsersAndCollectInList() {
-        ArrayList<String> emailList = new ArrayList<>();
         userRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     User user = userSnapshot.getValue(User.class);
-                    if (userId != null) {
-                        //userList.put(userId, user);
-                        emailList.add(userId);
+                    if (userId != null && user != null) {
+                        userList.put(userId, user);
                         email.setText(userId);
                     }
                 }

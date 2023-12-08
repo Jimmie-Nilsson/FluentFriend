@@ -48,7 +48,7 @@ public class SignUp extends AppCompatActivity {
                 return;
             }
             writeNewUser();
-            Intent intent = new Intent(SignUp.this, HomePage.class);
+            Intent intent = new Intent(SignUp.this, MainActivity.class);
             startActivity(intent);
         });
         }
@@ -65,7 +65,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     private void writeNewUser() {
-        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
+        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString(), "test",false,false,false,false,"test");
         myRef.child("users").child(user.getEmail()).setValue(user);
     }
 
