@@ -39,9 +39,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
-
-
         btnCreateAccount = (Button) findViewById(R.id.saveSettingsButton);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
         email = (TextView) findViewById(R.id.main_emailField);
@@ -98,5 +95,7 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
+
+
 
 }

@@ -46,6 +46,7 @@ public class MatchPage extends AppCompatActivity {
 
         AddressText = findViewById(R.id.matchPageText);
 
+
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);

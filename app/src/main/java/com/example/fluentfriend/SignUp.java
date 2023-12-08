@@ -2,15 +2,16 @@ package com.example.fluentfriend;
 
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.*;
 
 public class SignUp extends AppCompatActivity {
 
@@ -37,7 +38,24 @@ public class SignUp extends AppCompatActivity {
 
         FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
         DatabaseReference myRef =db.getReference("test");
-        myRef.setValue("Hello Jimmie");
+        //myRef.setValue("Hello Jimmie");
+
+        // Read from the database
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                // This method is called once with the initial value and again
+                // whenever data at this location is updated.
+                String value = dataSnapshot.getValue(String.class);
+                lastName.setText(value);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                // Failed to read value
+                firstName.setText("Fail");
+            }
+        });
         signUpBtn.setOnClickListener(view -> {
             if (!isInputCorrect()) {
                 sendErrorMessage("All fields must be filled");
@@ -66,4 +84,6 @@ public class SignUp extends AppCompatActivity {
     private void sendErrorMessage(String message) {
         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
     }
+
+
 }
