@@ -78,6 +78,9 @@ public class SignUp extends AppCompatActivity {
             sendErrorMessage("A user with this email already exists, try logging in instead!");
             return false;
         }
+
+
+        // remove this kalle
     }
 
 
