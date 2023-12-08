@@ -1,5 +1,7 @@
 package com.example.fluentfriend;
 
+import android.text.InputType;
+import android.view.Gravity;
 import android.widget.*;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,7 +28,6 @@ public class UserProfilePage extends AppCompatActivity {
 
         //loads the current user
         currentUser = UserManager.getCurrentUser();
-
 
         //displays the current user's name
         displayUserName = findViewById(R.id.displayUserNameTextView);
