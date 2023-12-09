@@ -1,23 +1,16 @@
 package com.example.fluentfriend;
 
 import android.content.Intent;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.*;
-import com.google.firebase.firestore.FirebaseFirestore;
-import org.jetbrains.annotations.NotNull;
 
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -27,8 +20,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView email;
     private TextView password;
     private User user;
-    FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
-    DatabaseReference userRef = db.getReference().child("users");
+    private FirebaseDatabase database = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+    private DatabaseReference userRef = database.getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -4,9 +4,8 @@ package com.example.fluentfriend;
 import android.widget.Button;
 
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-
 
 
 import android.os.Bundle;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 
 import com.google.android.gms.location.LocationRequest;
+import com.google.firebase.database.*;
 
 
 import java.util.HashMap;
@@ -31,6 +31,9 @@ public class MatchPage extends AppCompatActivity {
     private User currentUser;
     private double longitude;
     private double latitude;
+    private static FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+    private static DatabaseReference activeUsersRef = db.getReference().child("activeusers");
+
 
 
     // Test.
@@ -45,8 +48,7 @@ public class MatchPage extends AppCompatActivity {
         btnTwo = findViewById(R.id.matchmatchPageBtnCalcDistance);
         currentUser = UserManager.getCurrentUser();
         addSomeUser();
-
-
+        fetchActiveUsersAndCollectInList();
         btnTwo.setOnClickListener(view -> {
             UserLocation userLocationOne = activeUsers.get(currentUser);
             UserLocation userLocationTwo = activeUsers.get(user);
@@ -55,7 +57,7 @@ public class MatchPage extends AppCompatActivity {
             double distance = userLocationOne.calcDistanceBetweenUsers(userLocationTwo.getLatitude(), userLocationTwo.getLongitude());
 
             //distance = Math.round(distance);
-            textBoxTwo.setText("Distance between " + userOne.getFirstName() +" and " + userTwo.getFirstName() +" is " + distance + " meters");
+            textBoxTwo.setText("Distance between " + userOne.getFirstName() + " and " + userTwo.getFirstName() + " is " + distance + " meters");
         });
 
     }
@@ -69,11 +71,36 @@ public class MatchPage extends AppCompatActivity {
         activeUsers.put(user, u);
     }
 
-    protected static void addUserActive(UserLocation userLocation){
+    protected void addUserActive(UserLocation userLocation) {
+            System.err.println(userLocation.getLongitude());
+            System.err.println(userLocation.getLatitude());
+            activeUsersRef.child(userLocation.getUser().getEmail()).setValue(userLocation);
+            activeUsers.put(userLocation.getUser(), userLocation);
 
-        activeUsers.put(userLocation.getUser(), userLocation);
+
     }
-    protected static void removeUserActive(User user){
+
+    private void fetchActiveUsersAndCollectInList() {
+        activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
+                    if (userId != null && userLoc != null) {
+                        activeUsers.put(userLoc.getUser(),userLoc);
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+            }
+        });
+    }
+
+    protected static void removeUserActive(User user) {
+        activeUsersRef.child(user.getEmail()).removeValue();
         activeUsers.remove(user);
     }
 }

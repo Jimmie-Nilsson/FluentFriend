@@ -2,11 +2,12 @@ package com.example.fluentfriend;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class User implements java.io.Serializable {
-    private HashSet<String> languagesToLearn = new HashSet<>();
-    private HashSet<String> languagesSpeaks = new HashSet<>();
+    private List<String> languagesToLearn = new ArrayList<>();
+    private List<String> languagesSpeaks = new ArrayList<>();
     private String firstName;
     private String lastName;
     private String email;
@@ -35,8 +36,8 @@ public class User implements java.io.Serializable {
             languagesSpeaks.add(language.get(i));
         }
     }
-    public Set<String> getLanguagesSpeak() { return languagesSpeaks;}
-    public Set<String> getLanguagesToLearn() { return languagesToLearn;}
+    public List<String> getLanguagesSpeak() { return languagesSpeaks;}
+    public List<String> getLanguagesToLearn() { return languagesToLearn;}
     public void setUserBiography(String newBiography){biography = newBiography;}
     public void setFirstName(String inputFirstName){firstName = inputFirstName;}
     public void setLastName(String inputLastName){lastName = inputLastName;}

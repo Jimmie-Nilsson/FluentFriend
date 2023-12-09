@@ -50,6 +50,7 @@ public class HomePage extends AppCompatActivity {
     private double latitude;
     private double longitude;
 
+
     private LocationRequest locationRequest;
 
     @Override
@@ -63,27 +64,31 @@ public class HomePage extends AppCompatActivity {
         btnMessage = (Button) findViewById(R.id.homepage_messagesbtn);
         activeSwitch = (SwitchCompat) findViewById(R.id.homepage_activeSwitch);
 
-
-
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
 
-        activeSwitch.setOnClickListener(view -> {
-            if (activeSwitch.isChecked()){
-                getCurrentLocation();
-                dialog = new ProgressDialog(this); // this = YourActivity
-                dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                dialog.setTitle("Loading Location");
-                dialog.setMessage("Loading. Please wait...");
-                dialog.setIndeterminate(true);
-                dialog.setCanceledOnTouchOutside(false);
-                dialog.show();
-                UserLocation userLoc = new UserLocation(UserManager.getCurrentUser(), latitude, longitude);
-                MatchPage.addUserActive(userLoc);
 
-            }else if (!activeSwitch.isChecked()) {
+        // THIS SHOULD BE CHANGED TO BE IN SWITCH CLICK LISTERNER
+        getCurrentLocation();
+        dialog = new ProgressDialog(this); // this = YourActivity
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Loading Location");
+        dialog.setMessage("Loading. Please wait...");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        //END OF END IN CLICK LISTERNER
+
+
+        activeSwitch.setOnClickListener(view -> {
+            if (activeSwitch.isChecked()) {
+                UserLocation userLoc = new UserLocation(UserManager.getCurrentUser(), latitude, longitude);
+                MatchPage page = new MatchPage();
+                page.addUserActive(userLoc);
+
+            } else if (!activeSwitch.isChecked()) {
                 MatchPage.removeUserActive(UserManager.getCurrentUser());
             }
         });
@@ -96,11 +101,11 @@ public class HomePage extends AppCompatActivity {
         });
 
         btnMatch.setOnClickListener(view -> {
-            if (activeSwitch.isChecked()){
+            if (activeSwitch.isChecked()) {
                 Intent intentTwo = new Intent(HomePage.this, MatchPage.class);
                 startActivity(intentTwo);
-            }else {
-                Toast.makeText(this,"Must be active",Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Must be active", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -109,6 +114,7 @@ public class HomePage extends AppCompatActivity {
         });
 
     }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -137,6 +143,7 @@ public class HomePage extends AppCompatActivity {
             }
         }
     }
+
     private void getCurrentLocation() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (ActivityCompat.checkSelfPermission(HomePage.this, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -153,11 +160,11 @@ public class HomePage extends AppCompatActivity {
                                             .removeLocationUpdates(this);
 
                                     if (locationResult != null && locationResult.getLocations().size() > 0) {
-
                                         int index = locationResult.getLocations().size() - 1;
                                         latitude = locationResult.getLocations().get(index).getLatitude();
                                         longitude = locationResult.getLocations().get(index).getLongitude();
                                         dialog.dismiss();
+
                                     }
                                 }
                             }, Looper.getMainLooper());
@@ -210,6 +217,7 @@ public class HomePage extends AppCompatActivity {
         });
 
     }
+
     private boolean isGPSEnabled() {
         LocationManager locationManager = null;
         boolean isEnabled = false;
@@ -222,6 +230,6 @@ public class HomePage extends AppCompatActivity {
         return isEnabled;
     }
 
-
-
 }
+
+
