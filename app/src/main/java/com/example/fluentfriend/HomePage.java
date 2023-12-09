@@ -3,6 +3,7 @@ package com.example.fluentfriend;
 import android.content.Intent;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -36,6 +37,10 @@ public class HomePage extends AppCompatActivity {
         btnMatch.setOnClickListener(view -> {
             Intent intentTwo = new Intent(HomePage.this, MatchPage.class);
             startActivity(intentTwo);
+        });
+
+        btnMessage.setOnClickListener(view -> {
+            Toast.makeText(HomePage.this, "Not implemented", Toast.LENGTH_SHORT).show();
         });
 
     }
