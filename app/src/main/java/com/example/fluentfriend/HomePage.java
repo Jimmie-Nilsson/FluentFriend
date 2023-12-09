@@ -41,20 +41,16 @@ import com.google.firebase.database.FirebaseDatabase;
 public class HomePage extends AppCompatActivity {
 
     private User user;
-
     private Button btnProfile;
     private Button btnMessage;
     private Button btnMatch;
     private TextView welcomeText;
     private SwitchCompat activeSwitch;
     private ProgressDialog dialog;
-
     private double latitude;
     private double longitude;
 
     private LocationRequest locationRequest;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,11 +62,6 @@ public class HomePage extends AppCompatActivity {
         btnMatch = (Button) findViewById(R.id.matchPageBtn);
         btnMessage = (Button) findViewById(R.id.homepage_messagesbtn);
         activeSwitch = (SwitchCompat) findViewById(R.id.homepage_activeSwitch);
-
-
-
-
-
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -91,10 +82,9 @@ public class HomePage extends AppCompatActivity {
                 UserLocation loc = new UserLocation(user, latitude, longitude);
                 MatchPage.addUserActive(loc);
 
-
             }else {
                 Toast.makeText(this,"FAILURE",Toast.LENGTH_SHORT).show();
-                MatchPage.removeUserActive();
+                MatchPage.removeUserActive(user);
             }
         });
         Intent intent = getIntent();
@@ -168,8 +158,6 @@ public class HomePage extends AppCompatActivity {
                                         latitude = locationResult.getLocations().get(index).getLatitude();
                                         longitude = locationResult.getLocations().get(index).getLongitude();
                                         dialog.dismiss();
-
-                                        //AddressText.setText("Latitude: " + latitude + "\n" + "Longitude: " + longitude);
                                     }
                                 }
                             }, Looper.getMainLooper());

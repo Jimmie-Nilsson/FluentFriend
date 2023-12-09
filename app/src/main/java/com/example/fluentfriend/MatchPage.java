@@ -45,11 +45,6 @@ public class MatchPage extends AppCompatActivity {
         currentUser = UserManager.getCurrentUser();
         addSomeUser();
 
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(5000);
-        locationRequest.setFastestInterval(2000);
-
 
         btnTwo.setOnClickListener(view -> {
             UserLocation userLocationOne = activeUsers.get(currentUser);
@@ -64,16 +59,6 @@ public class MatchPage extends AppCompatActivity {
 
     }
 
-    private void addUserToLocList() {
-        if ((latitude != 0.0 && longitude != 0.0) && !activeUsers.containsKey(currentUser.getEmail())) {
-            UserLocation ul = new UserLocation(currentUser, latitude, longitude);
-            activeUsers.put(currentUser, ul);
-            textBoxOne.setText(currentUser.getFirstName() +" " + currentUser.getLastName() +"\nLatitude: " + latitude + "\n" + "Longitude: " + longitude);
-        } else {
-            textBoxTwo.setText("Fail");
-        }
-    }
-
     private void addSomeUser() {
         double lat = 59.403223; // Kista galleria
         double lon = 17.944535;
@@ -83,13 +68,10 @@ public class MatchPage extends AppCompatActivity {
         activeUsers.put(user, u);
     }
 
-
-
     protected static void addUserActive(UserLocation userLocation){
-
+        activeUsers.put(userLocation.getUser(), userLocation);
     }
-
-    protected static void removeUserActive(){
-
+    protected static void removeUserActive(User user){
+        activeUsers.remove(user);
     }
 }
