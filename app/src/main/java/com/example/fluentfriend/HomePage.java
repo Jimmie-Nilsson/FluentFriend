@@ -22,7 +22,7 @@ public class HomePage extends AppCompatActivity {
 
         btnProfile = (Button) findViewById(R.id.homepage_btn_profile);
         welcomeText = (TextView) findViewById(R.id.homepage_welcomeText);
-        btnMatch = (Button) findViewById(R.id.homepage_btnMatch);
+        btnMatch = (Button) findViewById(R.id.matchPageBtn);
         btnMessage = (Button) findViewById(R.id.homepage_messagesbtn);
 
         Intent intent = getIntent();

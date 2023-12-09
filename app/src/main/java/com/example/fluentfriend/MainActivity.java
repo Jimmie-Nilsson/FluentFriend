@@ -27,12 +27,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView email;
     private TextView password;
     private User user;
-
     FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     DatabaseReference userRef = db.getReference().child("users");
-
-    // test code here
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //addUsers(); // Lägg till användare
 
-
         fetchUsersAndCollectInList();
-
 
         btnCreateAccount = (Button) findViewById(R.id.saveSettingsButton);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
@@ -115,7 +109,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors

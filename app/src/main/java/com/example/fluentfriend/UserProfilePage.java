@@ -84,6 +84,7 @@ public class UserProfilePage extends AppCompatActivity {
         museumCheckBox.setChecked(currentUser.isMuseumChecked());
         barCheckBox.setChecked(currentUser.isBarChecked());
         fikaCheckBox.setChecked(currentUser.isFikaChecked());
+        loadGenderBox();
 
         otherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -91,8 +92,6 @@ public class UserProfilePage extends AppCompatActivity {
                 maleCheckBox.setChecked(false);
                 femaleCheckBox.setChecked(false);
                 otherCheckBox.setChecked(isChecked);
-                // Set gender i User, antingen här eller om det finns en metod som sparar allt när trycker på knappen "save" knappen.
-                // Finns ingen gender var i User klassen ännu :)
             }
         });
 
@@ -102,7 +101,6 @@ public class UserProfilePage extends AppCompatActivity {
                 otherCheckBox.setChecked(false);
                 maleCheckBox.setChecked(false);
                 femaleCheckBox.setChecked(isChecked);
-                // Set gender i User, antingen här eller om det finns en metod som sparar allt när trycker på knappen "save" knappen.
             }
         });
 
@@ -112,7 +110,6 @@ public class UserProfilePage extends AppCompatActivity {
                 femaleCheckBox.setChecked(false);
                 otherCheckBox.setChecked(false);
                 maleCheckBox.setChecked(isChecked);
-                // Set gender i User, antingen här eller om det finns en metod som sparar allt när trycker på knappen "save" knappen.
             }
         });
 
@@ -149,6 +146,9 @@ public class UserProfilePage extends AppCompatActivity {
             public void onClick(View view) {
                 saveBiography();
                 saveCheckBoxes(); //behövs denna?
+                saveGender();
+                Toast.makeText(UserProfilePage.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
+                finish(); // Går tillbaka till därifrån man kom
             }
         });
 
@@ -200,10 +200,19 @@ public class UserProfilePage extends AppCompatActivity {
         //save to user profile
     }
 
-
     private void loadBiography() {
         String biography = currentUser.getBiography();
         editTextBiography.setText(biography);
+    }
+
+    private void loadGenderBox() {
+        if (currentUser.getGender().equals("Male")) {
+            maleCheckBox.setChecked(true);
+        } else if (currentUser.getGender().equals("Female")) {
+            femaleCheckBox.setChecked(true);
+        } else if (currentUser.getGender().equals("Other/Private")) {
+            otherCheckBox.setChecked(true);
+        }
     }
 
     private void saveBiography(){
@@ -212,5 +221,19 @@ public class UserProfilePage extends AppCompatActivity {
     }
 
     private void saveCheckBoxes() {
+        currentUser.setCityWalksChecked(cityWalksCheckBox.isChecked());
+        currentUser.setMuseumChecked(museumCheckBox.isChecked());
+        currentUser.setBarChecked(barCheckBox.isChecked());
+        currentUser.setFikaChecked(fikaCheckBox.isChecked());
+    }
+
+    private void saveGender() {
+        if (femaleCheckBox.isChecked()) {
+            currentUser.setGender("Female");
+        } else if (maleCheckBox.isChecked()){
+            currentUser.setGender("Male");
+        } else if (otherCheckBox.isChecked()) {
+            currentUser.setGender("Other/Private");
+        }
     }
 }

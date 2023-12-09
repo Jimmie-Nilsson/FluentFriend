@@ -1,16 +1,16 @@
 package com.example.fluentfriend;
 
 public class UserLocation {
-    private String email;
+    private User user;
     private double longitude;
     private double latitude;
 
-    public UserLocation(String email, double latitude, double longitude) {
-        this.email = email;
+    public UserLocation(User user, double latitude, double longitude) {
+        this.user = user;
         this.longitude = longitude;
         this.latitude = latitude;
     }
-    public String getEmail() {return email;}
+    public User getUser() {return user;}
 
     public double getLongitude() {return longitude;}
 
