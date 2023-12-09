@@ -1,5 +1,6 @@
 package com.example.fluentfriend;
 
+import android.app.ProgressDialog;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,7 +38,7 @@ import java.util.HashMap;
 
 
 public class MatchPage extends AppCompatActivity {
-    private static HashMap<String, UserLocation> locationList = new HashMap<>();
+    private static HashMap<User, UserLocation> activeUsers = new HashMap<>();
     private TextView textBoxOne;
     private LocationRequest locationRequest;
     private Button btnOne;
@@ -46,17 +47,30 @@ public class MatchPage extends AppCompatActivity {
     private User currentUser;
     private double latitude;
     private double longitude;
+    private ProgressDialog dialog;
+
+    // Test.
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_page);
         textBoxOne = findViewById(R.id.matchPageText);
-        btnOne= findViewById(R.id.matchPageBtn);
         textBoxTwo = findViewById(R.id.matchPageText2);
         btnTwo = findViewById(R.id.matchmatchPageBtnCalcDistance);
         currentUser = UserManager.getCurrentUser();
         addSomeUser();
+
+        // Testar lite
+        dialog = new ProgressDialog(this); // this = YourActivity
+        dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        dialog.setTitle("Loading Location");
+        dialog.setMessage("Loading. Please wait...");
+        dialog.setIndeterminate(true);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        // dialog.dismiss();
 
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
@@ -64,35 +78,36 @@ public class MatchPage extends AppCompatActivity {
         locationRequest.setFastestInterval(2000);
         getCurrentLocation();
 
-        textBoxOne.setText("Latitude: " + latitude + "\n" + "Longitude: " + longitude);
-
-        btnOne.setOnClickListener(view -> {
-            textBoxOne.setText(currentUser.getFirstName() +" " + currentUser.getLastName() +"\nLatitude: " + latitude + "\n" + "Longitude: " + longitude);
-
-            if ((latitude != 0.0 && longitude != 0.0) && !locationList.containsKey(currentUser.getEmail())) {
-                UserLocation ul = new UserLocation(currentUser.getEmail(), latitude, longitude);
-                locationList.put(currentUser.getEmail(), ul);
-            }
-        });
-
         btnTwo.setOnClickListener(view -> {
-            textBoxTwo.setText("Test");
-
-            UserLocation userOne = locationList.get(currentUser.getEmail());
-            UserLocation userTwo = locationList.get("Adam");
-            double distance = userOne.calcDistanceBetweenUsers(userTwo.getLatitude(), userTwo.getLongitude());
+            UserLocation userLocationOne = activeUsers.get(currentUser);
+            UserLocation userLocationTwo = activeUsers.get(user);
+            User userOne = userLocationOne.getUser();
+            User userTwo = userLocationTwo.getUser();
+            double distance = userLocationOne.calcDistanceBetweenUsers(userLocationTwo.getLatitude(), userLocationTwo.getLongitude());
 
             //distance = Math.round(distance);
-            textBoxTwo.setText("Distance between " + userOne.getEmail() +" and " + userTwo.getEmail() +" is " + distance + " meters");
+            textBoxTwo.setText("Distance between " + userOne.getFirstName() +" and " + userTwo.getFirstName() +" is " + distance + " meters");
         });
 
+    }
+
+    private void addUserToLocList() {
+        if ((latitude != 0.0 && longitude != 0.0) && !activeUsers.containsKey(currentUser.getEmail())) {
+            UserLocation ul = new UserLocation(currentUser, latitude, longitude);
+            activeUsers.put(currentUser, ul);
+            textBoxOne.setText(currentUser.getFirstName() +" " + currentUser.getLastName() +"\nLatitude: " + latitude + "\n" + "Longitude: " + longitude);
+        } else {
+            textBoxTwo.setText("Fail");
+        }
     }
 
     private void addSomeUser() {
         double lat = 59.403223; // Kista galleria
         double lon = 17.944535;
-        UserLocation u = new UserLocation("Adam", lat, lon);
-        locationList.put(u.getEmail(), u);
+        user = new User("Kalle", "Berglund", "kalleb", "123");
+
+        UserLocation u = new UserLocation(user, lat, lon);
+        activeUsers.put(user, u);
     }
 
     @Override
@@ -143,6 +158,8 @@ public class MatchPage extends AppCompatActivity {
                                         int index = locationResult.getLocations().size() - 1;
                                         latitude = locationResult.getLocations().get(index).getLatitude();
                                         longitude = locationResult.getLocations().get(index).getLongitude();
+                                        addUserToLocList();
+                                        dialog.dismiss();
 
                                         //AddressText.setText("Latitude: " + latitude + "\n" + "Longitude: " + longitude);
                                     }
