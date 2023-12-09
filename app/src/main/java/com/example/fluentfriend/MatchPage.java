@@ -42,7 +42,6 @@ public class MatchPage extends AppCompatActivity {
     private LocationRequest locationRequest;
     private Button btnOne;
     private TextView textBoxTwo;
-
     private Button btnTwo;
     private User currentUser;
     private double latitude;
@@ -63,7 +62,6 @@ public class MatchPage extends AppCompatActivity {
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
-
         getCurrentLocation();
 
         textBoxOne.setText("Latitude: " + latitude + "\n" + "Longitude: " + longitude);
@@ -71,7 +69,7 @@ public class MatchPage extends AppCompatActivity {
         btnOne.setOnClickListener(view -> {
             textBoxOne.setText(currentUser.getFirstName() +" " + currentUser.getLastName() +"\nLatitude: " + latitude + "\n" + "Longitude: " + longitude);
 
-            if ((latitude != 0.0 || longitude != 0.0) && !locationList.containsKey(currentUser.getEmail())) {
+            if ((latitude != 0.0 && longitude != 0.0) && !locationList.containsKey(currentUser.getEmail())) {
                 UserLocation ul = new UserLocation(currentUser.getEmail(), latitude, longitude);
                 locationList.put(currentUser.getEmail(), ul);
             }
@@ -82,20 +80,16 @@ public class MatchPage extends AppCompatActivity {
 
             UserLocation userOne = locationList.get(currentUser.getEmail());
             UserLocation userTwo = locationList.get("Adam");
-            double distance = userOne.calcDistanceBetweenUsers(userOne.getLatitude(), userOne.getLongitude(), userTwo.getLatitude(), userTwo.getLongitude());
-            //textBoxTwo.setText(userOne.getTest());
+            double distance = userOne.calcDistanceBetweenUsers(userTwo.getLatitude(), userTwo.getLongitude());
 
             //distance = Math.round(distance);
-
-
             textBoxTwo.setText("Distance between " + userOne.getEmail() +" and " + userTwo.getEmail() +" is " + distance + " meters");
-
         });
 
     }
 
     private void addSomeUser() {
-        double lat = 59.403223;
+        double lat = 59.403223; // Kista galleria
         double lon = 17.944535;
         UserLocation u = new UserLocation("Adam", lat, lon);
         locationList.put(u.getEmail(), u);

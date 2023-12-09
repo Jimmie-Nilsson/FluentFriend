@@ -15,18 +15,12 @@ public class UserLocation {
     public double getLongitude() {return longitude;}
 
     public double getLatitude() {return latitude;}
-
-    public String getTest() {
-        String g = "Det funkar";
-        return g;
-    }
-
-    public double calcDistanceBetweenUsers(double lat1, double lon1, double lat2, double lon2) {
+    public double calcDistanceBetweenUsers( double lat2, double lon2) {
         final double EARTH_RADIUS = 6371000; // meters
 
         // Convert latitude and longitude from degrees to radians
-        double lat1Rad = Math.toRadians(lat1);
-        double lon1Rad = Math.toRadians(lon1);
+        double lat1Rad = Math.toRadians(this.latitude);
+        double lon1Rad = Math.toRadians(this.longitude);
         double lat2Rad = Math.toRadians(lat2);
         double lon2Rad = Math.toRadians(lon2);
 
