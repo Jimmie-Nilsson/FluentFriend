@@ -69,7 +69,7 @@ public class SignUp extends AppCompatActivity {
     }
 
     private boolean writeNewUser() {
-        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString(), "test",false,false,false,false,"test");
+        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
         Set<String> users = MainActivity.getRegisteredUsers();
         if (!users.contains(user.getEmail())) {
             myRef.child("users").child(user.getEmail()).setValue(user);

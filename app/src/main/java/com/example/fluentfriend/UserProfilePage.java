@@ -85,6 +85,8 @@ public class UserProfilePage extends AppCompatActivity {
         barCheckBox.setChecked(currentUser.isBarChecked());
         fikaCheckBox.setChecked(currentUser.isFikaChecked());
         loadGenderBox();
+        // Ladda in språk från User. Finns två set med getMetoder. Ett för språken de talar och för spårken de vill lära sig.
+
 
         otherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -184,7 +186,7 @@ public class UserProfilePage extends AppCompatActivity {
     }
 
     private void handleLanguageSelection() {
-        List<String> selectedLanguages = new ArrayList<>();
+        ArrayList<String> selectedLanguages = new ArrayList<>();
         for (int i = 0; i< checkedItems.length; i++) {
             if (checkedItems[i]) {
                 //if the language is selected, add it to the list
@@ -195,9 +197,10 @@ public class UserProfilePage extends AppCompatActivity {
         saveSelectedLanguages(selectedLanguages);
     }
 
-    private void saveSelectedLanguages(List<String> languages) {
+    private void saveSelectedLanguages(ArrayList<String> languages) {
         //save to database
         //save to user profile
+        currentUser.addLanguagesSpeak(languages);
     }
 
     private void loadBiography() {

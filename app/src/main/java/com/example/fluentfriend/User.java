@@ -1,8 +1,12 @@
 package com.example.fluentfriend;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 public class User implements java.io.Serializable {
+    private HashSet<String> languagesToLearn = new HashSet<>();
+    private HashSet<String> languagesSpeaks = new HashSet<>();
     private String firstName;
     private String lastName;
     private String email;
@@ -20,20 +24,19 @@ public class User implements java.io.Serializable {
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-
     }
-    public User(String firstName, String lastName, String email, String password, String bio, boolean fika, boolean museum, boolean cityWalks, boolean bar, String gender) {
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
-        this.password = password;
-        this.biography = bio;
-        this.fika = fika;
-        this.museum = museum;
-        this.cityWalks = cityWalks;
-        this.bar = bar;
-        this.gender = gender;
+    public void addLanguagesToLearn(ArrayList<String> language) {
+        for (int i = 0; i < language.size(); i++) {
+            languagesToLearn.add(language.get(i));
+        }
     }
+    public void addLanguagesSpeak(ArrayList<String> language) {
+        for (int i = 0; i < language.size(); i++) {
+            languagesSpeaks.add(language.get(i));
+        }
+    }
+    public Set<String> getLanguagesSpeak() { return languagesSpeaks;}
+    public Set<String> getLanguagesToLearn() { return languagesToLearn;}
     public void setUserBiography(String newBiography){biography = newBiography;}
     public void setFirstName(String inputFirstName){firstName = inputFirstName;}
     public void setLastName(String inputLastName){lastName = inputLastName;}
