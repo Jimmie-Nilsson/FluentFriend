@@ -3,6 +3,7 @@ package com.example.fluentfriend;
 
 import android.widget.Button;
 
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -69,6 +70,7 @@ public class MatchPage extends AppCompatActivity {
     }
 
     protected static void addUserActive(UserLocation userLocation){
+
         activeUsers.put(userLocation.getUser(), userLocation);
     }
     protected static void removeUserActive(User user){
