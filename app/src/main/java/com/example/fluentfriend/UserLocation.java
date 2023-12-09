@@ -5,6 +5,9 @@ public class UserLocation {
     private double longitude;
     private double latitude;
 
+    public UserLocation(){
+
+    }
     public UserLocation(User user, double latitude, double longitude) {
         this.user = user;
         this.longitude = longitude;

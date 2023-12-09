@@ -80,5 +80,14 @@
             android:id="@+id/imageView5" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintVertical_bias="1.0"/>
+    <androidx.appcompat.widget.SwitchCompat
+            android:text="Active"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/homepage_activeSwitch"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginBottom="4dp" app:layout_constraintEnd_toEndOf="@+id/homepage_btn_profile"
+            app:layout_constraintBottom_toTopOf="@+id/homepage_messagesbtn"
+            app:layout_constraintStart_toStartOf="@+id/matchPageBtn"
+            android:layout_marginStart="107dp" android:layout_marginEnd="125dp"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
