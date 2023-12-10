@@ -12,8 +12,8 @@ public class User implements java.io.Serializable {
     private String lastName;
     private String email;
     private String password;
-    private String biography;
-    private String gender;
+    private String biography = "";
+    private String gender = "";
     private boolean fika;
     private boolean museum;
     private boolean cityWalks;
@@ -26,21 +26,23 @@ public class User implements java.io.Serializable {
         this.email = email;
         this.password = password;
     }
-    public void addLanguagesToLearn(ArrayList<String> language) {
-        for (int i = 0; i < language.size(); i++) {
-
-            if (!languagesToLearn.contains(language.get(i))) {
-                languagesToLearn.add(language.get(i));
-            }
-        }
+    public void setLanguagesToLearn(List<String> language) {
+//        for (int i = 0; i < language.size(); i++) {
+//
+//            if (!languagesToLearn.contains(language.get(i))) {
+//                languagesToLearn.add(language.get(i));
+//            }
+//        }
+        languagesToLearn = language;
     }
-    public void addLanguagesSpeak(ArrayList<String> language) {
-        for (int i = 0; i < language.size(); i++) {
-
-            if (!languagesSpeaks.contains(language.get(i))) {
-                languagesSpeaks.add(language.get(i));
-            }
-        }
+    public void setLanguagesSpeak(List<String> language) {
+//        for (int i = 0; i < language.size(); i++) {
+//
+//            if (!languagesSpeaks.contains(language.get(i))) {
+//                languagesSpeaks.add(language.get(i));
+//            }
+//        }
+        languagesSpeaks = language;
     }
     public List<String> getLanguagesSpeak() { return languagesSpeaks;}
     public List<String> getLanguagesToLearn() { return languagesToLearn;}

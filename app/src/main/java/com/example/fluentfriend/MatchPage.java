@@ -18,11 +18,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.firebase.database.*;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 
 public class MatchPage extends AppCompatActivity {
     private static HashMap<User, UserLocation> activeUsers = new HashMap<>();
+
+    private List<User> users = new ArrayList<>();
     private TextView textBoxOne;
     private LocationRequest locationRequest;
     private Button btnOne;
@@ -33,6 +37,7 @@ public class MatchPage extends AppCompatActivity {
     private double latitude;
     private static FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     private static DatabaseReference activeUsersRef = db.getReference().child("activeusers");
+    private static DatabaseReference usersRef = db.getReference().child("users");
 
 
 
@@ -49,6 +54,7 @@ public class MatchPage extends AppCompatActivity {
         currentUser = UserManager.getCurrentUser();
         addSomeUser();
         fetchActiveUsersAndCollectInList();
+        fetchUsersAndCollectInList();
         btnTwo.setOnClickListener(view -> {
             UserLocation userLocationOne = activeUsers.get(currentUser);
             UserLocation userLocationTwo = activeUsers.get(user);
@@ -79,6 +85,27 @@ public class MatchPage extends AppCompatActivity {
 
 
     }
+
+    private void fetchUsersAndCollectInList(){
+        usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
+                    if (userId != null && userLoc != null) {
+                        users.add(userLoc.getUser());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+            }
+        });
+    }
+
+
 
     private void fetchActiveUsersAndCollectInList() {
         activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -1,21 +1,23 @@
 package com.example.fluentfriend;
 
 import android.content.DialogInterface;
-import android.text.InputType;
-import android.view.Gravity;
 import android.widget.*;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class UserProfilePage extends AppCompatActivity {
+public class UserProfilePage extends AppCompatActivity implements MultiSpinner.MultiSpinnerListener {
 
     private User currentUser;
+    private List<String> speakLanguages = new ArrayList<>();
+    private List<String> learnLanguages = new ArrayList<>();
     private TextView displayUserName;
     private CheckBox cityWalksCheckBox;
     private CheckBox museumCheckBox;
@@ -26,9 +28,11 @@ public class UserProfilePage extends AppCompatActivity {
     private CheckBox otherCheckBox;
     private EditText editTextBiography;
     private Button buttonSave;
-    private Spinner languagesToLearnSpinner;
-    private Spinner languagesISpeakSPinner;
+    private MultiSpinner languagesToLearnSpinner;
+    private MultiSpinner languagesISpeakSpinner;
     private boolean[] checkedItems;
+    private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+    private DatabaseReference usersRef = db.getReference().child("users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,28 +51,10 @@ public class UserProfilePage extends AppCompatActivity {
         buttonSave = findViewById(R.id.saveSettingsButton); //vad gör denna /G
         loadBiography();
 
-        //finds spinner view
-        languagesToLearnSpinner = findViewById(R.id.languagesToLearnSpinner);
-        //creates arrayadapter using the string array and a default spinner layout
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, LanguageManager.AVAILABLE_LANGUAGES);
-        //specifies layout to use when list of choices appear
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //apply adapter to spinner
-        languagesToLearnSpinner.setAdapter(adapter);
-        //listener for when an item is selected
-        languagesToLearnSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-               //get select item
-               String selectedLanguage = (String) parent.getItemAtPosition(position);
-               //add code to handle select item /G
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+        languagesToLearnSpinner = (MultiSpinner) findViewById(R.id.languagesToLearnSpinner);
+        languagesISpeakSpinner = (MultiSpinner) findViewById(R.id.languagesISpeakSpinner);
 
-            }
-        });
 
         //connects the checkboxes graphic to variables in this class
         cityWalksCheckBox = findViewById(R.id.cityWalksCheckBox);
@@ -85,8 +71,14 @@ public class UserProfilePage extends AppCompatActivity {
         barCheckBox.setChecked(currentUser.isBarChecked());
         fikaCheckBox.setChecked(currentUser.isFikaChecked());
         loadGenderBox();
-        // Ladda in språk från User. Finns två Arraylistor med getMetoder. Ett för språken de talar, och ett för språken de vill lära sig.
 
+        // Change this toString() if you want some other text like Language or something
+        languagesISpeakSpinner.setItems(LanguageManager.AVAILABLE_LANGUAGES,
+               UserManager.getCurrentUser().getLanguagesSpeak().toString() , this);
+        languagesToLearnSpinner.setItems(LanguageManager.AVAILABLE_LANGUAGES,
+                UserManager.getCurrentUser().getLanguagesToLearn().toString(), this);
+
+        loadUserLanguages();
 
         otherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -149,13 +141,16 @@ public class UserProfilePage extends AppCompatActivity {
                 saveBiography();
                 saveCheckBoxes(); //behövs denna?
                 saveGender();
+                saveSelectedLanguages();
+                // uploads to database
+                usersRef.child(UserManager.getCurrentUser().getEmail()).setValue(UserManager.getCurrentUser());
                 Toast.makeText(UserProfilePage.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
                 finish(); // Går tillbaka till därifrån man kom
             }
         });
 
     }
-
+//  Gustav check if this can be deleted or explain what it does.
     private void showLanguageList() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Choose languages");
@@ -185,6 +180,7 @@ public class UserProfilePage extends AppCompatActivity {
         dialog.show();
     }
 
+    //  Gustav check if this can be deleted
     private void handleLanguageSelection() {
         ArrayList<String> selectedLanguages = new ArrayList<>();
         for (int i = 0; i< checkedItems.length; i++) {
@@ -194,13 +190,13 @@ public class UserProfilePage extends AppCompatActivity {
             }
         }
 
-        saveSelectedLanguages(selectedLanguages);
+      //  saveSelectedLanguages(selectedLanguages); ???
     }
 
-    private void saveSelectedLanguages(ArrayList<String> languages) {
-        //save to database
-        //save to user profile
-        currentUser.addLanguagesSpeak(languages);
+    private void saveSelectedLanguages() {
+        UserManager.getCurrentUser().setLanguagesSpeak(speakLanguages);
+        UserManager.getCurrentUser().setLanguagesToLearn(learnLanguages);
+
     }
 
     private void loadBiography() {
@@ -237,6 +233,40 @@ public class UserProfilePage extends AppCompatActivity {
             currentUser.setGender("Male");
         } else if (otherCheckBox.isChecked()) {
             currentUser.setGender("Other/Private");
+        }
+    }
+
+    // this method loads the users languages from the current user.
+    private void loadUserLanguages(){
+        speakLanguages = UserManager.getCurrentUser().getLanguagesSpeak();
+        learnLanguages = UserManager.getCurrentUser().getLanguagesToLearn();
+        if (learnLanguages != null && speakLanguages != null) {
+            languagesToLearnSpinner.setItemsSelected(learnLanguages, LanguageManager.AVAILABLE_LANGUAGES);
+            languagesISpeakSpinner.setItemsSelected(speakLanguages,LanguageManager.AVAILABLE_LANGUAGES);
+        }
+    }
+
+
+    // this is the MultiSpinner classes clickHandler
+    @Override
+    public void onItemsSelected(boolean[] selected, MultiSpinner spinner) {
+        ArrayList<String> speakLanguages = new ArrayList<>();
+        ArrayList<String> learnLanguages = new ArrayList<>();
+        for (int i = 0; i < selected.length; i++){
+            if (selected[i]){
+                if (spinner.getId() == languagesISpeakSpinner.getId()) {
+                    speakLanguages.add(LanguageManager.AVAILABLE_LANGUAGES.get(i));
+                }else if (spinner.getId() == languagesToLearnSpinner.getId()) {
+                    learnLanguages.add(LanguageManager.AVAILABLE_LANGUAGES.get(i));
+                }
+            }
+        }
+        if (spinner.getId() == languagesISpeakSpinner.getId()) {
+            this.speakLanguages = speakLanguages;
+            spinner.setItemsSelected(this.speakLanguages, LanguageManager.AVAILABLE_LANGUAGES);
+        }else if (spinner.getId() == languagesToLearnSpinner.getId()) {
+            this.learnLanguages = learnLanguages;
+            spinner.setItemsSelected(this.learnLanguages, LanguageManager.AVAILABLE_LANGUAGES);
         }
     }
 }
