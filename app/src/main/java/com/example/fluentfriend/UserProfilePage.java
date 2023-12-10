@@ -85,7 +85,7 @@ public class UserProfilePage extends AppCompatActivity {
         barCheckBox.setChecked(currentUser.isBarChecked());
         fikaCheckBox.setChecked(currentUser.isFikaChecked());
         loadGenderBox();
-        // Ladda in språk från User. Finns två set med getMetoder. Ett för språken de talar och för spårken de vill lära sig.
+        // Ladda in språk från User. Finns två Arraylistor med getMetoder. Ett för språken de talar, och ett för språken de vill lära sig.
 
 
         otherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

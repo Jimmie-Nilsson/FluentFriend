@@ -28,12 +28,18 @@ public class User implements java.io.Serializable {
     }
     public void addLanguagesToLearn(ArrayList<String> language) {
         for (int i = 0; i < language.size(); i++) {
-            languagesToLearn.add(language.get(i));
+
+            if (!languagesToLearn.contains(language.get(i))) {
+                languagesToLearn.add(language.get(i));
+            }
         }
     }
     public void addLanguagesSpeak(ArrayList<String> language) {
         for (int i = 0; i < language.size(); i++) {
-            languagesSpeaks.add(language.get(i));
+
+            if (!languagesSpeaks.contains(language.get(i))) {
+                languagesSpeaks.add(language.get(i));
+            }
         }
     }
     public List<String> getLanguagesSpeak() { return languagesSpeaks;}
