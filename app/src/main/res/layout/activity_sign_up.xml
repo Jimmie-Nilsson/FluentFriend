@@ -8,7 +8,7 @@
         tools:context=".SignUp"
         android:clipChildren="false"
         android:clipToPadding="false"
-        android:background="@drawable/signuplogo"
+        android:background="@drawable/signupnewlogo"
         android:clickable="false">
 
 
