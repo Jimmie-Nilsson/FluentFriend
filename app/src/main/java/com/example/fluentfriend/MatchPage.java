@@ -55,6 +55,8 @@ public class MatchPage extends AppCompatActivity {
         addSomeUser();
         fetchActiveUsersAndCollectInList();
         fetchUsersAndCollectInList();
+
+        textBoxOne.setText(currentUser.getFirstName() + " location is\n" + "Latitude: " + activeUsers.get(currentUser).getLatitude() + "\nLongitude: " + activeUsers.get(currentUser).getLongitude() + "\n\n" + user.getFirstName() +" location is\n" +"Latitude: " + activeUsers.get(user).getLatitude() + "\nLongitude: " + activeUsers.get(user).getLongitude());
         btnTwo.setOnClickListener(view -> {
             UserLocation userLocationOne = activeUsers.get(currentUser);
             UserLocation userLocationTwo = activeUsers.get(user);
@@ -82,8 +84,6 @@ public class MatchPage extends AppCompatActivity {
             System.err.println(userLocation.getLatitude());
             activeUsersRef.child(userLocation.getUser().getEmail()).setValue(userLocation);
             activeUsers.put(userLocation.getUser(), userLocation);
-
-
     }
 
     private void fetchUsersAndCollectInList(){
