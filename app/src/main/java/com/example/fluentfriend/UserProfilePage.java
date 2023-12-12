@@ -52,12 +52,11 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         buttonSave = findViewById(R.id.saveSettingsButton); //vad gör denna /G
         loadBiography();
 
-
         languagesToLearnSpinner = (MultiSpinner) findViewById(R.id.languagesToLearnSpinner);
         languagesISpeakSpinner = (MultiSpinner) findViewById(R.id.languagesISpeakSpinner);
 
-
-        //connects the checkboxes graphic to variables in this class
+        //connects the checkboxes graphic to variables in this class so we can use them
+        //connects graphic elements in the xml code so we can change it in java code
         cityWalksCheckBox = findViewById(R.id.cityWalksCheckBox);
         museumCheckBox = findViewById(R.id.museumCheckBox);
         barCheckBox = findViewById(R.id.barCheckBox);
@@ -71,6 +70,8 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         museumCheckBox.setChecked(currentUser.isMuseumChecked());
         barCheckBox.setChecked(currentUser.isBarChecked());
         fikaCheckBox.setChecked(currentUser.isFikaChecked());
+
+        //gets the user's gender and sets the correct box
         loadGenderBox();
 
         // Change this toString() if you want some other text like Language or something
@@ -78,7 +79,6 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
                UserManager.getCurrentUser().getLanguagesSpeak().toString() , this);
         languagesToLearnSpinner.setItems(LanguageManager.AVAILABLE_LANGUAGES,
                 UserManager.getCurrentUser().getLanguagesToLearn().toString(), this);
-
         loadUserLanguages();
 
         otherCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -108,7 +108,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
             }
         });
 
-        //if user changed status of this checkBox
+        //if user click, changes to opposite value based on the current boolean
         cityWalksCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -140,7 +140,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
             @Override
             public void onClick(View view) {
                 saveBiography();
-                saveCheckBoxes(); //behövs denna?
+                saveCheckBoxes();
                 saveGender();
                 saveSelectedLanguages();
                 // uploads to database
@@ -153,48 +153,6 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
             }
         });
 
-    }
-//  Gustav check if this can be deleted or explain what it does.
-    private void showLanguageList() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Choose languages");
-
-        //create array with as many slots as available languages
-        checkedItems = new boolean[LanguageManager.AVAILABLE_LANGUAGES.size()];
-        Arrays.fill(checkedItems, false);
-
-        builder.setMultiChoiceItems(LanguageManager.AVAILABLE_LANGUAGES.toArray(new String[0]), checkedItems,
-                new DialogInterface.OnMultiChoiceClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                        //updates the checkedItems array
-                        checkedItems[which] = isChecked;
-                    }
-                });
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                handleLanguageSelection();
-            }
-        });
-
-        builder.setNegativeButton("Cancel", null);
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    //  Gustav check if this can be deleted
-    private void handleLanguageSelection() {
-        ArrayList<String> selectedLanguages = new ArrayList<>();
-        for (int i = 0; i< checkedItems.length; i++) {
-            if (checkedItems[i]) {
-                //if the language is selected, add it to the list
-                selectedLanguages.add(LanguageManager.AVAILABLE_LANGUAGES.get(i));
-            }
-        }
-
-      //  saveSelectedLanguages(selectedLanguages); ???
     }
 
     private void saveSelectedLanguages() {
