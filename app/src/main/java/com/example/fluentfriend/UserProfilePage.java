@@ -33,6 +33,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
     private boolean[] checkedItems;
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     private DatabaseReference usersRef = db.getReference().child("users");
+    private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +144,9 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
                 saveGender();
                 saveSelectedLanguages();
                 // uploads to database
+                if (MatchPage.userIsActive(UserManager.getCurrentUser())){
+                    activeUsersRef.child(UserManager.getCurrentUser().getEmail()).setValue(MatchPage.getActiveUser(UserManager.getCurrentUser()));
+                }
                 usersRef.child(UserManager.getCurrentUser().getEmail()).setValue(UserManager.getCurrentUser());
                 Toast.makeText(UserProfilePage.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
                 finish(); // Går tillbaka till därifrån man kom

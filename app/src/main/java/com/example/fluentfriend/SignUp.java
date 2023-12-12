@@ -42,8 +42,6 @@ public class SignUp extends AppCompatActivity {
         repeatPassword = findViewById(R.id.signup_RepeatPassword);
         signUpBtn = findViewById(R.id.signup_btnSignUp);
 
-
-
         // Read from the database
         signUpBtn.setOnClickListener(view -> {
             if (!isInputCorrect()) {

@@ -35,8 +35,6 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class HomePage extends AppCompatActivity {
 
@@ -79,6 +77,9 @@ public class HomePage extends AppCompatActivity {
         dialog.setIndeterminate(true);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
+        // MatchPage is not loaded yet so can't check if userIsActive should switch be on or off?
+        activeSwitch.setChecked(MatchPage.userIsActive(UserManager.getCurrentUser()));
+
         //END OF END IN CLICK LISTERNER
 
 
@@ -216,6 +217,9 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+    }
+    protected boolean isUserActive(){
+        return activeSwitch.isChecked();
     }
 
     private boolean isGPSEnabled() {

@@ -65,7 +65,8 @@ public class MatchPage extends AppCompatActivity {
             double distance = userLocationOne.calcDistanceBetweenUsers(userLocationTwo.getLatitude(), userLocationTwo.getLongitude());
 
             //distance = Math.round(distance);
-            textBoxTwo.setText("Distance between " + userOne.getFirstName() + " and " + userTwo.getFirstName() + " is " + distance + " meters");
+            //textBoxTwo.setText("Distance between " + userOne.getFirstName() + " and " + userTwo.getFirstName() + " is " + distance + " meters");
+            textBoxTwo.setText(String.format("Distance between %s and %s is %.1f meters.", userOne.getFirstName(), userTwo.getFirstName(), distance));
         });
 
     }
@@ -80,8 +81,6 @@ public class MatchPage extends AppCompatActivity {
     }
 
     protected void addUserActive(UserLocation userLocation) {
-            System.err.println(userLocation.getLongitude());
-            System.err.println(userLocation.getLatitude());
             activeUsersRef.child(userLocation.getUser().getEmail()).setValue(userLocation);
             activeUsers.put(userLocation.getUser(), userLocation);
     }
@@ -124,6 +123,13 @@ public class MatchPage extends AppCompatActivity {
                 // Handle errors
             }
         });
+    }
+    protected static UserLocation getActiveUser(User user){
+        return activeUsers.get(user);
+    }
+
+    protected static boolean userIsActive(User user){
+        return activeUsers.containsKey(user);
     }
 
     protected static void removeUserActive(User user) {

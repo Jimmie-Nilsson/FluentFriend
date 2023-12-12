@@ -27,21 +27,9 @@ public class User implements java.io.Serializable {
         this.password = password;
     }
     public void setLanguagesToLearn(List<String> language) {
-//        for (int i = 0; i < language.size(); i++) {
-//
-//            if (!languagesToLearn.contains(language.get(i))) {
-//                languagesToLearn.add(language.get(i));
-//            }
-//        }
         languagesToLearn = language;
     }
     public void setLanguagesSpeak(List<String> language) {
-//        for (int i = 0; i < language.size(); i++) {
-//
-//            if (!languagesSpeaks.contains(language.get(i))) {
-//                languagesSpeaks.add(language.get(i));
-//            }
-//        }
         languagesSpeaks = language;
     }
     public List<String> getLanguagesSpeak() { return languagesSpeaks;}
