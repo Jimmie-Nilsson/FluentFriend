@@ -1,21 +1,12 @@
 package com.example.fluentfriend;
 
-
 import android.content.Intent;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.*;
-
-import java.util.HashSet;
 import java.util.Set;
 
 public class SignUp extends AppCompatActivity {
@@ -48,6 +39,10 @@ public class SignUp extends AppCompatActivity {
                 sendErrorMessage("All fields must be filled");
                 return;
             }
+            if (!doesPasswordsMatch()){
+                sendErrorMessage("Passwords do not match");
+                return;
+            }
             if (writeNewUser()) {
                 Intent intent = new Intent(SignUp.this, MainActivity.class);
                 startActivity(intent);
@@ -55,11 +50,15 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
+    private boolean doesPasswordsMatch(){
+        return password.getText().toString().equals(repeatPassword.getText().toString());
+    }
+
     private boolean isInputCorrect() { // make a method for the toString().trim().isEmpty() checks
         if (firstName.getText().toString().trim().isEmpty() || lastName.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty() || repeatPassword.getText().toString().trim().isEmpty()) {
             return false;
         }
-        return password.getText().toString().equals(repeatPassword.getText().toString());
+        return true;
     }
 
     private void sendErrorMessage(String message) {
