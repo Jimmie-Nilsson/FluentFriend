@@ -26,6 +26,13 @@ public class User implements java.io.Serializable {
         this.email = email;
         this.password = password;
     }
+
+    public User getUser(String email){
+        if (email.equals(this.email)){
+            return this;
+        }
+        return null;
+    }
     public void setLanguagesToLearn(List<String> language) {
         languagesToLearn = language;
     }

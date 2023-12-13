@@ -85,12 +85,13 @@ public class HomePage extends AppCompatActivity {
 
         activeSwitch.setOnClickListener(view -> {
             if (activeSwitch.isChecked()) {
-                UserLocation userLoc = new UserLocation(UserManager.getCurrentUser(), latitude, longitude);
+                UserLocation userLoc = new UserLocation(UserManager.getCurrentUser().getEmail(), latitude, longitude);
                 MatchPage page = new MatchPage();
                 page.addUserActive(userLoc);
 
             } else if (!activeSwitch.isChecked()) {
-                new MatchPage().removeUserActive(UserManager.getCurrentUser());
+                // FIXA Denna när remove är Tilllagd
+               // new MatchPage().removeUserActive(UserManager.getCurrentUser());
             }
         });
         Intent intent = getIntent();

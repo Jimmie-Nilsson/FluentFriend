@@ -145,7 +145,8 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
                 saveSelectedLanguages();
                 // uploads to database
                 if (MatchPage.userIsActive(UserManager.getCurrentUser())){
-                    activeUsersRef.child(UserManager.getCurrentUser().getEmail()).setValue(MatchPage.getActiveUser(UserManager.getCurrentUser()));
+                    // Fixa denna metoden när vi fixat getActiveUser()---------
+                    // activeUsersRef.child(UserManager.getCurrentUser().getEmail()).setValue(MatchPage.getActiveUser(UserManager.getCurrentUser()));
                 }
                 usersRef.child(UserManager.getCurrentUser().getEmail()).setValue(UserManager.getCurrentUser());
                 Toast.makeText(UserProfilePage.this, "Saved Successfully", Toast.LENGTH_SHORT).show();

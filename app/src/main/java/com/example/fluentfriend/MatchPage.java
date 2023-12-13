@@ -26,9 +26,9 @@ import java.util.Map;
 
 
 public class MatchPage extends AppCompatActivity {
-    private static HashMap<User, UserLocation> activeUsers = new HashMap<>();
+    private static ArrayList<UserLocation> activeusers = new ArrayList<>();
 
-    private HashMap<User, Double> distanceList = new HashMap<>();
+    private ArrayList<UserLocation> distanceList = new ArrayList<>();
 
     private List<User> users = new ArrayList<>();
     private TextView textBoxOne;
@@ -70,13 +70,13 @@ public class MatchPage extends AppCompatActivity {
         double lon = 17.944535;
         user = new User("Kalle", "Berglund", "kalleb", "123");
 
-        UserLocation u = new UserLocation(user, lat, lon);
-        activeUsers.put(user, u);
+        UserLocation u = new UserLocation(user.getEmail(), lat, lon);
+        activeusers.add(u);
     }
 
     protected void addUserActive(UserLocation userLocation) {
-        activeUsersRef.child(userLocation.getUser().getEmail()).setValue(userLocation);
-        activeUsers.put(userLocation.getUser(), userLocation);
+        activeUsersRef.child(userLocation.getEmail()).setValue(userLocation);
+        activeusers.add(userLocation);
     }
 
     private void fetchUsersAndCollectInList() {
@@ -85,9 +85,11 @@ public class MatchPage extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
-                    UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
-                    if (userId != null && userLoc != null) {
-                        users.add(userLoc.getUser());
+                    User user = userSnapshot.getValue(User.class);
+                    // Kolla denna kod Nu kompilerar den inte och fungerar inte eftersom vi andrade....
+
+                    if (userId != null) {
+                        users.add(user);
                     }
                 }
             }
@@ -108,11 +110,6 @@ public class MatchPage extends AppCompatActivity {
                     String userId = userSnapshot.getKey();
                     UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
                     // testing code
-                    System.err.println(userLoc.getLatitude() + " test " + userLoc.getLongitude());
-
-                    // Assuming UserLocation class has a setUser method
-                    User user = userSnapshot.child("user").getValue(User.class);
-                    activeUsers.put(user, userLoc);
 
                 }
             }
@@ -159,31 +156,30 @@ public class MatchPage extends AppCompatActivity {
 //        });
 //    }
 
-    protected static UserLocation getActiveUser(User user) {
-        return activeUsers.get(user);
-    }
+
+    // samma problem som andra metoden fixa detta/////
+  //  protected static UserLocation getActiveUser(User user) {
+        // return activeusers.get(user);
+    //}
 
     protected static boolean userIsActive(User user) {
-        return activeUsers.containsKey(user);
+        return true;
     }
 
-    protected void removeUserActive(User user) {
-        activeUsersRef.child(user.getEmail()).removeValue();
-        activeUsers.remove(user);
-    }
+    // Fixa denna metod///////
+   // protected void removeUserActive(User user) {
+     //   activeUsersRef.child(user.getEmail()).removeValue();
+     //   activeusers.remove();
+  //  }
 
     private void calcDistanceBetweenUsers() {
-        UserLocation userLocationOne = activeUsers.get(currentUser);
-        for (UserLocation userLocation : activeUsers.values()) {
-            double distance = userLocationOne.calcDistanceBetweenUsers(userLocation.getLatitude(), userLocation.getLongitude());
-            distanceList.put(userLocation.getUser(), distance);
+      //  UserLocation userLocationOne = activeUsers.get(currentUser);
+        // for (UserLocation userLocation : activeUsers.values()) {
+        //    double distance = userLocationOne.calcDistanceBetweenUsers(userLocation.getLatitude(), userLocation.getLongitude());
+            //distanceList.put(userLocation.getEmail(), distance);
         }
 
         // Testing code
-        for (User user : distanceList.keySet()) {
 
-            textBoxTwo.setText(activeUsers.size() + " ");
-        }
-
-    }
+    //}
 }
