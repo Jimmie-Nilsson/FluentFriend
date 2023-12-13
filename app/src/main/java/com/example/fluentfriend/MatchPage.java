@@ -21,10 +21,13 @@ import com.google.firebase.database.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 public class MatchPage extends AppCompatActivity {
     private static HashMap<User, UserLocation> activeUsers = new HashMap<>();
+
+    private HashMap<User, Double> distanceList = new HashMap<>();
 
     private List<User> users = new ArrayList<>();
     private TextView textBoxOne;
@@ -48,15 +51,15 @@ public class MatchPage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_page);
-        textBoxOne = findViewById(R.id.matchPageText);
+
         textBoxTwo = findViewById(R.id.matchPageText2);
         btnTwo = findViewById(R.id.matchmatchPageBtnCalcDistance);
         currentUser = UserManager.getCurrentUser();
         addSomeUser();
         fetchActiveUsersAndCollectInList();
         fetchUsersAndCollectInList();
+        calcDistanceBetweenUsers();
 
-        textBoxOne.setText(currentUser.getFirstName() + " location is\n" + "Latitude: " + activeUsers.get(currentUser).getLatitude() + "\nLongitude: " + activeUsers.get(currentUser).getLongitude() + "\n\n" + user.getFirstName() +" location is\n" +"Latitude: " + activeUsers.get(user).getLatitude() + "\nLongitude: " + activeUsers.get(user).getLongitude());
         btnTwo.setOnClickListener(view -> {
             UserLocation userLocationOne = activeUsers.get(currentUser);
             UserLocation userLocationTwo = activeUsers.get(user);
@@ -135,5 +138,19 @@ public class MatchPage extends AppCompatActivity {
     protected static void removeUserActive(User user) {
         activeUsersRef.child(user.getEmail()).removeValue();
         activeUsers.remove(user);
+    }
+
+    private void calcDistanceBetweenUsers() {
+        UserLocation userLocationOne = activeUsers.get(currentUser);
+        for ( UserLocation userLocation : activeUsers.values())   {
+            double distance = userLocationOne.calcDistanceBetweenUsers(userLocation.getLatitude(), userLocation.getLongitude());
+            distanceList.put(userLocation.getUser(), distance);
+        }
+
+
+       
+        textBoxTwo.setText(activeUsers.size() + " ");
+
+
     }
 }
