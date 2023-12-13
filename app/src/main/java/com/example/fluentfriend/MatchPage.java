@@ -60,17 +60,7 @@ public class MatchPage extends AppCompatActivity {
         fetchUsersAndCollectInList();
         calcDistanceBetweenUsers();
 
-        btnTwo.setOnClickListener(view -> {
-            UserLocation userLocationOne = activeUsers.get(currentUser);
-            UserLocation userLocationTwo = activeUsers.get(user);
-            User userOne = userLocationOne.getUser();
-            User userTwo = userLocationTwo.getUser();
-            double distance = userLocationOne.calcDistanceBetweenUsers(userLocationTwo.getLatitude(), userLocationTwo.getLongitude());
-
-            //distance = Math.round(distance);
-            //textBoxTwo.setText("Distance between " + userOne.getFirstName() + " and " + userTwo.getFirstName() + " is " + distance + " meters");
-            textBoxTwo.setText(String.format("Distance between %s and %s is %.1f meters.", userOne.getFirstName(), userTwo.getFirstName(), distance));
-        });
+        // Kör matchings Algorithm  (Ka
 
     }
 
@@ -139,7 +129,6 @@ public class MatchPage extends AppCompatActivity {
         activeUsersRef.child(user.getEmail()).removeValue();
         activeUsers.remove(user);
     }
-
     private void calcDistanceBetweenUsers() {
         UserLocation userLocationOne = activeUsers.get(currentUser);
         for ( UserLocation userLocation : activeUsers.values())   {
@@ -147,10 +136,11 @@ public class MatchPage extends AppCompatActivity {
             distanceList.put(userLocation.getUser(), distance);
         }
 
+        // Testing code
+        //for (User user : distanceList.keySet())   {
 
-       
-        textBoxTwo.setText(activeUsers.size() + " ");
-
+           // textBoxTwo.setText(distanceList.get(user). +" ");
+       // }
 
     }
 }
