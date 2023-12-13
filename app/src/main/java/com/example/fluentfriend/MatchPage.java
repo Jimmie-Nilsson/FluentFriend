@@ -38,9 +38,9 @@ public class MatchPage extends AppCompatActivity {
     private User currentUser;
     private double longitude;
     private double latitude;
-    private static FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
-    private static DatabaseReference activeUsersRef = db.getReference().child("activeusers");
-    private static DatabaseReference usersRef = db.getReference().child("users");
+    private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+    private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
+    private DatabaseReference usersRef = db.getReference().child("users");
 
 
 
@@ -117,6 +117,30 @@ public class MatchPage extends AppCompatActivity {
             }
         });
     }
+//    public void fetchActiveUsers(){
+//        activeUsersRef.addChildEventListener(new ChildEventListener() {
+//            @Override
+//            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+//                UserLocation newPost = dataSnapshot.getValue(UserLocation.class);
+//              //  System.out.println("Author: " + newPost);
+//               // System.out.println("Title: " + newPost);
+//               // System.out.println("Previous Post ID: " + prevChildKey);
+//            }
+//
+//            @Override
+//            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
+//
+//            @Override
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+//
+//            @Override
+//            public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {}
+//        });
+//    }
+    
     protected static UserLocation getActiveUser(User user){
         return activeUsers.get(user);
     }
@@ -125,7 +149,7 @@ public class MatchPage extends AppCompatActivity {
         return activeUsers.containsKey(user);
     }
 
-    protected static void removeUserActive(User user) {
+    protected void removeUserActive(User user) {
         activeUsersRef.child(user.getEmail()).removeValue();
         activeUsers.remove(user);
     }

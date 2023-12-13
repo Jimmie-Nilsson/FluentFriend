@@ -90,7 +90,7 @@ public class HomePage extends AppCompatActivity {
                 page.addUserActive(userLoc);
 
             } else if (!activeSwitch.isChecked()) {
-                MatchPage.removeUserActive(UserManager.getCurrentUser());
+                new MatchPage().removeUserActive(UserManager.getCurrentUser());
             }
         });
         Intent intent = getIntent();
