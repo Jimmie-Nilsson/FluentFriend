@@ -1,10 +1,9 @@
 package com.example.fluentfriend;
 
 
-import android.os.Build;
+import android.content.Intent;
 import android.widget.Button;
 
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,23 +19,23 @@ import com.google.firebase.database.*;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class MatchPage extends AppCompatActivity {
-    private static ArrayList<UserLocation> activeusers = new ArrayList<>();
+    private static ArrayList<UserLocation> activeUsers = new ArrayList<>();
 
-    private ArrayList<UserLocation> distanceList = new ArrayList<>();
-
+    private HashMap<String, Double> distanceList = new HashMap<>();
     private List<User> users = new ArrayList<>();
     private TextView textBoxOne;
     private LocationRequest locationRequest;
-    private Button btnOne;
-    private TextView textBoxTwo;
-    private Button btnTwo;
+    private Button btnAccept;
+    private TextView textBox;
+    private Button btnDecline;
     private User currentUser;
+    private UserLocation currentUserLoc;
     private double longitude;
     private double latitude;
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
@@ -52,16 +51,25 @@ public class MatchPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_page);
 
-        textBoxTwo = findViewById(R.id.matchPageText2);
-        btnTwo = findViewById(R.id.matchmatchPageBtnCalcDistance);
+        textBox = findViewById(R.id.matchPageText);
+        btnAccept = findViewById(R.id.matchmatchPageBtnAccept);
+        btnDecline = findViewById(R.id.matchmatchPageBtnDecline);
         currentUser = UserManager.getCurrentUser();
         addSomeUser();
         fetchUsersAndCollectInList();
         fetchActiveUsersAndCollectInList();
         //fetchActiveUsers();
-        calcDistanceBetweenUsers();
+        //calcDistanceBetweenUsers();
 
-        // Kör matchings Algorithm  (Ka
+        // Kör matchings Algorithm
+
+        btnAccept.setOnClickListener(view -> {
+            // Write code
+        });
+
+        btnDecline.setOnClickListener(view -> {
+            // Write code
+        });
 
     }
 
@@ -71,12 +79,13 @@ public class MatchPage extends AppCompatActivity {
         user = new User("Kalle", "Berglund", "kalleb", "123");
 
         UserLocation u = new UserLocation(user.getEmail(), lat, lon);
-        activeusers.add(u);
+        activeUsers.add(u);
     }
 
     protected void addUserActive(UserLocation userLocation) {
         activeUsersRef.child(userLocation.getEmail()).setValue(userLocation);
-        activeusers.add(userLocation);
+        activeUsers.add(userLocation);
+        currentUserLoc = userLocation;
     }
 
     private void fetchUsersAndCollectInList() {
@@ -157,29 +166,71 @@ public class MatchPage extends AppCompatActivity {
 //    }
 
 
-    // samma problem som andra metoden fixa detta/////
-  //  protected static UserLocation getActiveUser(User user) {
-        // return activeusers.get(user);
-    //}
 
-    protected static boolean userIsActive(User user) {
-        return true;
+   protected static UserLocation getActiveUser(User user) {
+       for (int i = 0; i < activeUsers.size(); i++) {
+           if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
+               return activeUsers.get(i);
+           }
+       }
+       // ?? Kom på bättre lösning. Där denna metoden används kollar vi redan med metoden userIsActive.
+       return null;
     }
 
-    // Fixa denna metod///////
-   // protected void removeUserActive(User user) {
-     //   activeUsersRef.child(user.getEmail()).removeValue();
-     //   activeusers.remove();
-  //  }
+    protected static boolean userIsActive(User user) {
+        for (int i = 0; i < activeUsers.size(); i++) {
+            if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
+    protected void removeUserActive(User user) {
+        activeUsersRef.child(user.getEmail()).removeValue();
+
+        /* Find the right element and remove it from the list.
+         * Använda ett hashSet är kanske en bättre lösing om listan,
+         * blir väldigt stor. Vi kanske dock inte bryr oss.
+         */
+        for (int i = 0; i < activeUsers.size(); i++) {
+            if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
+                activeUsers.remove(i);
+                break;
+            }
+        }
+    }
     private void calcDistanceBetweenUsers() {
-      //  UserLocation userLocationOne = activeUsers.get(currentUser);
-        // for (UserLocation userLocation : activeUsers.values()) {
-        //    double distance = userLocationOne.calcDistanceBetweenUsers(userLocation.getLatitude(), userLocation.getLongitude());
-            //distanceList.put(userLocation.getEmail(), distance);
+
+        // Calcualte the distance between current user and all the other active users.
+         for (int i = 0; i < activeUsers.size(); i++) {
+            double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());
+            distanceList.put(activeUsers.get(i).getEmail(), distance);
         }
 
-        // Testing code
+         // Sort the list
 
-    //}
+    }
+
+    private void matchingalgorithm() {
+
+        /* Psudocode
+         * if no user near = return
+         * Get the users that are in less than 1km away (max 5)
+         *
+         * Start checks if userOne profile matches the currentuser profile
+         *
+         * Check the language
+         * if no match there = break
+         *
+         * check the checkboxes.
+         * if match there = add that (So we can print that they both like "fika" tex.
+         *
+         *
+         * end of userOne profile matching. Repeat with the other 2-5 users
+         *
+         * Förslag att vi har typ en poäng hur mkt man matchar. kan komma på något // KB
+         *
+         */
+    }
 }
