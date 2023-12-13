@@ -1,6 +1,7 @@
 package com.example.fluentfriend;
 
 
+import android.os.Build;
 import android.widget.Button;
 
 import android.widget.Toast;
@@ -43,7 +44,6 @@ public class MatchPage extends AppCompatActivity {
     private DatabaseReference usersRef = db.getReference().child("users");
 
 
-
     // Test.
     User user;
 
@@ -56,8 +56,9 @@ public class MatchPage extends AppCompatActivity {
         btnTwo = findViewById(R.id.matchmatchPageBtnCalcDistance);
         currentUser = UserManager.getCurrentUser();
         addSomeUser();
-        fetchActiveUsersAndCollectInList();
         fetchUsersAndCollectInList();
+        fetchActiveUsersAndCollectInList();
+        //fetchActiveUsers();
         calcDistanceBetweenUsers();
 
         // Kör matchings Algorithm  (Ka
@@ -74,11 +75,11 @@ public class MatchPage extends AppCompatActivity {
     }
 
     protected void addUserActive(UserLocation userLocation) {
-            activeUsersRef.child(userLocation.getUser().getEmail()).setValue(userLocation);
-            activeUsers.put(userLocation.getUser(), userLocation);
+        activeUsersRef.child(userLocation.getUser().getEmail()).setValue(userLocation);
+        activeUsers.put(userLocation.getUser(), userLocation);
     }
 
-    private void fetchUsersAndCollectInList(){
+    private void fetchUsersAndCollectInList() {
         usersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -90,13 +91,13 @@ public class MatchPage extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
             }
         });
     }
-
 
 
     private void fetchActiveUsersAndCollectInList() {
@@ -106,32 +107,49 @@ public class MatchPage extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
-                    if (userId != null && userLoc != null) {
-                        activeUsers.put(userLoc.getUser(),userLoc);
-                    }
+                    // testing code
+                    System.err.println(userLoc.getLatitude() + " test " + userLoc.getLongitude());
+
+                    // Assuming UserLocation class has a setUser method
+                    User user = userSnapshot.child("user").getValue(User.class);
+                    activeUsers.put(user, userLoc);
+
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
             }
         });
     }
+
+
 //    public void fetchActiveUsers(){
 //        activeUsersRef.addChildEventListener(new ChildEventListener() {
 //            @Override
 //            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
 //                UserLocation newPost = dataSnapshot.getValue(UserLocation.class);
-//              //  System.out.println("Author: " + newPost);
-//               // System.out.println("Title: " + newPost);
-//               // System.out.println("Previous Post ID: " + prevChildKey);
+//              if (!activeUsers.containsValue(newPost)){
+//                  activeUsers.put(newPost.getUser(),newPost);
+//              }
 //            }
 //
 //            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
+//            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
+//                UserLocation newPost = dataSnapshot.getValue(UserLocation.class);
+//                if (activeUsers.containsValue(newPost)) {
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        activeUsers.replace(newPost.getUser(), newPost);
+//                    }
+//                }
+//            }
 //
 //            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+//            public void onChildRemoved(DataSnapshot dataSnapshot) {
+//                UserLocation newPost = dataSnapshot.getValue(UserLocation.class);
+//                activeUsers.remove(newPost.getUser());
+//            }
 //
 //            @Override
 //            public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
@@ -140,12 +158,12 @@ public class MatchPage extends AppCompatActivity {
 //            public void onCancelled(DatabaseError databaseError) {}
 //        });
 //    }
-    
-    protected static UserLocation getActiveUser(User user){
+
+    protected static UserLocation getActiveUser(User user) {
         return activeUsers.get(user);
     }
 
-    protected static boolean userIsActive(User user){
+    protected static boolean userIsActive(User user) {
         return activeUsers.containsKey(user);
     }
 
@@ -153,18 +171,19 @@ public class MatchPage extends AppCompatActivity {
         activeUsersRef.child(user.getEmail()).removeValue();
         activeUsers.remove(user);
     }
+
     private void calcDistanceBetweenUsers() {
         UserLocation userLocationOne = activeUsers.get(currentUser);
-        for ( UserLocation userLocation : activeUsers.values())   {
+        for (UserLocation userLocation : activeUsers.values()) {
             double distance = userLocationOne.calcDistanceBetweenUsers(userLocation.getLatitude(), userLocation.getLongitude());
             distanceList.put(userLocation.getUser(), distance);
         }
 
         // Testing code
-        //for (User user : distanceList.keySet())   {
+        for (User user : distanceList.keySet()) {
 
-           // textBoxTwo.setText(distanceList.get(user). +" ");
-       // }
+            textBoxTwo.setText(activeUsers.size() + " ");
+        }
 
     }
 }
