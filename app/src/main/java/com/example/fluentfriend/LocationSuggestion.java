@@ -90,10 +90,10 @@ public class LocationSuggestion extends AppCompatActivity {
             }
         });
     }
-    private void sendMessageToUser() {
+    private void sendMessageToUser() { //this needs to be added when Firebasemessaging is up
         //code for message request to server
     }
-    //these methods check what interests the users have in common
+    //these methods check what interests the users have in common /G
     private boolean doBothLikeFika() {
         return user1.isFikaChecked() && user2.isFikaChecked();
     }
@@ -144,7 +144,7 @@ public class LocationSuggestion extends AppCompatActivity {
         }
     }
 
-    //finds the lat/long middle point between the two users, returns as Location object
+    //finds the lat/long middle point between the two users, returns as Location object /G
     private Location getMiddleDistanceBetweenUsers(double user1lat, double user1long, double user2lat, double user2long) {
         double lat = (user1lat + user2lat) / 2;
         double longitude = (user1long + user2long) / 2;
@@ -177,7 +177,7 @@ public class LocationSuggestion extends AppCompatActivity {
             Toast.makeText(this, "Google Maps is not installed.", Toast.LENGTH_LONG).show();
         }
     }
-    //elaborate on this method
+    //elaborate on this method and comments in it
     private void fetchNearbyPlaces() {
         //explanation about threads
         new Thread(() -> {
