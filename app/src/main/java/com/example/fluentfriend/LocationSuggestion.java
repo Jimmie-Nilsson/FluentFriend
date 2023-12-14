@@ -5,6 +5,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,7 +34,8 @@ public class LocationSuggestion extends AppCompatActivity {
     private double user1long;
     private double user2lat;
     private double user2long;
-    TextView resultView;
+    private TextView resultView;
+    private String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +78,20 @@ public class LocationSuggestion extends AppCompatActivity {
         //button that leaves the app and opens Google Maps with a search query based on location and interests /G
         Button openGoogleMapsButton = findViewById(R.id.open_google_maps);
         openGoogleMapsButton.setOnClickListener(view -> openGoogleMaps(midpoint));
+
+        //button for messaging the other user that you've matched with
+        Button messageUserButton = findViewById(R.id.message_user_button);
+        messageUserButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendMessageToUser();
+            }
+        });
     }
-    //these methods check what interests the users have in common, and then displays them
+    private void sendMessageToUser() {
+        //code for message request to server
+    }
+    //these methods check what interests the users have in common
     private boolean doBothLikeFika() {
         return user1.isFikaChecked() && user2.isFikaChecked();
     }
@@ -90,21 +104,33 @@ public class LocationSuggestion extends AppCompatActivity {
     private boolean doBothLikeCityWalk() {
         return user1.isCityWalksChecked() && user2.isCityWalksChecked();
     }
+
+    //displays the common interests in the textView and builds the query for Google Maps based on common interests /G
     private void displayCommonInterests() {
         List<String> commonInterests = new ArrayList<>();
+        StringBuilder queryBuilder = new StringBuilder();
 
         if (doBothLikeFika()) {
             commonInterests.add("Fika");
+            queryBuilder.append("cafes");
+
         }
         if (doBothLikeMuseum()) {
             commonInterests.add("Museums");
+            if (queryBuilder.length() > 0) queryBuilder.append("or");
+            queryBuilder.append("Museums");
         }
         if (doBothLikeBar()) {
             commonInterests.add("Bars");
+            if (queryBuilder.length() > 0) queryBuilder.append("or");
+            queryBuilder.append("Bars");
         }
         if (doBothLikeCityWalk()) {
             commonInterests.add("City Walks");
         }
+
+        //sets the query depending on the common interests
+        query = queryBuilder.toString();
 
         String interestsText = "";
         if (!commonInterests.isEmpty()) {
@@ -119,6 +145,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
     }
 
+    //finds the lat/long middle point between the two users
     private Location getMiddleDistanceBetweenUsers(double user1lat, double user1long, double user2lat, double user2long) {
         double lat = (user1lat + user2lat) / 2;
         double longitude = (user1long + user2long) / 2;
@@ -127,9 +154,12 @@ public class LocationSuggestion extends AppCompatActivity {
         midpoint.setLongitude(longitude);
         return midpoint;
     }
+
+    //when user pushes the button, google map opens with a search for
     private void openGoogleMaps(Location location) {
+
         // Create a Uri from an intent string. Use the result to create an Intent.
-        Uri gmmIntentUri = Uri.parse("geo:" + location.getLatitude() + "," + location.getLongitude() + "?q=cafes");
+        Uri gmmIntentUri = Uri.parse("geo:" + location.getLatitude() + "," + location.getLongitude() + "?q=" + Uri.encode(query));
 
         // Create an Intent to open Google Maps at the specified location
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
@@ -139,7 +169,7 @@ public class LocationSuggestion extends AppCompatActivity {
         if (mapIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(mapIntent);
         } else {
-            // Show an error if Google Maps is not installed
+            // Show error if Google Maps is not installed
             Toast.makeText(this, "Google Maps is not installed.", Toast.LENGTH_LONG).show();
         }
     }
