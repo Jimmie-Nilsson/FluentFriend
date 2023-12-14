@@ -8,6 +8,16 @@ android {
     namespace = "com.example.fluentfriend"
     compileSdk = 34
 
+    signingConfigs {
+        create("release") {
+            //prevents nullpointerexception with the ?:
+            storeFile = File(System.getenv("MYAPP_RELEASE_STORE_FILE") ?: "default.keystore")
+            storePassword = "abc321#"
+            keyAlias = "admin"
+            keyPassword = "abc123#"
+        }
+    }
+
     defaultConfig {
         applicationId = "com.example.fluentfriend"
         minSdk = 28
@@ -22,11 +32,12 @@ android {
         release {
             isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 }
 
