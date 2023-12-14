@@ -14,6 +14,9 @@ import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.fluentfriend.MatchPage.getActiveUser;
 
 public class LocationSuggestion extends AppCompatActivity {
@@ -29,6 +32,7 @@ public class LocationSuggestion extends AppCompatActivity {
     private double user1long;
     private double user2lat;
     private double user2long;
+    private List<String> commonInterests = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +54,62 @@ public class LocationSuggestion extends AppCompatActivity {
         userLocation2.setLatitude(user2lat);
         userLocation2.setLongitude(user2long);
 
-        // Initialize midpoint here or from another method after you get user locations
         midpoint = getMiddleDistanceBetweenUsers(userLocation1, userLocation2);
         context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();
+        displayCommonInterests();
 
-        fetchNearbyPlaces();
+        //button that runs the method for finding nearby places /G
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
-        findNearbyPlacesButton.setOnClickListener(view ->
-        {fetchNearbyPlaces();
-        });
+        findNearbyPlacesButton.setOnClickListener(view -> {fetchNearbyPlaces();});
 
-        Button openGoogleMapsButton = findViewById(R.id.open_google_maps); // replace with your actual button ID
+        Button openGoogleMapsButton = findViewById(R.id.open_google_maps);
         openGoogleMapsButton.setOnClickListener(view -> openGoogleMaps(midpoint));
     }
+
+    private boolean doBothLikeFika() {
+        return user1.isFikaChecked() && user2.isFikaChecked();
+    }
+    private boolean doBothLikeMuseum() {
+        return user1.isMuseumChecked() && user2.isMuseumChecked();
+    }
+    private boolean doBothLikeBar() {
+        return user1.isBarChecked() && user2.isBarChecked();
+    }
+    private boolean doBothLikeCityWalk() {
+        return user1.isCityWalksChecked() && user2.isCityWalksChecked();
+    }
+
+    private void displayCommonInterests() {
+        List<String> commonInterests = new ArrayList<>();
+
+        if (doBothLikeFika()) {
+            commonInterests.add("Fika");
+        }
+        if (doBothLikeMuseum()) {
+            commonInterests.add("Museum");
+        }
+        if (doBothLikeBar()) {
+            commonInterests.add("Bar");
+        }
+        if (doBothLikeCityWalk()) {
+            commonInterests.add("City Walks");
+        }
+
+        String interestsText = "You both like: ";
+        if (!commonInterests.isEmpty()) {
+            // Join the common interests in a single string separated by commas
+            interestsText += String.join(", ", commonInterests);
+        } else {
+            // Handle the case where there are no common interests
+            interestsText = "You have no common interests";
+        }
+        TextView textViewCommonInterests = findViewById(R.id.CommonInterestsTextView); // Replace with your actual TextView ID
+        textViewCommonInterests.setText(interestsText);
+
+    }
+
     private Location getMiddleDistanceBetweenUsers(Location loc1, Location loc2) {
         double lat = (loc1.getLatitude() + loc2.getLatitude()) / 2;
         double longitude = (loc1.getLongitude() + loc2.getLongitude()) / 2;

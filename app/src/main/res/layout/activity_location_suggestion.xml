@@ -8,35 +8,52 @@
         tools:context=".LocationSuggestion">
 
     <TextView
+            android:layout_width="0dp"
+            android:layout_height="87dp" android:id="@+id/setUserInfoTextView"
+            app:layout_constraintStart_toEndOf="@+id/UserInfoTextView" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginBottom="50dp" app:layout_constraintBottom_toTopOf="@+id/CommonInterestsTextView"
+            android:layout_marginEnd="65dp"/>
+    <TextView
+            android:text="You both like:"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/CommonInterestsTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginStart="42dp"
+            android:layout_marginBottom="152dp"/>
+    <TextView
             android:id="@+id/place_name_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:layout_gravity="center_vertical"
-            android:layout_marginTop="87dp" android:layout_marginBottom="201dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/find_nearby_places"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginTop="87dp" app:layout_constraintEnd_toEndOf="parent"/>
     <TextView
             android:text="TextView"
             android:layout_width="216dp"
-            android:layout_height="0dp" android:id="@+id/resultTextView"
-            app:layout_constraintTop_toBottomOf="@+id/open_google_maps"
-            android:layout_marginBottom="138dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+            android:layout_height="87dp" android:id="@+id/resultTextView"
+            app:layout_constraintStart_toStartOf="@+id/place_name_text_view" android:layout_marginTop="29dp"
+            app:layout_constraintTop_toBottomOf="@+id/place_name_text_view"
+            app:layout_constraintEnd_toStartOf="@+id/place_name_text_view"/>
     <Button
             android:text="Open google maps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/open_google_maps"
-            app:layout_constraintStart_toStartOf="@+id/resultTextView"
-            android:layout_marginStart="28dp"
-            app:layout_constraintTop_toBottomOf="@+id/find_nearby_places" android:layout_marginBottom="42dp"
-            app:layout_constraintBottom_toTopOf="@+id/resultTextView"/>
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="35dp"
+            app:layout_constraintTop_toBottomOf="@+id/CommonInterestsTextView"
+            app:layout_constraintEnd_toEndOf="parent"/>
     <Button
-            android:text="Find Nearby"
+            android:text="Find Nearby places"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/find_nearby_places"
-            app:layout_constraintTop_toBottomOf="@+id/place_name_text_view"
-            android:layout_marginEnd="24dp" android:layout_marginBottom="40dp"
-            app:layout_constraintEnd_toEndOf="@+id/open_google_maps"
-            app:layout_constraintBottom_toTopOf="@+id/open_google_maps"/>
+            app:layout_constraintStart_toStartOf="@+id/resultTextView" android:layout_marginTop="65dp"
+            android:layout_marginStart="25dp"
+            app:layout_constraintTop_toBottomOf="@+id/resultTextView"/>
+    <TextView
+            android:text="UserInfo: "
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/UserInfoTextView"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp" app:layout_constraintBaseline_toBaselineOf="@+id/setUserInfoTextView"
+            app:layout_constraintEnd_toStartOf="@+id/setUserInfoTextView"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
