@@ -58,7 +58,7 @@ public class HomePage extends AppCompatActivity {
 
         btnProfile = (Button) findViewById(R.id.homepage_btn_profile);
         welcomeText = (TextView) findViewById(R.id.homepage_welcomeText);
-        btnMatch = (Button) findViewById(R.id.matchPageBtn);
+        btnMatch = (Button) findViewById(R.id.matchPageReturnBack);
         btnMessage = (Button) findViewById(R.id.homepage_messagesbtn);
         activeSwitch = (SwitchCompat) findViewById(R.id.homepage_activeSwitch);
 

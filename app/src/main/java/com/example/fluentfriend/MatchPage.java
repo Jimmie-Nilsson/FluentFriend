@@ -2,6 +2,7 @@ package com.example.fluentfriend;
 
 
 import android.content.Intent;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,6 @@ import com.google.firebase.database.*;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -29,15 +29,17 @@ public class MatchPage extends AppCompatActivity {
 
     private HashMap<String, Double> distanceList = new HashMap<>();
     private List<User> users = new ArrayList<>();
-    private TextView textBoxOne;
+
     private LocationRequest locationRequest;
     private Button btnAccept;
-    private TextView textBox;
     private Button btnDecline;
+
+    private Button btnReturn;
+    private TextView textProfile;
+    private TextView textBoxHeader;
     private User currentUser;
     private UserLocation currentUserLoc;
-    private double longitude;
-    private double latitude;
+
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
     private DatabaseReference usersRef = db.getReference().child("users");
@@ -51,10 +53,17 @@ public class MatchPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_match_page);
 
-        textBox = findViewById(R.id.matchPageText);
+        textBoxHeader = findViewById(R.id.matchPageTextTop);
+        textProfile = findViewById(R.id.matchPageTextShowProfile);
         btnAccept = findViewById(R.id.matchmatchPageBtnAccept);
         btnDecline = findViewById(R.id.matchmatchPageBtnDecline);
+        btnReturn = findViewById(R.id.matchPageReturnBack);
         currentUser = UserManager.getCurrentUser();
+
+        // If no match, show this button and disabel the other buttons.
+        btnReturn.setClickable(false);
+        btnReturn.setVisibility(View.INVISIBLE);
+
         addSomeUser();
         fetchUsersAndCollectInList();
         fetchActiveUsersAndCollectInList();
@@ -64,11 +73,18 @@ public class MatchPage extends AppCompatActivity {
         // Kör matchings Algorithm
 
         btnAccept.setOnClickListener(view -> {
-            // Write code
+            // Open new frame where we show cafe suggestions etc,
+            // The next page need the location, need to solve that.
+            Intent i = new Intent(this, LocationSuggestion.class);
+            startActivity(i);
         });
 
         btnDecline.setOnClickListener(view -> {
             // Write code
+        });
+
+        btnReturn.setOnClickListener(view -> {
+            finish();
         });
 
     }
