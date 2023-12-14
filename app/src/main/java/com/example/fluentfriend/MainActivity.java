@@ -115,6 +115,15 @@ public class MainActivity extends AppCompatActivity {
         return userList.keySet();
     }
 
+    protected static User getUser(String email){
+        for (User u : userList.values()){
+            if (u.getEmail().equals(email)){
+                return u;
+            }
+        }
+        return null;
+    }
+
 
 
 }
