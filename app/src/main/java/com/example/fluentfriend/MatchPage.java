@@ -29,6 +29,10 @@ public class MatchPage extends AppCompatActivity {
     private TreeMap<Double, ArrayList<String>> distanceList = new TreeMap<>();
     private List<User> users = new ArrayList<>();
 
+    // Store all the data
+    private TreeMap<Double, User> similarityScore = new TreeMap<>(Comparator.reverseOrder());
+    private HashMap<User, String> userInfo = new HashMap<>();
+
     private LocationRequest locationRequest;
     private Button btnAccept;
     private Button btnDecline;
@@ -63,27 +67,27 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setClickable(false);
         btnReturn.setVisibility(View.INVISIBLE);
 
-
-
-
-
         fetchUsersAndCollectInList();
         fetchActiveUsersAndCollectInList();
 
         //addTestUsers();
 
-        // Kör matchings Algorithm
-
         btnAccept.setOnClickListener(view -> {
             // Open new frame where we show cafe suggestions etc,
-            // The next page need the location, need to solve that.
             Intent i = new Intent(this, LocationSuggestion.class);
             i.putExtra("email","hejhej");
             startActivity(i);
         });
 
         btnDecline.setOnClickListener(view -> {
-            // Write code
+            similarityScore.remove(similarityScore.firstKey());
+
+            if(similarityScore.isEmpty()) {
+                setFrameForNoMatches();
+            } else {
+                showUser();
+            }
+
         });
 
         btnReturn.setOnClickListener(view -> {
@@ -93,12 +97,14 @@ public class MatchPage extends AppCompatActivity {
     }
 
 
-    private void addSomeUser() {
-        double lat = 59.403223; // Kista galleria
-        double lon = 17.944535;
-        user = new User("Kalle", "Berglund", "kalleb", "123");
-        UserLocation u = new UserLocation(user.getEmail(), lat, lon);
-        activeUsers.add(u);
+    private void showUser() {
+        double d = similarityScore.firstKey();
+        User u = similarityScore.get(d);
+        String s = userInfo.get(u);
+
+        textBoxHeader.setText(distanceList.size() + " - " + similarityScore.size() + "  Score: "+ d);
+
+        textProfile.setText( s );
     }
 
     protected void addUserActive(UserLocation userLocation) {
@@ -157,6 +163,8 @@ public class MatchPage extends AppCompatActivity {
                 }
                 currentUserLoc = getActiveUser(UserManager.getCurrentUser());
                 calcDistanceBetweenUsers();
+                matchingalgorithm();
+                showUser();
             }
 
             @Override
@@ -166,10 +174,6 @@ public class MatchPage extends AppCompatActivity {
         });
 
     }
-
-
-
-
 
 
    protected static UserLocation getActiveUser(User user) {
@@ -204,6 +208,7 @@ public class MatchPage extends AppCompatActivity {
             }
         }
     }
+
     private void calcDistanceBetweenUsers() {
 
         // Calcualte the distance between current user and all the other active users.
@@ -229,29 +234,130 @@ public class MatchPage extends AppCompatActivity {
              test = test + "\n";
          }
 
-         textProfile.setText(test);
+         //textProfile.setText(test);
     }
 
     private void matchingalgorithm() {
+        // Define how far out users can match
+        final double maxDistance = 100000000; // Meters
 
-        /* Psudocode
-         * if no user near = return
-         * Get the users that are in less than 1km away (max 5)
-         *
-         * Start checks if userOne profile matches the currentuser profile
-         *
-         * Check the language
-         * if no match there = break
-         *
-         * check the checkboxes.
-         * if match there = add that (So we can print that they both like "fika" tex.
-         *
-         *
-         * end of userOne profile matching. Repeat with the other 2-5 users
-         *
-         * Förslag att vi har typ en poäng hur mkt man matchar. kan komma på något // KB
-         *
-         */
+        // Define weights (summing to 1.0)
+        final double weightBio = 0.0;
+        final double weightLanguage = 0.7;
+        final double weightCheckbox = 0.3;
+
+        // If no user is nearby.
+        if (distanceList.isEmpty() || distanceList.firstKey() > maxDistance) {
+            setFrameForNoMatches();
+            return;
+        }
+
+        for (Double d : distanceList.keySet()) {
+
+            for (String s  : distanceList.get(d)) {
+                User otherUser = MainActivity.getUser(s);
+                StringBuilder sb = new StringBuilder();
+
+                // Similarity score for each category
+                double bioSimilarity;
+                double languageSimilarity = 0;
+                double checkboxSimilarity = 0;
+                double combinedSimilarityScore;
+
+                // Checks during the algorithm
+                boolean checkOne = false;
+                boolean checkTwo = false;
+                boolean checkThree = false;
+
+                // Check for similarity in languages. Get users data for language
+                List <String> otherUserSpeaks = otherUser.getLanguagesSpeak();
+                List <String> otherUserWantsToLearn = otherUser.getLanguagesToLearn();
+                List <String> currentUserSpeaks = currentUser.getLanguagesSpeak();
+                List <String> currentUserWantsToLearn = currentUser.getLanguagesToLearn();
+
+                // Check if otheruser speaks any language that current user wants to learn.
+                for (int i = 0; i < otherUserSpeaks.size(); i++) {
+
+                    if(currentUserWantsToLearn.contains(otherUserSpeaks.get(i))) {
+                        sb.append(otherUser.getFirstName());
+                        sb.append(" speaks " + otherUserSpeaks.get(i) + " and it's on your list language to learn!\n");
+                        languageSimilarity =+ 2;
+                        checkOne = true;
+                    }
+                }
+
+                // Check if otheruser wants to learn any of the language currentUser speak.
+                for (int k = 0; k < otherUserWantsToLearn.size(); k++) {
+                    if(currentUserSpeaks.contains(otherUserWantsToLearn.get(k))) {
+                        sb.append(otherUser.getFirstName());
+                        sb.append(" wants to learn " + otherUserWantsToLearn.get(k) + " and that's in your speaking list!\n");
+                        languageSimilarity =+ 2;
+                        checkTwo = true;
+                    }
+                }
+
+                // If we didn't find any common language for the currentuser and the otheruser, we break and test with someone else
+                if (checkOne == false || checkTwo == false) {
+                    break;
+                }
+
+                // Check for common checkbox interest.
+                if(currentUser.isFikaChecked() && otherUser.isFikaChecked()) {
+                    sb.append("Fika is a common interest\n");
+                    checkboxSimilarity =+ 1;
+                    checkThree = true;
+                }
+                if (currentUser.isBarChecked() && otherUser.isBarChecked()) {
+                    sb.append("Bar is a common interest\n");
+                    checkboxSimilarity =+ 1;
+                    checkThree = true;
+                }
+                if (currentUser.isCityWalksChecked() && otherUser.isCityWalksChecked()) {
+                    sb.append("City walks is a common interest\n");
+                    checkboxSimilarity =+ 1;
+                    checkThree = true;
+                }
+                if (currentUser.isMuseumChecked() && otherUser.isMuseumChecked()) {
+                    sb.append("Museum is a common interest\n");
+                    checkboxSimilarity =+ 1;
+                    checkThree = true;
+                }
+
+                // if they don't have any common interest
+                if(!checkThree){
+                    sb.append("No common interest.");
+                }
+
+                // For the future, maybe add a method for biosimilarity
+
+                // Calculate the similarity score with weights adjusted
+                combinedSimilarityScore = (checkboxSimilarity * weightCheckbox) + (languageSimilarity * weightLanguage);
+
+                // Save info
+                similarityScore.put(combinedSimilarityScore, otherUser);
+                userInfo.put(otherUser, sb.toString());
+
+
+            } // End s loop
+        } // End d loop
+
+        // If don't find any matches
+        if (similarityScore.isEmpty()) {
+            setFrameForNoMatches();
+            return;
+        }
+
+    } // End of matchingalgorithm
+
+    private void setFrameForNoMatches() {
+        textBoxHeader.setText("No match found");
+        textProfile.setText("Currently no other users nearby you. Please try again later! ");
+        btnAccept.setClickable(false);
+        btnAccept.setVisibility(View.INVISIBLE);
+        btnDecline.setClickable(false);
+        btnDecline.setVisibility(View.INVISIBLE);
+        btnReturn.setVisibility(View.VISIBLE);
+        btnReturn.setClickable(true);
     }
 
 
