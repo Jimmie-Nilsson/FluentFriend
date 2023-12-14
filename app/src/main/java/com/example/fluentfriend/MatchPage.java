@@ -2,6 +2,7 @@ package com.example.fluentfriend;
 
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -67,8 +68,8 @@ public class MatchPage extends AppCompatActivity {
         addSomeUser();
         fetchUsersAndCollectInList();
         fetchActiveUsersAndCollectInList();
-        //fetchActiveUsers();
-        //calcDistanceBetweenUsers();
+        currentUserLoc = getActiveUser(UserManager.getCurrentUser());
+        calcDistanceBetweenUsers();
 
         // Kör matchings Algorithm
 
@@ -93,7 +94,6 @@ public class MatchPage extends AppCompatActivity {
         double lat = 59.403223; // Kista galleria
         double lon = 17.944535;
         user = new User("Kalle", "Berglund", "kalleb", "123");
-
         UserLocation u = new UserLocation(user.getEmail(), lat, lon);
         activeUsers.add(u);
     }
@@ -133,9 +133,12 @@ public class MatchPage extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
-                    // testing code
+                    activeUsers.add(userLoc);
+                    Log.d("ActiveUsers","Added User: " + userId); // Log for debugging
+
 
                 }
+                Log.d("ActiveUsers","Active users count: " + activeUsers.size()); // Log for debugging
             }
 
             @Override
@@ -160,7 +163,7 @@ public class MatchPage extends AppCompatActivity {
        return null;
     }
 
-    protected static boolean userIsActive(User user) {
+    protected boolean userIsActive(User user) {
         for (int i = 0; i < activeUsers.size(); i++) {
             if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
                 return true;
@@ -189,6 +192,7 @@ public class MatchPage extends AppCompatActivity {
             double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());
             distanceList.put(activeUsers.get(i).getEmail(), distance);
         }
+         textProfile.setText(activeUsers.size() + "Testing");
 
          // Sort the list
 

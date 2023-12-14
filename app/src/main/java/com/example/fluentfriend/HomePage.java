@@ -78,7 +78,7 @@ public class HomePage extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         // MatchPage is not loaded yet so can't check if userIsActive should switch be on or off?
-        activeSwitch.setChecked(MatchPage.userIsActive(UserManager.getCurrentUser()));
+        activeSwitch.setChecked(new MatchPage().userIsActive(UserManager.getCurrentUser()));
 
         //END OF END IN CLICK LISTERNER
 
