@@ -11,10 +11,10 @@ android {
     signingConfigs {
         create("release") {
             //prevents nullpointerexception with the ?:
-            storeFile = File(System.getenv("MYAPP_RELEASE_STORE_FILE") ?: "default.keystore")
-            storePassword = "abc321#"
-            keyAlias = "admin"
-            keyPassword = "abc123#"
+            storeFile = File(project.property("MYAPP_RELEASE_STORE_FILE") as String)
+            storePassword = project.property("MYAPP_RELEASE_STORE_PASSWORD") as String
+            keyAlias = project.property("MYAPP_RELEASE_KEY_ALIAS") as String
+            keyPassword = project.property("MYAPP_RELEASE_KEY_PASSWORD") as String
         }
     }
 
@@ -24,7 +24,6 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
