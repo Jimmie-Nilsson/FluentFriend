@@ -33,44 +33,51 @@ public class LocationSuggestion extends AppCompatActivity {
     private double user1long;
     private double user2lat;
     private double user2long;
-    private List<String> commonInterests = new ArrayList<>();
     TextView resultView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_suggestion);
+
+        //gets the two User objects for the two users that have matched /G
         this.user1 = UserManager.getCurrentUser();
         Intent intent = getIntent();
         this.user2 = MainActivity.getUser(intent.getStringExtra("email"));
+
+        //gets the UserLocation object for the two users that have matched (they are in the DB active list) /G
         user1Location = getActiveUser(user1);
         user2Location = getActiveUser(user2);
+
+        //gets the lat/long values from the UserLocation object for the two users /G
         this.user1lat = user1Location.getLatitude();
         this.user1long = user1Location.getLongitude();
         this.user2lat = user2Location.getLatitude();
         this.user2long = user2Location.getLongitude();
-        Location userLocation1 = new Location("");
-        Location userLocation2 = new Location("");
-        userLocation1.setLatitude(user1lat);
-        userLocation1.setLongitude(user1long);
-        userLocation2.setLatitude(user2lat);
-        userLocation2.setLongitude(user2long);
-        resultView = findViewById(R.id.resultTextView);
 
-        midpoint = getMiddleDistanceBetweenUsers(userLocation1, userLocation2);
+        //calculates the middle point between the two users based on their respective locations /G
+        midpoint = getMiddleDistanceBetweenUsers(user1lat, user1long, user2lat, user2long);
+
+        //what does this do? /G
         context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();
+
+        //displays to the user what interests they have in common in a textview /G
         displayCommonInterests();
 
         //button that runs the method for finding nearby places /G
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
         findNearbyPlacesButton.setOnClickListener(view -> {fetchNearbyPlaces();});
 
+        //Displays results from fetchNearbyPlaces() /G
+        resultView = findViewById(R.id.resultTextView);
+
+        //button that leaves the app and opens Google Maps with a search query based on location and interests /G
         Button openGoogleMapsButton = findViewById(R.id.open_google_maps);
         openGoogleMapsButton.setOnClickListener(view -> openGoogleMaps(midpoint));
     }
-
+    //these methods check what interests the users have in common, and then displays them
     private boolean doBothLikeFika() {
         return user1.isFikaChecked() && user2.isFikaChecked();
     }
@@ -83,7 +90,6 @@ public class LocationSuggestion extends AppCompatActivity {
     private boolean doBothLikeCityWalk() {
         return user1.isCityWalksChecked() && user2.isCityWalksChecked();
     }
-
     private void displayCommonInterests() {
         List<String> commonInterests = new ArrayList<>();
 
@@ -91,10 +97,10 @@ public class LocationSuggestion extends AppCompatActivity {
             commonInterests.add("Fika");
         }
         if (doBothLikeMuseum()) {
-            commonInterests.add("Museum");
+            commonInterests.add("Museums");
         }
         if (doBothLikeBar()) {
-            commonInterests.add("Bar");
+            commonInterests.add("Bars");
         }
         if (doBothLikeCityWalk()) {
             commonInterests.add("City Walks");
@@ -106,16 +112,16 @@ public class LocationSuggestion extends AppCompatActivity {
             interestsText += String.join(", ", commonInterests);
         } else {
             // Handle the case where there are no common interests
-            interestsText = "You have no common interests";
+            interestsText = "You have no common interests :(";
         }
         TextView textViewCommonInterests = findViewById(R.id.CommonInterestsTextView); // Replace with your actual TextView ID
         textViewCommonInterests.setText(interestsText);
 
     }
 
-    private Location getMiddleDistanceBetweenUsers(Location loc1, Location loc2) {
-        double lat = (loc1.getLatitude() + loc2.getLatitude()) / 2;
-        double longitude = (loc1.getLongitude() + loc2.getLongitude()) / 2;
+    private Location getMiddleDistanceBetweenUsers(double user1lat, double user1long, double user2lat, double user2long) {
+        double lat = (user1lat + user2lat) / 2;
+        double longitude = (user1long + user2long) / 2;
         Location midpoint = new Location("");
         midpoint.setLatitude(lat);
         midpoint.setLongitude(longitude);
