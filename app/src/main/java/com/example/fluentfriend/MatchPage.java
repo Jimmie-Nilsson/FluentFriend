@@ -98,14 +98,6 @@ public class MatchPage extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        calcDistanceBetweenUsers();
-        textProfile.setText(activeUsers.size() + " users");
-
-    }
-
     private void addSomeUser() {
         double lat = 59.403223; // Kista galleria
         double lon = 17.944535;
@@ -143,7 +135,8 @@ public class MatchPage extends AppCompatActivity {
 
 
     private void fetchActiveUsersAndCollectInList() {
-        activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+
+          activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
@@ -159,6 +152,8 @@ public class MatchPage extends AppCompatActivity {
 
                 }
                 Log.d("ActiveUsers","Active users count: " + activeUsers.size()); // Log for debugging
+                textProfile.setText(activeUsers.size() + " users");
+                calcDistanceBetweenUsers();
             }
 
             @Override
@@ -184,7 +179,7 @@ public class MatchPage extends AppCompatActivity {
        return null;
     }
 
-    protected boolean userIsActive(User user) {
+    protected static boolean userIsActive(User user) {
         for (int i = 0; i < activeUsers.size(); i++) {
             if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
                 return true;

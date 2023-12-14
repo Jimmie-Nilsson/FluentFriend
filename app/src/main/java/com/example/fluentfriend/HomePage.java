@@ -1,6 +1,7 @@
 package com.example.fluentfriend;
 
 import android.app.ProgressDialog;
+import android.util.Log;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,11 +35,15 @@ import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.*;
+
+import java.util.ArrayList;
 
 
 public class HomePage extends AppCompatActivity {
 
 
+    private static ArrayList<UserLocation> activeUsers = new ArrayList<>();
     private Button btnProfile;
     private Button btnMessage;
     private Button btnMatch;
@@ -47,6 +52,9 @@ public class HomePage extends AppCompatActivity {
     private ProgressDialog dialog;
     private double latitude;
     private double longitude;
+
+    private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+    private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
 
 
     private LocationRequest locationRequest;
@@ -78,9 +86,9 @@ public class HomePage extends AppCompatActivity {
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
         // MatchPage is not loaded yet so can't check if userIsActive should switch be on or off?
-        activeSwitch.setChecked(new MatchPage().userIsActive(UserManager.getCurrentUser()));
 
         //END OF END IN CLICK LISTERNER
+        fetchActiveUsersAndCollectInList();
 
 
         activeSwitch.setOnClickListener(view -> {
@@ -114,6 +122,47 @@ public class HomePage extends AppCompatActivity {
             Toast.makeText(HomePage.this, "Not implemented", Toast.LENGTH_SHORT).show();
         });
 
+    }
+
+
+    private void fetchActiveUsersAndCollectInList() {
+
+        activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
+                    if (!activeUsers.contains(userLoc)) {
+                        activeUsers.add(userLoc);
+                        Log.d("ActiveUsers", "Added User: " + userLoc.getEmail() + userLoc.getLongitude() + " " + userLoc.getLatitude());
+                        Log.d("ActiveUsers", "Added User: " + activeUsers.contains(userLoc));
+                    }
+                    // Log for debugging
+
+
+                }
+                Log.d("ActiveUsers","Active users count: " + activeUsers.size()); // Log for debugging
+                // set active switch to ON if user is active
+                activeSwitch.setChecked(userIsActive(UserManager.getCurrentUser()));
+            }
+
+
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+            }
+        });
+
+    }
+    protected static boolean userIsActive(User user) {
+        for (int i = 0; i < activeUsers.size(); i++) {
+            if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
