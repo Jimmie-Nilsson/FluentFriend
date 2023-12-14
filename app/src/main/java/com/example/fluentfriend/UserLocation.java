@@ -65,4 +65,3 @@ public class UserLocation implements java.io.Serializable {
 giving an "as-the-crow-flies" distance between the points
 (ignoring any hills, valleys, or other potential obstacles).
  */
-
