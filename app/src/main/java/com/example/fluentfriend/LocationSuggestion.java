@@ -112,7 +112,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
         if (doBothLikeFika()) {
             commonInterests.add("Fika");
-            queryBuilder.append("cafes");
+            queryBuilder.append("Cafes");
 
         }
         if (doBothLikeMuseum()) {
