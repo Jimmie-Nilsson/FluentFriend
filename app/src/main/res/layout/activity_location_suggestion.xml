@@ -22,8 +22,8 @@
             android:paddingRight="15dp"
             android:background="@drawable/textview_border" app:layout_constraintHorizontal_bias="0.0"/>
     <TextView
-            android:layout_width="223dp"
-            android:layout_height="165dp" android:id="@+id/resultTextView"
+            android:layout_width="353dp"
+            android:layout_height="166dp" android:id="@+id/resultTextView"
             android:background="@drawable/textview_border"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
@@ -33,7 +33,7 @@
             android:paddingLeft="15dp"
             android:paddingRight="15dp" android:textSize="16sp"/>
     <Button
-            android:text="Show locations in Goole Maps"
+            android:text="Show in Goole Maps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/open_google_maps"
