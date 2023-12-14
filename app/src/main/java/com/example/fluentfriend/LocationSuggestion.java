@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,6 +30,7 @@ public class LocationSuggestion extends AppCompatActivity {
     private double user1long;
     private double user2lat;
     private double user2long;
+    private TextView resultView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class LocationSuggestion extends AppCompatActivity {
         setContentView(R.layout.activity_location_suggestion);
         this.user1 = UserManager.getCurrentUser();
         Intent intent = getIntent();
+        resultView = findViewById(R.id.resultTextView);
         this.user2 = MainActivity.getUser(intent.getStringExtra("email"));
         user1Location = getActiveUser(user1);
         user2Location = getActiveUser(user2);
@@ -50,16 +53,18 @@ public class LocationSuggestion extends AppCompatActivity {
         userLocation2.setLatitude(user2lat);
         userLocation2.setLongitude(user2long);
 
+
         // Initialize midpoint here or from another method after you get user locations
         midpoint = getMiddleDistanceBetweenUsers(userLocation1, userLocation2);
         context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();
 
-        fetchNearbyPlaces();
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
-        findNearbyPlacesButton.setOnClickListener(view ->
-        {fetchNearbyPlaces();
+        findNearbyPlacesButton.setOnClickListener(view -> {
+
+            fetchNearbyPlaces();
+
         });
 
         Button openGoogleMapsButton = findViewById(R.id.open_google_maps); // replace with your actual button ID
@@ -89,9 +94,11 @@ public class LocationSuggestion extends AppCompatActivity {
             Toast.makeText(this, "Google Maps is not installed.", Toast.LENGTH_LONG).show();
         }
     }
+
     private void fetchNearbyPlaces() {
         new Thread(() -> {
             try {
+                Log.d("Before UI thread","STARTING THREAD");
                 LatLng location = new LatLng(midpoint.getLatitude(), midpoint.getLongitude());
                 PlacesSearchResult[] results = PlacesApi.nearbySearchQuery(context, location)
                         .radius(1000) // in meters
@@ -99,13 +106,23 @@ public class LocationSuggestion extends AppCompatActivity {
                         .await()
                         .results;
                 // Now you need to handle the results on the UI thread
+                Log.d("Before UI thread","WE ARE BEFORE UI THREAD");
                 runOnUiThread(() -> {
                     if (results.length > 0) {
+                        Log.d("GotResults","Results" + results[0].name);
                         // Update your UI with the results here
                         // e.g., display the name of the first result in a TextView
-                        TextView resultView = findViewById(R.id.resultTextView);
                         resultView.setText(results[0].name);
+                        StringBuilder suggestion = new StringBuilder();
+                        for (int i = 0; i < results.length; i++){
+                            suggestion.append(results[i].name);
+                            suggestion.append("Opening hours:").append(results[i].openingHours);
+                            suggestion.append("\n");
+                        }
+                        resultView.setText(suggestion);
+
                     } else {
+                        Log.d("No Results","NO RESULTS");
                         // Show a message if no results were found
                         Toast.makeText(this, "No nearby cafes found.", Toast.LENGTH_LONG).show();
                     }
