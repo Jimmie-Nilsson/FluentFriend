@@ -21,9 +21,7 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.firebase.database.*;
 
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
@@ -31,9 +29,8 @@ import java.util.concurrent.ExecutionException;
 public class MatchPage extends AppCompatActivity {
     private static ArrayList<UserLocation> activeUsers = new ArrayList<>();
 
-    private HashMap<String, Double> distanceList = new HashMap<>();
+    private TreeMap<Double, ArrayList<String>> distanceList = new TreeMap<>();
     private List<User> users = new ArrayList<>();
-
 
     private LocationRequest locationRequest;
     private Button btnAccept;
@@ -212,12 +209,28 @@ public class MatchPage extends AppCompatActivity {
 
         // Calcualte the distance between current user and all the other active users.
          for (int i = 0; i < activeUsers.size(); i++) {
-            double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());
-            distanceList.put(activeUsers.get(i).getEmail(), distance);
+             if(!activeUsers.get(i).getEmail().equals(currentUser.getEmail())) {
+                 double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());
+                 if (!distanceList.containsKey(distance)) {
+                     distanceList.put(distance, new ArrayList<>());
+                 }
+                 distanceList.get(distance).add(activeUsers.get(i).getEmail());
+             }
+
         }
 
-         // Sort the list
+         String test = " ";
+         for (Double d : distanceList.keySet()) {
+             test = test + " "+ d;
 
+             for (String s  : distanceList.get(d)) {
+
+                 test = test + " " + s;
+             }
+             test = test + "\n";
+         }
+
+         textProfile.setText(test);
     }
 
     private void matchingalgorithm() {
