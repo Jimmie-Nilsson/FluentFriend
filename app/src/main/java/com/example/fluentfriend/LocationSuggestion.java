@@ -36,6 +36,8 @@ public class LocationSuggestion extends AppCompatActivity {
     private double user2long;
     private TextView resultView;
     private String query = "";
+    private List<String> commonInterests = new ArrayList<>();
+    private StringBuilder queryBuilder = new StringBuilder();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,7 @@ public class LocationSuggestion extends AppCompatActivity {
         Intent intent = getIntent();
         this.user2 = MainActivity.getUser(intent.getStringExtra("email"));
 
-        //gets the UserLocation object for the two users that have matched (they are in the DB active list) /G
+        //saves the UserLocation object for the two users that have matched (they are in the DB active list) /G
         user1Location = getActiveUser(user1);
         user2Location = getActiveUser(user2);
 
@@ -105,15 +107,27 @@ public class LocationSuggestion extends AppCompatActivity {
         return user1.isCityWalksChecked() && user2.isCityWalksChecked();
     }
 
-    //displays the common interests in the textView and builds the query for Google Maps based on common interests /G
+    //displays the common interests in the textView /G
     private void displayCommonInterests() {
-        List<String> commonInterests = new ArrayList<>();
-        StringBuilder queryBuilder = new StringBuilder();
+        findCommonInterests();
+        String interestsText = "";
+        if (!commonInterests.isEmpty()) {
+            // Joins common interests in a single string separated by commas
+            interestsText += String.join(", ", commonInterests);
+        } else {
+            // Handles no common interests
+            interestsText = "You have no common interests :(";
+        }
+        TextView textViewCommonInterests = findViewById(R.id.CommonInterestsTextView); // Replace with your actual TextView ID
+        textViewCommonInterests.setText(interestsText);
 
+    }
+    //finds the common interests of both users and adds them to a list of Strings that can be shown to the user,
+    //as well as to a querybuilder that is formatted for Google search queries to be used by the Google Maps query /G
+    private void findCommonInterests() {
         if (doBothLikeFika()) {
             commonInterests.add("Fika");
             queryBuilder.append("Cafes");
-
         }
         if (doBothLikeMuseum()) {
             commonInterests.add("Museums");
@@ -128,20 +142,6 @@ public class LocationSuggestion extends AppCompatActivity {
         if (doBothLikeCityWalk()) {
             commonInterests.add("City Walks");
         }
-
-        //sets the query depending on the common interests
-        query = queryBuilder.toString();
-
-        String interestsText = "";
-        if (!commonInterests.isEmpty()) {
-            // Joins common interests in a single string separated by commas
-            interestsText += String.join(", ", commonInterests);
-        } else {
-            // Handles no common interests
-            interestsText = "You have no common interests :(";
-        }
-        TextView textViewCommonInterests = findViewById(R.id.CommonInterestsTextView); // Replace with your actual TextView ID
-        textViewCommonInterests.setText(interestsText);
     }
 
     //finds the lat/long middle point between the two users, returns as Location object
@@ -154,25 +154,32 @@ public class LocationSuggestion extends AppCompatActivity {
         return midpoint;
     }
 
-    //when user pushes the button, google map opens with a search for
+    //When Google Maps button is pressed, Google Maps opens with a search for the common interests /G
     private void openGoogleMaps(Location location) {
+        //sets the query depending on the common interests
+        this.query = queryBuilder.toString();
 
         // Create a Uri from an intent string. Use the result to create an Intent.
+        //write easier-to-understand comment what this does /G
         Uri gmmIntentUri = Uri.parse("geo:" + location.getLatitude() + "," + location.getLongitude() + "?q=" + Uri.encode(query));
 
         // Create an Intent to open Google Maps at the specified location
+        //same here /G
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
 
         // Attempt to start an activity that can handle the Intent
+        //also here /G
         if (mapIntent.resolveActivity(getPackageManager()) != null) {
             startActivity(mapIntent);
         } else {
-            // Show error if Google Maps is not installed
+            // Display error text if Google Maps is not installed
             Toast.makeText(this, "Google Maps is not installed.", Toast.LENGTH_LONG).show();
         }
     }
+    //elaborate on this method
     private void fetchNearbyPlaces() {
+        //explanation about threads
         new Thread(() -> {
             try {
                 Log.d("Before UI thread", "STARTING THREAD");
@@ -182,7 +189,7 @@ public class LocationSuggestion extends AppCompatActivity {
                         .type(PlaceType.CAFE)
                         .await()
                         .results;
-                // Now you need to handle the results on the UI thread
+                // handle the results on the UI thread
                 Log.d("Before UI thread", "WE ARE BEFORE UI THREAD");
                 runOnUiThread(() -> {
                     if (results.length > 0) {
