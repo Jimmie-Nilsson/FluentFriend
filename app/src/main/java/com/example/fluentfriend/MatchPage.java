@@ -31,8 +31,6 @@ import java.util.concurrent.ExecutionException;
 public class MatchPage extends AppCompatActivity {
     private static ArrayList<UserLocation> activeUsers = new ArrayList<>();
 
-
-
     private HashMap<String, Double> distanceList = new HashMap<>();
     private List<User> users = new ArrayList<>();
 
@@ -71,7 +69,8 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setClickable(false);
         btnReturn.setVisibility(View.INVISIBLE);
 
-        currentUserLoc = getActiveUser(UserManager.getCurrentUser());
+
+
 
 
         fetchUsersAndCollectInList();
@@ -153,6 +152,14 @@ public class MatchPage extends AppCompatActivity {
                 }
                 Log.d("ActiveUsers","Active users count: " + activeUsers.size()); // Log for debugging
                 textProfile.setText(activeUsers.size() + " users");
+                for (UserLocation l : activeUsers){
+                    if (l.getEmail().equals(UserManager.getCurrentUser().getEmail())){
+                        addUserActive(l);
+                        currentUserLoc = l;
+                        break;
+                    }
+                }
+                currentUserLoc = getActiveUser(UserManager.getCurrentUser());
                 calcDistanceBetweenUsers();
             }
 
