@@ -2,6 +2,7 @@ package com.example.fluentfriend;
 
 
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -23,13 +24,18 @@ import com.google.firebase.database.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 
 public class MatchPage extends AppCompatActivity {
     private static ArrayList<UserLocation> activeUsers = new ArrayList<>();
 
+
+
     private HashMap<String, Double> distanceList = new HashMap<>();
     private List<User> users = new ArrayList<>();
+
 
     private LocationRequest locationRequest;
     private Button btnAccept;
@@ -65,11 +71,12 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setClickable(false);
         btnReturn.setVisibility(View.INVISIBLE);
 
-        addSomeUser();
+        currentUserLoc = getActiveUser(UserManager.getCurrentUser());
+
+
         fetchUsersAndCollectInList();
         fetchActiveUsersAndCollectInList();
-        currentUserLoc = getActiveUser(UserManager.getCurrentUser());
-        calcDistanceBetweenUsers();
+
 
         // Kör matchings Algorithm
 
@@ -87,6 +94,15 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setOnClickListener(view -> {
             finish();
         });
+
+    }
+
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        calcDistanceBetweenUsers();
+        textProfile.setText(activeUsers.size() + " users");
 
     }
 
@@ -133,8 +149,12 @@ public class MatchPage extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
-                    activeUsers.add(userLoc);
-                    Log.d("ActiveUsers","Added User: " + userId); // Log for debugging
+                    if (!activeUsers.contains(userLoc)) {
+                        activeUsers.add(userLoc);
+                        Log.d("ActiveUsers", "Added User: " + userLoc.getEmail() + userLoc.getLongitude() + " " + userLoc.getLatitude());
+                        Log.d("ActiveUsers", "Added User: " + activeUsers.contains(userLoc));
+                    }
+                    // Log for debugging
 
 
                 }
@@ -146,6 +166,7 @@ public class MatchPage extends AppCompatActivity {
                 // Handle errors
             }
         });
+
     }
 
 
@@ -192,7 +213,6 @@ public class MatchPage extends AppCompatActivity {
             double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());
             distanceList.put(activeUsers.get(i).getEmail(), distance);
         }
-         textProfile.setText(activeUsers.size() + "Testing");
 
          // Sort the list
 

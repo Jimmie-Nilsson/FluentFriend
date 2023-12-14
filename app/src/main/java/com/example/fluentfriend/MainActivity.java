@@ -7,6 +7,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
 
 
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //addUsers(); // Lägg till användare
 
+        FirebaseApp.initializeApp(this);
         fetchUsersAndCollectInList();
 
         btnCreateAccount = (Button) findViewById(R.id.saveSettingsButton);

@@ -51,6 +51,14 @@ public class UserLocation implements java.io.Serializable {
         // Calculate distance
         return EARTH_RADIUS * c;
     }
+
+    @Override
+    public boolean equals(Object object){
+        if (object instanceof UserLocation loc){
+            return loc.getEmail().equals(this.email) && loc.getLatitude() == this.latitude && loc.getLongitude() == this.longitude;
+        }
+        return false;
+    }
 }
 
 /* Haversine formula. The Haversine formula calculates the shortest distance over the earth's surface,
