@@ -35,7 +35,7 @@ public class LocationSuggestion extends AppCompatActivity {
     private double user2lat;
     private double user2long;
     private TextView resultView;
-    private String query;
+    private String query = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,12 +117,12 @@ public class LocationSuggestion extends AppCompatActivity {
         }
         if (doBothLikeMuseum()) {
             commonInterests.add("Museums");
-            if (queryBuilder.length() > 0) queryBuilder.append("or");
+            if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Museums");
         }
         if (doBothLikeBar()) {
             commonInterests.add("Bars");
-            if (queryBuilder.length() > 0) queryBuilder.append("or");
+            if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Bars");
         }
         if (doBothLikeCityWalk()) {
@@ -134,18 +134,17 @@ public class LocationSuggestion extends AppCompatActivity {
 
         String interestsText = "";
         if (!commonInterests.isEmpty()) {
-            // Join the common interests in a single string separated by commas
+            // Joins common interests in a single string separated by commas
             interestsText += String.join(", ", commonInterests);
         } else {
-            // Handle the case where there are no common interests
+            // Handles no common interests
             interestsText = "You have no common interests :(";
         }
         TextView textViewCommonInterests = findViewById(R.id.CommonInterestsTextView); // Replace with your actual TextView ID
         textViewCommonInterests.setText(interestsText);
-
     }
 
-    //finds the lat/long middle point between the two users
+    //finds the lat/long middle point between the two users, returns as Location object
     private Location getMiddleDistanceBetweenUsers(double user1lat, double user1long, double user2lat, double user2long) {
         double lat = (user1lat + user2lat) / 2;
         double longitude = (user1long + user2long) / 2;
