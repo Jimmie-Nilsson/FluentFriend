@@ -90,12 +90,11 @@ public class HomePage extends AppCompatActivity {
                 page.addUserActive(userLoc);
 
             } else if (!activeSwitch.isChecked()) {
-                // FIXA Denna när remove är Tilllagd
-               // new MatchPage().removeUserActive(UserManager.getCurrentUser());
+                new MatchPage().removeUserActive(UserManager.getCurrentUser());
             }
         });
         Intent intent = getIntent();
-        welcomeText.setText("Welcome " + intent.getStringExtra("firstName") + " " + intent.getStringExtra("lastName"));
+        welcomeText.setText(String.format("Welcome %s %s", intent.getStringExtra("firstName"), intent.getStringExtra("lastName")));
 
         btnProfile.setOnClickListener(view -> {
             Intent intentTwo = new Intent(HomePage.this, UserProfilePage.class);
@@ -219,7 +218,8 @@ public class HomePage extends AppCompatActivity {
         });
 
     }
-    protected boolean isUserActive(){
+
+    protected boolean isUserActive() {
         return activeSwitch.isChecked();
     }
 

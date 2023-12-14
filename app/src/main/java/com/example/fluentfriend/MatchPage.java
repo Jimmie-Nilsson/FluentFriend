@@ -112,7 +112,6 @@ public class MatchPage extends AppCompatActivity {
                     String userId = userSnapshot.getKey();
                     User user = userSnapshot.getValue(User.class);
                     // Kolla denna kod Nu kompilerar den inte och fungerar inte eftersom vi andrade....
-
                     if (userId != null) {
                         users.add(user);
                     }
@@ -147,39 +146,7 @@ public class MatchPage extends AppCompatActivity {
     }
 
 
-//    public void fetchActiveUsers(){
-//        activeUsersRef.addChildEventListener(new ChildEventListener() {
-//            @Override
-//            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
-//                UserLocation newPost = dataSnapshot.getValue(UserLocation.class);
-//              if (!activeUsers.containsValue(newPost)){
-//                  activeUsers.put(newPost.getUser(),newPost);
-//              }
-//            }
-//
-//            @Override
-//            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {
-//                UserLocation newPost = dataSnapshot.getValue(UserLocation.class);
-//                if (activeUsers.containsValue(newPost)) {
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                        activeUsers.replace(newPost.getUser(), newPost);
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onChildRemoved(DataSnapshot dataSnapshot) {
-//                UserLocation newPost = dataSnapshot.getValue(UserLocation.class);
-//                activeUsers.remove(newPost.getUser());
-//            }
-//
-//            @Override
-//            public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {}
-//        });
-//    }
+
 
 
 
@@ -204,7 +171,6 @@ public class MatchPage extends AppCompatActivity {
 
     protected void removeUserActive(User user) {
         activeUsersRef.child(user.getEmail()).removeValue();
-
         /* Find the right element and remove it from the list.
          * Använda ett hashSet är kanske en bättre lösing om listan,
          * blir väldigt stor. Vi kanske dock inte bryr oss.
