@@ -15,6 +15,9 @@ import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.example.fluentfriend.MatchPage.getActiveUser;
 
 public class LocationSuggestion extends AppCompatActivity {
@@ -30,7 +33,8 @@ public class LocationSuggestion extends AppCompatActivity {
     private double user1long;
     private double user2lat;
     private double user2long;
-    private TextView resultView;
+    private List<String> commonInterests = new ArrayList<>();
+    TextView resultView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +42,6 @@ public class LocationSuggestion extends AppCompatActivity {
         setContentView(R.layout.activity_location_suggestion);
         this.user1 = UserManager.getCurrentUser();
         Intent intent = getIntent();
-        resultView = findViewById(R.id.resultTextView);
         this.user2 = MainActivity.getUser(intent.getStringExtra("email"));
         user1Location = getActiveUser(user1);
         user2Location = getActiveUser(user2);
@@ -52,24 +55,64 @@ public class LocationSuggestion extends AppCompatActivity {
         userLocation1.setLongitude(user1long);
         userLocation2.setLatitude(user2lat);
         userLocation2.setLongitude(user2long);
+        resultView = findViewById(R.id.resultTextView);
 
-
-        // Initialize midpoint here or from another method after you get user locations
         midpoint = getMiddleDistanceBetweenUsers(userLocation1, userLocation2);
         context = new GeoApiContext.Builder()
                 .apiKey(apiKey)
                 .build();
+        displayCommonInterests();
 
+        //button that runs the method for finding nearby places /G
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
-        findNearbyPlacesButton.setOnClickListener(view -> {
+        findNearbyPlacesButton.setOnClickListener(view -> {fetchNearbyPlaces();});
 
-            fetchNearbyPlaces();
-
-        });
-
-        Button openGoogleMapsButton = findViewById(R.id.open_google_maps); // replace with your actual button ID
+        Button openGoogleMapsButton = findViewById(R.id.open_google_maps);
         openGoogleMapsButton.setOnClickListener(view -> openGoogleMaps(midpoint));
     }
+
+    private boolean doBothLikeFika() {
+        return user1.isFikaChecked() && user2.isFikaChecked();
+    }
+    private boolean doBothLikeMuseum() {
+        return user1.isMuseumChecked() && user2.isMuseumChecked();
+    }
+    private boolean doBothLikeBar() {
+        return user1.isBarChecked() && user2.isBarChecked();
+    }
+    private boolean doBothLikeCityWalk() {
+        return user1.isCityWalksChecked() && user2.isCityWalksChecked();
+    }
+
+    private void displayCommonInterests() {
+        List<String> commonInterests = new ArrayList<>();
+
+        if (doBothLikeFika()) {
+            commonInterests.add("Fika");
+        }
+        if (doBothLikeMuseum()) {
+            commonInterests.add("Museum");
+        }
+        if (doBothLikeBar()) {
+            commonInterests.add("Bar");
+        }
+        if (doBothLikeCityWalk()) {
+            commonInterests.add("City Walks");
+        }
+
+        String interestsText = "You both like: ";
+        if (!commonInterests.isEmpty()) {
+            // Join the common interests in a single string separated by commas
+            interestsText += String.join(", ", commonInterests);
+        } else {
+            // Handle the case where there are no common interests
+            interestsText = "You have no common interests";
+        }
+        TextView textViewCommonInterests = findViewById(R.id.CommonInterestsTextView); // Replace with your actual TextView ID
+        textViewCommonInterests.setText(interestsText);
+
+    }
+
     private Location getMiddleDistanceBetweenUsers(Location loc1, Location loc2) {
         double lat = (loc1.getLatitude() + loc2.getLatitude()) / 2;
         double longitude = (loc1.getLongitude() + loc2.getLongitude()) / 2;
@@ -94,11 +137,10 @@ public class LocationSuggestion extends AppCompatActivity {
             Toast.makeText(this, "Google Maps is not installed.", Toast.LENGTH_LONG).show();
         }
     }
-
     private void fetchNearbyPlaces() {
         new Thread(() -> {
             try {
-                Log.d("Before UI thread","STARTING THREAD");
+                Log.d("Before UI thread", "STARTING THREAD");
                 LatLng location = new LatLng(midpoint.getLatitude(), midpoint.getLongitude());
                 PlacesSearchResult[] results = PlacesApi.nearbySearchQuery(context, location)
                         .radius(1000) // in meters
@@ -106,15 +148,14 @@ public class LocationSuggestion extends AppCompatActivity {
                         .await()
                         .results;
                 // Now you need to handle the results on the UI thread
-                Log.d("Before UI thread","WE ARE BEFORE UI THREAD");
+                Log.d("Before UI thread", "WE ARE BEFORE UI THREAD");
                 runOnUiThread(() -> {
                     if (results.length > 0) {
-                        Log.d("GotResults","Results" + results[0].name);
+                        Log.d("GotResults", "Results" + results[0].name);
                         // Update your UI with the results here
                         // e.g., display the name of the first result in a TextView
-                        resultView.setText(results[0].name);
                         StringBuilder suggestion = new StringBuilder();
-                        for (int i = 0; i < results.length; i++){
+                        for (int i = 0; i < results.length; i++) {
                             suggestion.append(results[i].name);
                             suggestion.append("Opening hours:").append(results[i].openingHours);
                             suggestion.append("\n");
@@ -122,7 +163,7 @@ public class LocationSuggestion extends AppCompatActivity {
                         resultView.setText(suggestion);
 
                     } else {
-                        Log.d("No Results","NO RESULTS");
+                        Log.d("No Results", "NO RESULTS");
                         // Show a message if no results were found
                         Toast.makeText(this, "No nearby cafes found.", Toast.LENGTH_LONG).show();
                     }
@@ -133,5 +174,4 @@ public class LocationSuggestion extends AppCompatActivity {
             }
         }).start();
     }
-
 }
