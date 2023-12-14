@@ -17,6 +17,9 @@ android {
             keyPassword = project.property("MYAPP_RELEASE_KEY_PASSWORD") as String
         }
     }
+    buildFeatures {
+        buildConfig = true
+    }
 
     defaultConfig {
         applicationId = "com.example.fluentfriend"
@@ -25,6 +28,8 @@ android {
         versionCode = 1
         versionName = "1.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        val mapsApiKey = project.properties["SECRET_GOOGLE_MAPS_API_KEY"]?.toString() ?: "No API Key"
+        buildConfigField("String", "API_KEY", "\"$mapsApiKey\"")
     }
 
     buildTypes {
@@ -51,6 +56,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-maps:18.2.0")
     implementation("com.google.firebase:firebase-firestore:24.9.1")
     implementation("com.google.firebase:firebase-database")
+    implementation("com.google.maps:google-maps-services:2.2.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")

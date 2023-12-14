@@ -76,7 +76,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
 
         // Change this toString() if you want some other text like Language or something
         languagesISpeakSpinner.setItems(LanguageManager.AVAILABLE_LANGUAGES,
-               UserManager.getCurrentUser().getLanguagesSpeak().toString() , this);
+                UserManager.getCurrentUser().getLanguagesSpeak().toString() , this);
         languagesToLearnSpinner.setItems(LanguageManager.AVAILABLE_LANGUAGES,
                 UserManager.getCurrentUser().getLanguagesToLearn().toString(), this);
         loadUserLanguages();
