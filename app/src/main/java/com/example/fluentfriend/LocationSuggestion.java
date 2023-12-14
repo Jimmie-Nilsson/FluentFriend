@@ -100,7 +100,7 @@ public class LocationSuggestion extends AppCompatActivity {
             commonInterests.add("City Walks");
         }
 
-        String interestsText = "You both like: ";
+        String interestsText = "";
         if (!commonInterests.isEmpty()) {
             // Join the common interests in a single string separated by commas
             interestsText += String.join(", ", commonInterests);
