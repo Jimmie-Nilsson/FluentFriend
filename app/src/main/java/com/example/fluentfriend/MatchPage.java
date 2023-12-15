@@ -67,6 +67,8 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setClickable(false);
         btnReturn.setVisibility(View.INVISIBLE);
 
+
+
         fetchUsersAndCollectInList();
         fetchActiveUsersAndCollectInList();
 
@@ -281,7 +283,7 @@ public class MatchPage extends AppCompatActivity {
                     if(currentUserWantsToLearn.contains(otherUserSpeaks.get(i))) {
                         sb.append(otherUser.getFirstName());
                         sb.append(" speaks " + otherUserSpeaks.get(i) + " and it's on your list language to learn!\n");
-                        languageSimilarity =+ 2;
+                        languageSimilarity += 2;
                         checkOne = true;
                     }
                 }
@@ -291,7 +293,7 @@ public class MatchPage extends AppCompatActivity {
                     if(currentUserSpeaks.contains(otherUserWantsToLearn.get(k))) {
                         sb.append(otherUser.getFirstName());
                         sb.append(" wants to learn " + otherUserWantsToLearn.get(k) + " and that's in your speaking list!\n");
-                        languageSimilarity =+ 2;
+                        languageSimilarity += 2;
                         checkTwo = true;
                     }
                 }
@@ -304,22 +306,22 @@ public class MatchPage extends AppCompatActivity {
                 // Check for common checkbox interest.
                 if(currentUser.isFikaChecked() && otherUser.isFikaChecked()) {
                     sb.append("Fika is a common interest\n");
-                    checkboxSimilarity =+ 1;
+                    checkboxSimilarity += 1;
                     checkThree = true;
                 }
                 if (currentUser.isBarChecked() && otherUser.isBarChecked()) {
                     sb.append("Bar is a common interest\n");
-                    checkboxSimilarity =+ 1;
+                    checkboxSimilarity += 1;
                     checkThree = true;
                 }
                 if (currentUser.isCityWalksChecked() && otherUser.isCityWalksChecked()) {
                     sb.append("City walks is a common interest\n");
-                    checkboxSimilarity =+ 1;
+                    checkboxSimilarity += 1;
                     checkThree = true;
                 }
                 if (currentUser.isMuseumChecked() && otherUser.isMuseumChecked()) {
                     sb.append("Museum is a common interest\n");
-                    checkboxSimilarity =+ 1;
+                    checkboxSimilarity += 1;
                     checkThree = true;
                 }
 
