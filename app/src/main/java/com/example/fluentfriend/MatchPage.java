@@ -57,7 +57,6 @@ public class MatchPage extends AppCompatActivity {
 
 
         // ToDo
-        // Göra textProfile scrollingbar ???? // KB
         // Fixa utskrifter på skärmen (Vid ingen match tex + om user har gått igneom alla matchningar. tex) // KB
         // Skicka med rätt profil till nästa skärm vid accept // KB
         // Snygga till koden // KB

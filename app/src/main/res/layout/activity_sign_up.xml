@@ -53,8 +53,8 @@
             app:layout_constraintBottom_toTopOf="@+id/signup_btnSignUp"/>
     <Button
             android:id="@+id/signup_btnSignUp"
-            android:layout_width="203dp"
-            android:layout_height="0dp"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
             android:text="Sign Up"
             android:elevation="30dp"
             android:padding="10dp"
