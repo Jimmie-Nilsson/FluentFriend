@@ -55,6 +55,7 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setClickable(false);
         btnReturn.setVisibility(View.INVISIBLE);
 
+
         // ToDo
         // Göra textProfile scrollingbar ???? // KB
         // Fixa utskrifter på skärmen (Vid ingen match tex + om user har gått igneom alla matchningar. tex) // KB
@@ -67,7 +68,7 @@ public class MatchPage extends AppCompatActivity {
         btnAccept.setOnClickListener(view -> {
             // Open new frame where we show cafe suggestions etc,
             Intent i = new Intent(this, LocationSuggestion.class);
-            i.putExtra("email","hejhej");
+            i.putExtra("email",similarityScore.get(similarityScore.firstKey()).getEmail());
             startActivity(i);
         });
 
@@ -110,7 +111,6 @@ public class MatchPage extends AppCompatActivity {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     User user = userSnapshot.getValue(User.class);
-                    // Kolla denna kod Nu kompilerar den inte och fungerar inte eftersom vi andrade....
                     if (userId != null) {
                         users.add(user);
                     }
