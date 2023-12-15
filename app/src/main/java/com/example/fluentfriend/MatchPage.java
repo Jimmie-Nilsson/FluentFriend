@@ -25,31 +25,21 @@ import java.util.*;
 
 public class MatchPage extends AppCompatActivity {
     private static ArrayList<UserLocation> activeUsers = new ArrayList<>();
-
     private TreeMap<Double, ArrayList<String>> distanceList = new TreeMap<>();
     private List<User> users = new ArrayList<>();
-
-    // Store all the data
     private TreeMap<Double, User> similarityScore = new TreeMap<>(Comparator.reverseOrder());
     private HashMap<User, String> userInfo = new HashMap<>();
-
     private LocationRequest locationRequest;
     private Button btnAccept;
     private Button btnDecline;
-
     private Button btnReturn;
     private TextView textProfile;
     private TextView textBoxHeader;
     private User currentUser;
     private UserLocation currentUserLoc;
-
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
     private DatabaseReference usersRef = db.getReference().child("users");
-
-
-    // Test.
-    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,17 +52,17 @@ public class MatchPage extends AppCompatActivity {
         btnDecline = findViewById(R.id.matchmatchPageBtnDecline);
         btnReturn = findViewById(R.id.matchPageReturnBack);
         currentUser = UserManager.getCurrentUser();
-
-        // If no match, show this button and disabel the other buttons.
         btnReturn.setClickable(false);
         btnReturn.setVisibility(View.INVISIBLE);
 
-
+        // ToDo
+        // Göra textProfile scrollingbar ???? // KB
+        // Fixa utskrifter på skärmen (Vid ingen match tex + om user har gått igneom alla matchningar. tex) // KB
+        // Skicka med rätt profil till nästa skärm vid accept // KB
+        // Snygga till koden // KB
 
         fetchUsersAndCollectInList();
         fetchActiveUsersAndCollectInList();
-
-        //addTestUsers();
 
         btnAccept.setOnClickListener(view -> {
             // Open new frame where we show cafe suggestions etc,
@@ -95,9 +85,7 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setOnClickListener(view -> {
             finish();
         });
-
     }
-
 
     private void showUser() {
         double d = similarityScore.firstKey();
@@ -106,7 +94,7 @@ public class MatchPage extends AppCompatActivity {
 
         textBoxHeader.setText(distanceList.size() + " - " + similarityScore.size() + "  Score: "+ d);
 
-        textProfile.setText( s );
+        textProfile.setText(s);
     }
 
     protected void addUserActive(UserLocation userLocation) {
@@ -174,9 +162,7 @@ public class MatchPage extends AppCompatActivity {
                 // Handle errors
             }
         });
-
     }
-
 
    protected static UserLocation getActiveUser(User user) {
        for (int i = 0; i < activeUsers.size(); i++) {
@@ -222,21 +208,7 @@ public class MatchPage extends AppCompatActivity {
                  }
                  distanceList.get(distance).add(activeUsers.get(i).getEmail());
              }
-
         }
-
-         String test = " ";
-         for (Double d : distanceList.keySet()) {
-             test = test + " "+ d;
-
-             for (String s  : distanceList.get(d)) {
-
-                 test = test + " " + s;
-             }
-             test = test + "\n";
-         }
-
-         //textProfile.setText(test);
     }
 
     private void matchingalgorithm() {
