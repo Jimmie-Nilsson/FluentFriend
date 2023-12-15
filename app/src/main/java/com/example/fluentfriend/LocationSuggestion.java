@@ -22,7 +22,6 @@ import java.util.List;
 import static com.example.fluentfriend.MatchPage.getActiveUser;
 
 public class LocationSuggestion extends AppCompatActivity {
-
     private String apiKey = BuildConfig.API_KEY;
     private GeoApiContext context;
     private Location midpoint;
@@ -186,7 +185,7 @@ public class LocationSuggestion extends AppCompatActivity {
                 LatLng location = new LatLng(midpoint.getLatitude(), midpoint.getLongitude());
                 PlacesSearchResult[] results = PlacesApi.nearbySearchQuery(context, location)
                         .radius(1000) // in meters
-                        .type(PlaceType.CAFE)
+                        .type(PlaceType.CAFE) //change this to also get museum and cafe
                         .await()
                         .results;
                 // handle the results on the UI thread
