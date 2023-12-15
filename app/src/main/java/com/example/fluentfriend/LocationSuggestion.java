@@ -199,7 +199,6 @@ public class LocationSuggestion extends AppCompatActivity {
                         StringBuilder suggestion = new StringBuilder();
                         for (int i = 0; i < results.length; i++) {
                             suggestion.append(results[i].name);
-                            //suggestion.append("Opening hours:").append(results[i].openingHours);
                             suggestion.append("\n");
                         }
                         resultView.setText(suggestion);

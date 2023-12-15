@@ -116,9 +116,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     protected static User getUser(String email){
-        for (User u : userList.values()){
-            if (u.getEmail().equals(email)){
-                return u;
+        for (User user : userList.values()){
+            if (user.getEmail().equals(email)){
+                return user;
             }
         }
         return null;

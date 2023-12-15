@@ -134,14 +134,11 @@ public class MatchPage extends AppCompatActivity {
                     UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
                     if (!activeUsers.contains(userLoc)) {
                         activeUsers.add(userLoc);
-                        Log.d("ActiveUsers", "Added User: " + userLoc.getEmail() + userLoc.getLongitude() + " " + userLoc.getLatitude());
-                        Log.d("ActiveUsers", "Added User: " + activeUsers.contains(userLoc));
                     }
-                    // Log for debugging
+
 
 
                 }
-                Log.d("ActiveUsers","Active users count: " + activeUsers.size()); // Log for debugging
                 textProfile.setText(activeUsers.size() + " users");
                 for (UserLocation l : activeUsers){
                     if (l.getEmail().equals(UserManager.getCurrentUser().getEmail())){
@@ -198,7 +195,7 @@ public class MatchPage extends AppCompatActivity {
 
     private void calcDistanceBetweenUsers() {
 
-        // Calcualte the distance between current user and all the other active users.
+        // Calculate the distance between current user and all the other active users.
          for (int i = 0; i < activeUsers.size(); i++) {
              if(!activeUsers.get(i).getEmail().equals(currentUser.getEmail())) {
                  double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());

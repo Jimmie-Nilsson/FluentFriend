@@ -55,9 +55,8 @@ public class HomePage extends AppCompatActivity {
 
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
-
-
     private LocationRequest locationRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -121,10 +120,7 @@ public class HomePage extends AppCompatActivity {
         btnMessage.setOnClickListener(view -> {
             Toast.makeText(HomePage.this, "Not implemented", Toast.LENGTH_SHORT).show();
         });
-
     }
-
-
     private void fetchActiveUsersAndCollectInList() {
 
         activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
