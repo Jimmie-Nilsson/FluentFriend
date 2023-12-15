@@ -13,60 +13,64 @@
             android:layout_height="0dp"
             android:id="@+id/scrollView2"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="1.0" app:layout_constraintVertical_bias="1.0">
         <androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
                                                            android:layout_height="wrap_content"
                                                            android:orientation="vertical"
                                                            android:id="@+id/linearLayout">
             <com.example.fluentfriend.MultiSpinner
                     android:id="@+id/languagesToLearnSpinner"
-                    android:layout_width="0dp"
+                    android:layout_width="172dp"
                     android:layout_height="52dp"
-                    android:layout_marginTop="69dp" app:layout_constraintTop_toBottomOf="@+id/selectedLanguagesTextView"
-                    app:layout_constraintStart_toEndOf="@+id/iWantToLearnTextView"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="96dp"
-            />
+                    app:layout_constraintTop_toBottomOf="@+id/iWantToLearnTextView"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"/>
             <TextView
                     android:text="Gender:"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/genderTextView"
                     android:textSize="24sp"
-                    app:layout_constraintHorizontal_chainStyle="packed" android:layout_marginTop="303dp"
-                    app:layout_constraintEnd_toStartOf="@+id/maleCheckBox" app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="4dp"
-            />
+                    app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="20dp"
+                    android:layout_marginTop="49dp" app:layout_constraintTop_toBottomOf="@+id/userNameTextView"
+                    android:layout_marginBottom="34dp" app:layout_constraintBottom_toTopOf="@+id/iSpeakTextView"/>
             <CheckBox
                     android:text="Other/Private"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/otherCheckBox"
                     android:minHeight="48dp"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/femaleCheckBox"
-                    app:layout_constraintStart_toEndOf="@+id/femaleCheckBox" android:layout_marginEnd="6dp"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/displayUserNameTextView"
+                    android:layout_marginBottom="26dp" app:layout_constraintBottom_toTopOf="@+id/iSpeakTextView"
+                    android:layout_marginEnd="19dp" app:layout_constraintEnd_toEndOf="parent"/>
             <CheckBox
                     android:text="Female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/femaleCheckBox"
                     android:minHeight="48dp"
-                    android:layout_marginTop="19dp" app:layout_constraintTop_toBottomOf="@+id/displayUserNameTextView"
-                    app:layout_constraintStart_toEndOf="@+id/maleCheckBox"
-                    app:layout_constraintEnd_toStartOf="@+id/otherCheckBox" android:layout_marginEnd="2dp"
-            />
+                    app:layout_constraintEnd_toStartOf="@+id/otherCheckBox" android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/displayUserNameTextView"
+                    android:layout_marginBottom="26dp" app:layout_constraintBottom_toTopOf="@+id/iSpeakTextView"/>
             <CheckBox
                     android:text="Male"
+                    android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/maleCheckBox"
+                    android:id="@+id/maleCheckBox"
                     android:minHeight="48dp"
-                    app:layout_constraintBaseline_toBaselineOf="@+id/femaleCheckBox"
+                    android:layout_marginStart="9dp"
                     app:layout_constraintStart_toEndOf="@+id/genderTextView"
-                    app:layout_constraintEnd_toStartOf="@+id/femaleCheckBox"/>
+                    app:layout_constraintEnd_toStartOf="@+id/femaleCheckBox" android:layout_marginTop="24dp"
+                    app:layout_constraintTop_toBottomOf="@+id/displayUserNameTextView"
+                    app:layout_constraintHorizontal_bias="0.0"/>
             <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/displayUserNameTextView"
+                    android:layout_width="250dp"
+                    android:layout_height="50dp" android:id="@+id/displayUserNameTextView"
                     android:textSize="24sp"
+                    android:textAlignment="textStart"
                     android:text="displayUserName"
-                    app:layout_constraintStart_toEndOf="@+id/userNameTextView" app:layout_constraintEnd_toEndOf="parent"
-                    android:layout_marginBottom="27dp" app:layout_constraintBottom_toTopOf="@+id/genderTextView"/>
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    android:layout_marginEnd="27dp" app:layout_constraintEnd_toEndOf="parent"/>
             <TextView
                     android:text="Profile Settings"
                     android:textSize="20dp"
@@ -79,74 +83,79 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/textView2"
                     app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="29dp"
-                    android:layout_marginEnd="18dp"
+                    android:layout_marginEnd="19dp"
                     app:layout_constraintEnd_toEndOf="@+id/imageView"/>
             <CheckBox
                     android:text="MUSEUM"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/museumCheckBox"
                     android:minHeight="48dp"
-                    app:layout_constraintStart_toStartOf="@+id/fikaCheckBox" android:layout_marginTop="5dp"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4"/>
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    app:layout_constraintStart_toStartOf="@+id/fikaCheckBox"/>
             <CheckBox
                     android:text="CITY WALK"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/cityWalksCheckBox"
                     android:minHeight="48dp"
-                    app:layout_constraintStart_toStartOf="@+id/barCheckBox" android:layout_marginBottom="13dp"
-                    app:layout_constraintBottom_toTopOf="@+id/barCheckBox"/>
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    app:layout_constraintStart_toStartOf="@+id/barCheckBox"/>
             <CheckBox
                     android:text="BAR"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/barCheckBox"
                     android:minHeight="48dp"
+                    android:layout_marginTop="13dp"
+                    app:layout_constraintTop_toBottomOf="@+id/cityWalksCheckBox"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="91dp" android:layout_marginBottom="11dp"
-                    app:layout_constraintBottom_toTopOf="@+id/saveSettingsButton"/>
+                    android:layout_marginStart="91dp"/>
             <CheckBox
                     android:text="FIKA"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/fikaCheckBox"
                     android:minHeight="48dp"
-                    android:layout_marginStart="25dp"
-                    app:layout_constraintStart_toEndOf="@+id/cityWalksCheckBox" android:layout_marginBottom="11dp"
-                    app:layout_constraintBottom_toTopOf="@+id/saveSettingsButton"/>
+                    android:layout_marginTop="13dp"
+                    app:layout_constraintTop_toBottomOf="@+id/museumCheckBox"
+                    android:layout_marginStart="25dp" app:layout_constraintStart_toEndOf="@+id/cityWalksCheckBox"/>
             <TextView
                     android:text="My interests"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/textView4"
                     android:textSize="24sp"
-                    android:layout_marginEnd="39dp" android:layout_marginBottom="5dp"
-                    app:layout_constraintEnd_toEndOf="@+id/museumCheckBox"
-                    app:layout_constraintBottom_toTopOf="@+id/cityWalksCheckBox"/>
+                    android:layout_marginTop="7dp"
+                    app:layout_constraintTop_toBottomOf="@+id/bioEditText"
+                    app:layout_constraintStart_toStartOf="@+id/saveSettingsButton"
+                    android:layout_marginStart="12dp" android:layout_marginEnd="12dp"
+                    app:layout_constraintEnd_toEndOf="@+id/languagesToLearnSpinner"/>
             <TextView
                     android:text="About me"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/textView5"
                     android:textSize="24sp"
-                    app:layout_constraintStart_toStartOf="@+id/bioEditText" android:layout_marginTop="345dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/barCheckBox"
-                    app:layout_constraintTop_toBottomOf="@+id/genderTextView" android:layout_marginBottom="346dp"/>
+                    android:layout_marginTop="114dp"
+                    app:layout_constraintTop_toBottomOf="@+id/languagesToLearnSpinner"
+                    app:layout_constraintStart_toStartOf="@+id/bioEditText"/>
             <TextView
                     android:text="Name:"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/userNameTextView"
                     android:textSize="24sp"
-                    app:layout_constraintHorizontal_chainStyle="packed"
-                    app:layout_constraintEnd_toStartOf="@+id/displayUserNameTextView" android:layout_marginBottom="16dp"
-                    app:layout_constraintBottom_toTopOf="@+id/maleCheckBox"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="20dp" android:layout_marginEnd="19dp"
+                    android:layout_marginTop="9dp"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView"
+                    app:layout_constraintStart_toEndOf="@+id/genderTextView"
+                    app:layout_constraintEnd_toEndOf="@+id/genderTextView"
+                    app:layout_constraintHorizontal_chainStyle="packed" app:layout_constraintStart_toStartOf="parent"
+                    android:layout_marginStart="23dp"
+                    app:layout_constraintEnd_toStartOf="@+id/displayUserNameTextView" android:layout_marginEnd="23dp"
             />
             <com.example.fluentfriend.MultiSpinner
                     android:id="@+id/languagesISpeakSpinner"
-                    android:layout_width="0dp"
+                    android:layout_width="172dp"
                     android:layout_height="48dp"
-                    android:layout_marginTop="97dp" app:layout_constraintStart_toEndOf="@+id/selectedLanguagesTextView"
-                    app:layout_constraintEnd_toEndOf="parent" android:layout_marginBottom="96dp"
-                    app:layout_constraintBottom_toTopOf="@+id/iWantToLearnTextView"
-                    app:layout_constraintTop_toTopOf="@+id/otherCheckBox" android:layout_marginEnd="90dp"
-            />
+                    app:layout_constraintTop_toBottomOf="@+id/iSpeakTextView"
+                    app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"/>
             <Button
                     android:id="@+id/saveSettingsButton"
                     android:layout_width="wrap_content"
@@ -154,9 +163,10 @@
                     android:text="SAVE SETTINGS"
                     android:background="@drawable/mybutton"
                     android:textSize="16sp"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="35dp"
-                    android:layout_marginBottom="1dp"
-                    app:layout_constraintEnd_toEndOf="@+id/fikaCheckBox"/>
+                    android:layout_marginTop="11dp"
+                    app:layout_constraintTop_toBottomOf="@+id/barCheckBox"
+                    app:layout_constraintStart_toStartOf="@+id/barCheckBox"
+                    android:layout_marginStart="36dp"/>
             <androidx.constraintlayout.widget.Guideline android:layout_width="wrap_content"
                                                         android:layout_height="wrap_content"
                                                         android:id="@+id/guideline3"
@@ -172,56 +182,33 @@
                     android:scrollbars="vertical"
                     android:text="Biography..."
                     android:maxLength="300"
-                    app:layout_constraintTop_toBottomOf="@+id/textView5" app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="30dp" android:layout_marginEnd="30dp"
-            />
+                    android:layout_marginStart="11dp" android:layout_marginEnd="11dp"
+                    app:layout_constraintEnd_toEndOf="parent"/>
             <ImageView
                     android:layout_width="178dp"
-                    android:layout_height="0dp" app:srcCompat="@drawable/_60152224_acb6_4f98_a275_c9d7e1cae641"
+                    android:layout_height="165dp" app:srcCompat="@drawable/_60152224_acb6_4f98_a275_c9d7e1cae641"
                     android:id="@+id/imageView"
-                    android:layout_marginTop="43dp" android:layout_marginBottom="42dp"
-                    app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="@+id/textView2"
-                    app:layout_constraintStart_toStartOf="@+id/guideline3"
-                    app:layout_constraintBottom_toBottomOf="@+id/userNameTextView" android:layout_marginStart="126dp"
-                    android:layout_marginEnd="126dp"/>
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintTop_toBottomOf="@+id/textView2" app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
             <TextView
                     android:text="I speak:"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" android:id="@+id/iSpeakTextView"
                     android:textSize="20sp"
-                    app:layout_constraintStart_toStartOf="@+id/selectedLanguagesTextView"
-                    android:layout_marginStart="27dp"
-                    app:layout_constraintBottom_toTopOf="@+id/selectedLanguagesTextView"/>
+                    app:layout_constraintStart_toStartOf="@+id/languagesISpeakSpinner"
+                    android:layout_marginTop="26dp" app:layout_constraintTop_toBottomOf="@+id/maleCheckBox"/>
             <TextView
                     android:text="I want to learn:"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/iWantToLearnTextView"
                     android:textSize="20sp"
-                    app:layout_constraintEnd_toStartOf="@+id/languagesToLearnSpinner"
-                    app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="19dp"
-                    app:layout_constraintBottom_toBottomOf="parent" android:layout_marginEnd="21dp"
-            />
-            <TextView
-                    android:text="Selected languages: "
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/selectedLanguagesTextView"
-                    app:layout_constraintTop_toBottomOf="@+id/languagesISpeakSpinner"
-                    app:layout_constraintEnd_toStartOf="@+id/languagesISpeakSpinner"
-                    app:layout_constraintStart_toStartOf="parent"
-                    android:layout_marginStart="20dp"
-                    app:layout_constraintBottom_toBottomOf="@+id/languagesISpeakSpinner"
-                    android:layout_marginEnd="21dp"/>
-            <TextView
-                    android:text="Selected languages"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/selectedLanguagesToLearnTextView"
-                    app:layout_constraintStart_toStartOf="@+id/iWantToLearnTextView"
-                    app:layout_constraintBottom_toBottomOf="@+id/languagesToLearnSpinner"
-                    android:layout_marginStart="11dp"
-                    app:layout_constraintTop_toBottomOf="@+id/languagesToLearnSpinner"/>
+                    android:layout_marginTop="40dp"
+                    app:layout_constraintTop_toBottomOf="@+id/languagesISpeakSpinner" android:layout_marginEnd="44dp"
+                    app:layout_constraintEnd_toEndOf="@+id/languagesToLearnSpinner"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
