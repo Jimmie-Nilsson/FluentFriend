@@ -17,6 +17,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Random;
 
+
+//PLACEHOLDER CODE, NOT IMPLEMENTED, FOR SCALABILITY
 public class FluentFriendFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FCMService";
