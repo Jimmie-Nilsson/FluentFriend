@@ -91,7 +91,7 @@ public class LocationSuggestion extends AppCompatActivity {
         });
     }
     private void sendMessageToUser() { //this needs to be added when Firebasemessaging is up
-        //code for message request to server
+        //code for message request to server if this is implemented
     }
     //these methods check what interests the users have in common /G
     private boolean doBothLikeFika() {
