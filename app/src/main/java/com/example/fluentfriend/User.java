@@ -18,6 +18,7 @@ public class User implements java.io.Serializable {
     private boolean museum;
     private boolean cityWalks;
     private boolean bar;
+    private String imageURL;
 
     public User() {}
     public User(String firstName, String lastName, String email, String password) {

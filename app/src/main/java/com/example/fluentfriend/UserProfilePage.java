@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.view.View;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +37,8 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     private DatabaseReference usersRef = db.getReference().child("users");
     private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
+    private FirebaseStorage storage = FirebaseStorage.getInstance("gs://fluent-friend-dad39.appspot.com");
+    private ImageView userImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +60,22 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         languagesToLearnSpinner = (MultiSpinner) findViewById(R.id.languagesToLearnSpinner);
         languagesISpeakSpinner = (MultiSpinner) findViewById(R.id.languagesISpeakSpinner);
 
+
+
+        userImage = findViewById(R.id.imageView);
+
+        String profileImagePath = "fluent-friend-dad39.appspot.com/userimages" + currentUser.getEmail() + ".jpg";
+        // Get a reference to the Firebase Storage
+        String defaultImage = "fluent-friend-dad39.appspot.com/userimages/_0e85e3bc_a57f_4623_92c3_f2c2c78b33eb.jpg";
+
+        // Create a storage reference
+        StorageReference storageRef = storage.getReference();
+
+        // Create a reference to the image file
+        StorageReference imageRef = storageRef.child(profileImagePath);
+
+
+        Picasso.get().load(imageRef.getPath()).placeholder(R.drawable._95cb4738_0cd5_47de_abc7_091916a074d2).error(R.drawable._3d0d656a_5f2b_4a78_bb27_477367edb14d).into(userImage);
         //connects the checkboxes graphic to variables in this class so we can use them
         //connects graphic elements in the xml code so we can change it in java code
         cityWalksCheckBox = findViewById(R.id.cityWalksCheckBox);
