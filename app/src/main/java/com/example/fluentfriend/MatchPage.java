@@ -102,7 +102,7 @@ public class MatchPage extends AppCompatActivity {
         Picasso.get().load(imageURL).placeholder(R.drawable.default_profile_picture).error(R.drawable.default_profile_picture).into(profilePicture);
 
         textName.setText(u.getFirstName() +" " + u.getLastName());
-        textBoxHeader.setText(distanceList.size() + " - " + similarityScore.size() + "  Score: "+ d);
+        textBoxHeader.setText(activeUsers.size() + " - " + similarityScore.size() + "  Score: "+ d);
         textProfile.setText(s);
     }
 
@@ -156,7 +156,24 @@ public class MatchPage extends AppCompatActivity {
                 currentUserLoc = getActiveUser(UserManager.getCurrentUser());
                 calcDistanceBetweenUsers();
                 matchingalgorithm();
-                showUser();
+
+                StringBuilder sb = new StringBuilder();
+                for (Double d : distanceList.keySet()) {
+
+                    for (String s : distanceList.get(d)) {
+                        User user = MainActivity.getUser(s);
+
+                        sb.append(user.getFirstName() +"  " + d  + "\n");
+                    }
+                }
+
+                // If don't find any matches
+                if (similarityScore.isEmpty()) {
+                    setFrameForNoMatches(" " ,sb.toString());
+                } else {
+                    showUser();
+                }
+
             }
 
             @Override
@@ -232,6 +249,11 @@ public class MatchPage extends AppCompatActivity {
         }
 
         for (Double d : distanceList.keySet()) {
+
+            // Check if the other user is to far away
+           // if (d > maxDistance) {
+             //   break;
+           // }
 
             for (String s  : distanceList.get(d)) {
                 User otherUser = MainActivity.getUser(s);
@@ -320,11 +342,6 @@ public class MatchPage extends AppCompatActivity {
             } // End s loop
         } // End d loop
 
-        // If don't find any matches
-        if (similarityScore.isEmpty()) {
-            setFrameForNoMatches(textHeader, textProfile);
-            return;
-        }
     } // End of matchingalgorithm
 
     private void setFrameForNoMatches(String header, String txtProfile) {
