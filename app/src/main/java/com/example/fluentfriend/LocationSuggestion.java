@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.LatLng;
+import com.google.maps.model.Photo;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
 import java.util.ArrayList;
@@ -198,6 +199,8 @@ public class LocationSuggestion extends AppCompatActivity {
                         for (int i = 0; i < results.length; i++) {
                             suggestion.append(results[i].name);
                             suggestion.append("\n");
+                            Photo[] photo = results[i].photos;
+
                         }
                         resultView.setText(suggestion);
 

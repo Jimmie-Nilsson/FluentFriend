@@ -345,6 +345,7 @@ public class MatchPage extends AppCompatActivity {
     }
 
 
+    // This code is for adding Random "Mock" users to the database so we can test matching and location suggesting JN.
 //    private void addTestUsers(){
 //        ArrayList<String> firstName = new ArrayList<>();
 //        String[] firstNames = {
