@@ -32,6 +32,7 @@ import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.*;
+
 import java.util.ArrayList;
 
 
@@ -112,6 +113,7 @@ public class HomePage extends AppCompatActivity {
             Toast.makeText(HomePage.this, "Not implemented", Toast.LENGTH_SHORT).show();
         });
     }
+
     private void fetchActiveUsersAndCollectInList() {
         activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -127,7 +129,7 @@ public class HomePage extends AppCompatActivity {
                     // Log for debugging
 
                 }
-                Log.d("ActiveUsers","Active users count: " + activeUsers.size()); // Log for debugging
+                Log.d("ActiveUsers", "Active users count: " + activeUsers.size()); // Log for debugging
                 // set active switch to ON if user is active
                 activeSwitch.setChecked(userIsActive(UserManager.getCurrentUser()));
             }
@@ -138,6 +140,7 @@ public class HomePage extends AppCompatActivity {
             }
         });
     }
+
     protected static boolean userIsActive(User user) {
         for (int i = 0; i < activeUsers.size(); i++) {
             if (activeUsers.get(i).getEmail().equals(user.getEmail())) {

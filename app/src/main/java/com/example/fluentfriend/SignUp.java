@@ -7,6 +7,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.firebase.database.*;
+
 import java.util.Set;
 
 public class SignUp extends AppCompatActivity {
@@ -39,7 +40,7 @@ public class SignUp extends AppCompatActivity {
                 sendErrorMessage("All fields must be filled");
                 return;
             }
-            if (!doesPasswordsMatch()){
+            if (!doesPasswordsMatch()) {
                 sendErrorMessage("Passwords do not match");
                 return;
             }
@@ -51,7 +52,7 @@ public class SignUp extends AppCompatActivity {
         });
     }
 
-    private boolean doesPasswordsMatch(){
+    private boolean doesPasswordsMatch() {
         return password.getText().toString().equals(repeatPassword.getText().toString());
     }
 
@@ -62,8 +63,8 @@ public class SignUp extends AppCompatActivity {
         return true;
     }
 
-    private String normalizeString(String string){
-        return string.substring(0,1).toUpperCase() + string.substring(1).toLowerCase();
+    private String normalizeString(String string) {
+        return string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
     }
 
     private void sendErrorMessage(String message) {
@@ -76,7 +77,7 @@ public class SignUp extends AppCompatActivity {
         if (!users.contains(user.getEmail())) {
             myRef.child("users").child(user.getEmail()).setValue(user);
             return true;
-        }else{
+        } else {
             sendErrorMessage("A user with this email already exists, try logging in instead!");
             return false;
         }

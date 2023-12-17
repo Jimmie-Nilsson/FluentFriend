@@ -60,7 +60,7 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
                 android.R.layout.simple_spinner_item,
-                new String[] { spinnerText });
+                new String[]{spinnerText});
         setAdapter(adapter);
         listener.onItemsSelected(selected, this);
     }
@@ -82,12 +82,13 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
         builder.show();
         return true;
     }
-    public void setItemsSelected(List<String> itemsSelected, List<String> itemsTotal){
-        for (int i = 0; i < itemsTotal.size(); i++){
+
+    public void setItemsSelected(List<String> itemsSelected, List<String> itemsTotal) {
+        for (int i = 0; i < itemsTotal.size(); i++) {
             String s = itemsTotal.get(i);
-            if (itemsSelected.contains(s)){
+            if (itemsSelected.contains(s)) {
                 selected[i] = true;
-            }else {
+            } else {
                 selected[i] = false;
             }
         }
@@ -106,11 +107,11 @@ public class MultiSpinner extends androidx.appcompat.widget.AppCompatSpinner imp
 
         // all text on the spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(),
-                android.R.layout.simple_spinner_item, new String[] { allText });
+                android.R.layout.simple_spinner_item, new String[]{allText});
         setAdapter(adapter);
     }
 
     public interface MultiSpinnerListener {
-        public void onItemsSelected(boolean[] selected,MultiSpinner spinner);
+        public void onItemsSelected(boolean[] selected, MultiSpinner spinner);
     }
 }

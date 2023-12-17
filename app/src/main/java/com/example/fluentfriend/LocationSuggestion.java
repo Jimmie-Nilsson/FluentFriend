@@ -21,7 +21,7 @@ import java.util.List;
 import static com.example.fluentfriend.MatchPage.getActiveUser;
 
 public class LocationSuggestion extends AppCompatActivity {
-    private String apiKey = BuildConfig.API_KEY;
+    private static final String API_KEY = BuildConfig.API_KEY;
     private GeoApiContext context;
     private Location midpoint;
     private User user1;
@@ -62,7 +62,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
         //what does this do? /G
         context = new GeoApiContext.Builder()
-                .apiKey(apiKey)
+                .apiKey(API_KEY)
                 .build();
 
         //displays to the user what interests they have in common in a textview /G

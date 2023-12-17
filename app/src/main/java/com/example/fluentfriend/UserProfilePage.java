@@ -17,6 +17,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,7 +55,6 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         currentUser = UserManager.getCurrentUser();
 
 
-
         //displays the current user's name
         displayUserName = findViewById(R.id.displayUserNameTextView);
         displayUserName.setText(currentUser.getFirstName() + " " + currentUser.getLastName());
@@ -66,7 +66,6 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
 
         languagesToLearnSpinner = (MultiSpinner) findViewById(R.id.languagesToLearnSpinner);
         languagesISpeakSpinner = (MultiSpinner) findViewById(R.id.languagesISpeakSpinner);
-
 
 
         userImage = findViewById(R.id.imageView);
@@ -99,12 +98,12 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         barCheckBox.setChecked(currentUser.isBarChecked());
         fikaCheckBox.setChecked(currentUser.isFikaChecked());
 
-        //gets the user's gender and sets the correct box
+        //gets the user's gender and sets the correct box / KB
         loadGenderBox();
 
-        // Change this toString() if you want some other text like Language or something
+        // Change this toString() part if you want some other text like Language or something / JN
         languagesISpeakSpinner.setItems(LanguageManager.AVAILABLE_LANGUAGES,
-                UserManager.getCurrentUser().getLanguagesSpeak().toString() , this);
+                UserManager.getCurrentUser().getLanguagesSpeak().toString(), this);
         languagesToLearnSpinner.setItems(LanguageManager.AVAILABLE_LANGUAGES,
                 UserManager.getCurrentUser().getLanguagesToLearn().toString(), this);
         loadUserLanguages();
@@ -136,7 +135,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
             }
         });
 
-        //if user click, changes to opposite value based on the current boolean
+        //if user click, changes to opposite value based on the current boolean / KB
         cityWalksCheckBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -164,17 +163,17 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
             }
         });
 
-        buttonSave.setOnClickListener(new View.OnClickListener(){
+        buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 saveBiography();
                 saveCheckBoxes();
                 saveGender();
                 saveSelectedLanguages();
-                // uploads to database
+                // uploads to database / JN
                 usersRef.child(UserManager.getCurrentUser().getEmail()).setValue(UserManager.getCurrentUser());
                 Toast.makeText(UserProfilePage.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
-                finish(); // Går tillbaka till därifrån man kom
+                finish(); // Går tillbaka till därifrån man kom / KB
             }
         });
 
@@ -201,7 +200,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         }
     }
 
-    private void saveBiography(){
+    private void saveBiography() {
         String newBiography = editTextBiography.getText().toString();
         currentUser.setUserBiography(newBiography);
     }
@@ -216,34 +215,34 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
     private void saveGender() {
         if (femaleCheckBox.isChecked()) {
             currentUser.setGender("Female");
-        } else if (maleCheckBox.isChecked()){
+        } else if (maleCheckBox.isChecked()) {
             currentUser.setGender("Male");
         } else if (otherCheckBox.isChecked()) {
             currentUser.setGender("Other/Private");
         }
     }
 
-    // this method loads the users languages from the current user.
-    private void loadUserLanguages(){
+    // this method loads the users languages from the current user / JN
+    private void loadUserLanguages() {
         speakLanguages = UserManager.getCurrentUser().getLanguagesSpeak();
         learnLanguages = UserManager.getCurrentUser().getLanguagesToLearn();
         if (learnLanguages != null && speakLanguages != null) {
             languagesToLearnSpinner.setItemsSelected(learnLanguages, LanguageManager.AVAILABLE_LANGUAGES);
-            languagesISpeakSpinner.setItemsSelected(speakLanguages,LanguageManager.AVAILABLE_LANGUAGES);
+            languagesISpeakSpinner.setItemsSelected(speakLanguages, LanguageManager.AVAILABLE_LANGUAGES);
         }
     }
 
 
-    // this is the MultiSpinner classes clickHandler
+    // this is the MultiSpinner classes clickHandler / JN
     @Override
     public void onItemsSelected(boolean[] selected, MultiSpinner spinner) {
         ArrayList<String> speakLanguages = new ArrayList<>();
         ArrayList<String> learnLanguages = new ArrayList<>();
-        for (int i = 0; i < selected.length; i++){
-            if (selected[i]){
+        for (int i = 0; i < selected.length; i++) {
+            if (selected[i]) {
                 if (spinner.getId() == languagesISpeakSpinner.getId()) {
                     speakLanguages.add(LanguageManager.AVAILABLE_LANGUAGES.get(i));
-                }else if (spinner.getId() == languagesToLearnSpinner.getId()) {
+                } else if (spinner.getId() == languagesToLearnSpinner.getId()) {
                     learnLanguages.add(LanguageManager.AVAILABLE_LANGUAGES.get(i));
                 }
             }
@@ -251,7 +250,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         if (spinner.getId() == languagesISpeakSpinner.getId()) {
             this.speakLanguages = speakLanguages;
             spinner.setItemsSelected(this.speakLanguages, LanguageManager.AVAILABLE_LANGUAGES);
-        }else if (spinner.getId() == languagesToLearnSpinner.getId()) {
+        } else if (spinner.getId() == languagesToLearnSpinner.getId()) {
             this.learnLanguages = learnLanguages;
             spinner.setItemsSelected(this.learnLanguages, LanguageManager.AVAILABLE_LANGUAGES);
         }
@@ -260,32 +259,33 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("Image","MADE IT TO ACTIVITY RESULT" );
+        Log.d("Image", "MADE IT TO ACTIVITY RESULT");
 
         if (resultCode == RESULT_OK) {
-            // Get the selected image URI
+            // Get the selected image URI JN
             Uri imageUri = data.getData();
             Picasso.get().load(imageUri).placeholder(R.drawable._95cb4738_0cd5_47de_abc7_091916a074d2).error(R.drawable._3d0d656a_5f2b_4a78_bb27_477367edb14d).into(userImage);
-            // Upload the image to Firebase Storage
+            // Upload the image to Firebase Storage / JN
             uploadImage(imageUri);
         }
     }
 
     private void uploadImage(Uri imageUri) {
-        // Replace "profile_images" with the actual folder in your Firebase Storage where profile images should be stored
+
         String profileImagePath = "userimages/" + currentUser.getEmail() + ".jpg";
 
-        // Create a reference to the image file
+        // Create a reference to the image file / JN
         StorageReference imageRef = storageRef.child(profileImagePath);
-        // Upload the image
+
+        // Uploads the image. / JN
         imageRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                // Image uploaded successfully
+                // Image uploaded successfully / JN
                 imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri downloadUri) {
-                        // Save the download URL to the user's profile
+                        // Save the download URL to the user's profile / JN
                         UserManager.getCurrentUser().setImageURL(downloadUri.toString());
                         Toast.makeText(UserProfilePage.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
                     }
@@ -294,7 +294,8 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
         });
     }
 
-    private void openGallery(){
+    // ImagePicker is a library that helps us choose images from the device. JN
+    private void openGallery() {
         ImagePicker.with(this).galleryOnly().start();
     }
 }

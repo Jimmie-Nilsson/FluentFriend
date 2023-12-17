@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.google.firebase.database.*;
 import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
+
 import java.util.*;
 
 public class MatchPage extends AppCompatActivity {
@@ -60,14 +61,14 @@ public class MatchPage extends AppCompatActivity {
         btnAccept.setOnClickListener(view -> {
             // Open new frame where we show cafe suggestions etc,
             Intent i = new Intent(this, LocationSuggestion.class);
-            i.putExtra("matchedUser",similarityScore.get(similarityScore.firstKey()));
+            i.putExtra("matchedUser", similarityScore.get(similarityScore.firstKey()));
             startActivity(i);
         });
 
         btnDecline.setOnClickListener(view -> {
             similarityScore.remove(similarityScore.firstKey());
 
-            if(similarityScore.isEmpty()) {
+            if (similarityScore.isEmpty()) {
                 setFrameForNoMatches("No more matches :(", "Comeback later and test your luck.\n\nHave a nice day!");
             } else {
                 showUser();
@@ -81,7 +82,7 @@ public class MatchPage extends AppCompatActivity {
 
     private void showUser() {
         // Fix so it doesn't run showUser if Matches is empty. JN
-        textScroll.scrollTo(0,0);
+        textScroll.scrollTo(0, 0);
         double d = similarityScore.firstKey();
         User u = similarityScore.get(d);
         String s = userInfo.get(u);
@@ -89,8 +90,8 @@ public class MatchPage extends AppCompatActivity {
         String imageURL = u.getImageURL();
         Picasso.get().load(imageURL).placeholder(R.drawable.default_profile_picture).error(R.drawable.default_profile_picture).into(profilePicture);
 
-        textName.setText(u.getFirstName() +" " + u.getLastName());
-        textBoxHeader.setText(activeUsers.size() + " - " + similarityScore.size() + "  Score: "+ d);
+        textName.setText(u.getFirstName() + " " + u.getLastName());
+        textBoxHeader.setText(activeUsers.size() + " - " + similarityScore.size() + "  Score: " + d);
         textProfile.setText(s);
     }
 
@@ -121,7 +122,7 @@ public class MatchPage extends AppCompatActivity {
     }
 
     private void fetchActiveUsersAndCollectInList() {
-          activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
@@ -134,8 +135,8 @@ public class MatchPage extends AppCompatActivity {
 
                 textProfile.setText(activeUsers.size() + " users");
 
-                for (UserLocation l : activeUsers){
-                    if (l.getEmail().equals(UserManager.getCurrentUser().getEmail())){
+                for (UserLocation l : activeUsers) {
+                    if (l.getEmail().equals(UserManager.getCurrentUser().getEmail())) {
                         addUserActive(l);
                         currentUserLoc = l;
                         break;
@@ -153,10 +154,10 @@ public class MatchPage extends AppCompatActivity {
                         for (String s : distanceList.get(d)) {
                             User user = MainActivity.getUser(s);
 
-                            sb.append(user.getFirstName() +"  " + d  + "\n");
+                            sb.append(user.getFirstName() + "  " + d + "\n");
                         }
                     }
-                    setFrameForNoMatches("No match found" ,sb.toString());
+                    setFrameForNoMatches("No match found", sb.toString());
                 } else {
                     showUser();
                 }
@@ -170,13 +171,13 @@ public class MatchPage extends AppCompatActivity {
         });
     }
 
-   protected static UserLocation getActiveUser(User user) {
-       for (int i = 0; i < activeUsers.size(); i++) {
-           if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
-               return activeUsers.get(i);
-           }
-       }
-       return null; // If the user is not active. We return null.
+    protected static UserLocation getActiveUser(User user) {
+        for (int i = 0; i < activeUsers.size(); i++) {
+            if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
+                return activeUsers.get(i);
+            }
+        }
+        return null; // If the user is not active. We return null.
     }
 
     protected static boolean userIsActive(User user) {
@@ -201,14 +202,14 @@ public class MatchPage extends AppCompatActivity {
 
     private void calcDistanceBetweenUsers() {
         // Calculate the distance between current user and all the other active users.
-         for (int i = 0; i < activeUsers.size(); i++) {
-             if(!activeUsers.get(i).getEmail().equals(currentUser.getEmail())) {
-                 double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());
-                 if (!distanceList.containsKey(distance)) {
-                     distanceList.put(distance, new ArrayList<>());
-                 }
-                 distanceList.get(distance).add(activeUsers.get(i).getEmail());
-             }
+        for (int i = 0; i < activeUsers.size(); i++) {
+            if (!activeUsers.get(i).getEmail().equals(currentUser.getEmail())) {
+                double distance = currentUserLoc.calcDistanceBetweenUsers(activeUsers.get(i).getLatitude(), activeUsers.get(i).getLongitude());
+                if (!distanceList.containsKey(distance)) {
+                    distanceList.put(distance, new ArrayList<>());
+                }
+                distanceList.get(distance).add(activeUsers.get(i).getEmail());
+            }
         }
     }
 
@@ -242,7 +243,7 @@ public class MatchPage extends AppCompatActivity {
                 break;
             }
 
-            for (String s  : distanceList.get(d)) {
+            for (String s : distanceList.get(d)) {
                 User otherUser = MainActivity.getUser(s);
                 StringBuilder sb = new StringBuilder();
 
@@ -258,15 +259,15 @@ public class MatchPage extends AppCompatActivity {
                 boolean checkThree = false;
 
                 // Check for similarity in languages. Get users data for language
-                List <String> otherUserSpeaks = otherUser.getLanguagesSpeak();
-                List <String> otherUserWantsToLearn = otherUser.getLanguagesToLearn();
-                List <String> currentUserSpeaks = currentUser.getLanguagesSpeak();
-                List <String> currentUserWantsToLearn = currentUser.getLanguagesToLearn();
+                List<String> otherUserSpeaks = otherUser.getLanguagesSpeak();
+                List<String> otherUserWantsToLearn = otherUser.getLanguagesToLearn();
+                List<String> currentUserSpeaks = currentUser.getLanguagesSpeak();
+                List<String> currentUserWantsToLearn = currentUser.getLanguagesToLearn();
 
                 // Check if otheruser speaks any language that current user wants to learn.
                 for (int i = 0; i < otherUserSpeaks.size(); i++) {
 
-                    if(currentUserWantsToLearn.contains(otherUserSpeaks.get(i))) {
+                    if (currentUserWantsToLearn.contains(otherUserSpeaks.get(i))) {
                         sb.append(otherUser.getFirstName());
                         sb.append(" speaks " + otherUserSpeaks.get(i) + " and it's on your list of language to learn!\n\n");
                         languageSimilarity += numberLanguage;
@@ -276,7 +277,7 @@ public class MatchPage extends AppCompatActivity {
 
                 // Check if otheruser wants to learn any of the language currentUser speak.
                 for (int k = 0; k < otherUserWantsToLearn.size(); k++) {
-                    if(currentUserSpeaks.contains(otherUserWantsToLearn.get(k))) {
+                    if (currentUserSpeaks.contains(otherUserWantsToLearn.get(k))) {
                         sb.append(otherUser.getFirstName());
                         sb.append(" wants to learn " + otherUserWantsToLearn.get(k) + " and that's in your speaking list!\n\n");
                         languageSimilarity += numberLanguage;
@@ -290,7 +291,7 @@ public class MatchPage extends AppCompatActivity {
                 }
 
                 // Check for common checkbox interest.
-                if(currentUser.isFikaChecked() && otherUser.isFikaChecked()) {
+                if (currentUser.isFikaChecked() && otherUser.isFikaChecked()) {
                     sb.append("Fika is a common interest!\n");
                     checkboxSimilarity += numberCheckBox;
                     checkThree = true;
@@ -312,7 +313,7 @@ public class MatchPage extends AppCompatActivity {
                 }
 
                 // if they don't have any common interest
-                if(!checkThree){
+                if (!checkThree) {
                     sb.append("No common interest...");
                 }
 
@@ -342,7 +343,6 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setVisibility(View.VISIBLE);
         btnReturn.setClickable(true);
     }
-
 
 
 //    private void addTestUsers(){

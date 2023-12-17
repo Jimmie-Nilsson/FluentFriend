@@ -10,6 +10,7 @@ import androidx.core.app.NotificationCompat;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import org.json.JSONObject;
+
 import java.io.BufferedWriter;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
@@ -22,6 +23,7 @@ import java.util.Random;
 public class FluentFriendFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "FCMService";
+
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
@@ -55,6 +57,7 @@ public class FluentFriendFirebaseMessagingService extends FirebaseMessagingServi
         sendRegistrationToServer(token);
         Log.d(TAG, "Refreshed token: " + token);
     }
+
     private void sendRegistrationToServer(final String token) {
         // Create a new thread for network operations
         new Thread(new Runnable() {

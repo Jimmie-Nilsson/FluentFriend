@@ -5,29 +5,40 @@ public class UserLocation implements java.io.Serializable {
     private double longitude;
     private double latitude;
 
-    public UserLocation(){}
+    public UserLocation() {
+    }
+
     public UserLocation(String email, double latitude, double longitude) {
         this.email = email;
         this.longitude = longitude;
         this.latitude = latitude;
     }
-    public String getEmail() {return email;}
 
-    public void setEmail(String email){
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
         this.email = email;
     }
 
-    public double getLongitude() {return longitude;}
+    public double getLongitude() {
+        return longitude;
+    }
 
-    public void setLongitude(double longitude){
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
-    public void setLatitude(double latitude){
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
-    public double getLatitude() {return latitude;}
-    public double calcDistanceBetweenUsers( double lat2, double lon2) {
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double calcDistanceBetweenUsers(double lat2, double lon2) {
         final double EARTH_RADIUS = 6371000; // meters
 
         // Convert latitude and longitude from degrees to radians
@@ -56,8 +67,8 @@ public class UserLocation implements java.io.Serializable {
     }
 
     @Override
-    public boolean equals(Object object){
-        if (object instanceof UserLocation loc){
+    public boolean equals(Object object) {
+        if (object instanceof UserLocation loc) {
             return loc.getEmail().equals(this.email) && loc.getLatitude() == this.latitude && loc.getLongitude() == this.longitude;
         }
         return false;

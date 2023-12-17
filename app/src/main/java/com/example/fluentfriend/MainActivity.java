@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.*;
+
 import java.util.HashMap;
 import java.util.Set;
 
@@ -84,19 +85,21 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
             }
         });
     }
-    protected static Set<String> getRegisteredUsers(){
+
+    protected static Set<String> getRegisteredUsers() {
         return userList.keySet();
     }
 
-    protected static User getUser(String email){
-        for (User user : userList.values()){
-            if (user.getEmail().equalsIgnoreCase(email)){
+    protected static User getUser(String email) {
+        for (User user : userList.values()) {
+            if (user.getEmail().equalsIgnoreCase(email)) {
                 return user;
             }
         }
