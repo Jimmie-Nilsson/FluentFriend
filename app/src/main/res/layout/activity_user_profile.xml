@@ -187,7 +187,6 @@
                     android:layout_marginStart="11dp" android:layout_marginEnd="11dp"
                     app:layout_constraintEnd_toEndOf="parent"/>
             <de.hdodenhof.circleimageview.CircleImageView
-                    xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:layout_width="178dp"
                     android:layout_height="165dp"
                     android:id="@+id/imageView"

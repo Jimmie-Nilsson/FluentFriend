@@ -19,6 +19,8 @@ import android.widget.TextView;
 
 import com.google.android.gms.location.LocationRequest;
 import com.google.firebase.database.*;
+import com.squareup.picasso.Picasso;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 import java.util.*;
@@ -36,7 +38,7 @@ public class MatchPage extends AppCompatActivity {
     private TextView textBoxHeader;
     private TextView textName;
     private ScrollView textScroll;
-    private ImageView profilePicture;
+    private CircleImageView profilePicture;
     private User currentUser;
     private UserLocation currentUserLoc;
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
@@ -90,10 +92,14 @@ public class MatchPage extends AppCompatActivity {
     }
 
     private void showUser() {
+        // Fix so it doesnt run showUser if Matches is empty.
         textScroll.scrollTo(0,0);
         double d = similarityScore.firstKey();
         User u = similarityScore.get(d);
         String s = userInfo.get(u);
+
+        String imageURL = u.getImageURL();
+        Picasso.get().load(imageURL).placeholder(R.drawable.default_profile_picture).error(R.drawable.default_profile_picture).into(profilePicture);
 
         textName.setText(u.getFirstName() +" " + u.getLastName());
         textBoxHeader.setText(distanceList.size() + " - " + similarityScore.size() + "  Score: "+ d);

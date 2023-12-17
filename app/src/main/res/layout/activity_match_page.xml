@@ -82,9 +82,9 @@
             app:layout_constraintBottom_toTopOf="@+id/matchPageImageView" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="20dp" android:layout_marginEnd="20dp"/>
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="172dp"
-            android:layout_height="178dp" app:srcCompat="@drawable/_61e9c924_b485_4247_9df4_89c621790e1d"
+            android:layout_height="178dp"
             android:id="@+id/matchPageImageView"
             app:layout_constraintTop_toBottomOf="@+id/matchPageTextTop" android:layout_marginBottom="25dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/matchPageNameText"
