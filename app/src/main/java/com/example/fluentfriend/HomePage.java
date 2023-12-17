@@ -41,8 +41,6 @@ import java.util.ArrayList;
 
 
 public class HomePage extends AppCompatActivity {
-
-
     private static ArrayList<UserLocation> activeUsers = new ArrayList<>();
     private Button btnProfile;
     private Button btnMessage;
@@ -52,11 +50,9 @@ public class HomePage extends AppCompatActivity {
     private ProgressDialog dialog;
     private double latitude;
     private double longitude;
-
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
     private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
     private LocationRequest locationRequest;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,8 +138,6 @@ public class HomePage extends AppCompatActivity {
                 // set active switch to ON if user is active
                 activeSwitch.setChecked(userIsActive(UserManager.getCurrentUser()));
             }
-
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {

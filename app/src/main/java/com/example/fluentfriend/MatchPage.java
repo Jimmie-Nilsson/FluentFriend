@@ -29,7 +29,6 @@ public class MatchPage extends AppCompatActivity {
     private List<User> users = new ArrayList<>();
     private TreeMap<Double, User> similarityScore = new TreeMap<>(Comparator.reverseOrder());
     private HashMap<User, String> userInfo = new HashMap<>();
-    private LocationRequest locationRequest;
     private Button btnAccept;
     private Button btnDecline;
     private Button btnReturn;

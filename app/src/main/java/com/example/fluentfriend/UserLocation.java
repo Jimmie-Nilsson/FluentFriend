@@ -5,9 +5,7 @@ public class UserLocation implements java.io.Serializable {
     private double longitude;
     private double latitude;
 
-    public UserLocation(){
-
-    }
+    public UserLocation(){}
     public UserLocation(String email, double latitude, double longitude) {
         this.email = email;
         this.longitude = longitude;
@@ -50,6 +48,11 @@ public class UserLocation implements java.io.Serializable {
 
         // Calculate distance
         return EARTH_RADIUS * c;
+
+        /* Haversine formula. The Haversine formula calculates the shortest distance over the earth's surface,
+           giving an "as-the-crow-flies" distance between the points
+           (ignoring any hills, valleys, or other potential obstacles).
+        */
     }
 
     @Override
@@ -61,7 +64,3 @@ public class UserLocation implements java.io.Serializable {
     }
 }
 
-/* Haversine formula. The Haversine formula calculates the shortest distance over the earth's surface,
-giving an "as-the-crow-flies" distance between the points
-(ignoring any hills, valleys, or other potential obstacles).
- */

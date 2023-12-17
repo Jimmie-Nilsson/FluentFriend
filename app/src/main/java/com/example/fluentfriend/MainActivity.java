@@ -29,8 +29,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //addUsers(); // Lägg till användare
 
+        // Get users som the DB
         FirebaseApp.initializeApp(this);
         fetchUsersAndCollectInList();
 
@@ -45,11 +45,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         btnLogIn.setOnClickListener(view -> {
+            // Check so the text fields is filled out
             if (email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty()) {
                 wrongInputMessage("Empty field");
                 return;
             }
 
+            // Get the input from the input fields
             String inputEmail = email.getText().toString();
             String inputPassword = password.getText().toString();
 
@@ -66,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("lastName", user.getLastName());
                 UserManager.setCurrentUser(user);
                 startActivity(intent);
-
             } else {
                 wrongInputMessage("Wrong password");
             }
@@ -75,22 +76,6 @@ public class MainActivity extends AppCompatActivity {
 
     private void wrongInputMessage(String message) {
         Toast.makeText(MainActivity.this, message, Toast.LENGTH_LONG).show();
-    }
-
-    private void addUsers() {
-        User userOne = new User("admin", "admin", "admin", "123");
-        User userTwo = new User("Bosse", "Nillson", "bosse", "123");
-        userList.put("admin", userOne);
-        userList.put("bosse", userTwo);
-    }
-
-    public static boolean addNewUser(String firstName, String lastname, String email, String password) {
-        if (userList.containsKey(email)) {
-            return false;
-        } else {
-            User user = new User(firstName, lastname, email, password);
-            return true;
-        }
     }
 
     private void fetchUsersAndCollectInList() {
@@ -123,7 +108,4 @@ public class MainActivity extends AppCompatActivity {
         }
         return null;
     }
-
-
-
 }
