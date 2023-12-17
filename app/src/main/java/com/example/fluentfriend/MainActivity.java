@@ -29,15 +29,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        // Get users som the DB
-        FirebaseApp.initializeApp(this);
-        fetchUsersAndCollectInList();
-
         btnCreateAccount = (Button) findViewById(R.id.saveSettingsButton);
         btnLogIn = (Button) findViewById(R.id.main_btnLogIn);
         email = (TextView) findViewById(R.id.main_emailField);
         password = (TextView) findViewById(R.id.main_passwordField);
+
+        // Get users som the DB
+        FirebaseApp.initializeApp(this);
+        fetchUsersAndCollectInList();
 
         btnCreateAccount.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SignUp.class);
@@ -64,8 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (inputPassword.equals(user.getPassword())) {
                 Intent intent = new Intent(MainActivity.this, HomePage.class);
-                intent.putExtra("firstName", user.getFirstName());
-                intent.putExtra("lastName", user.getLastName());
                 UserManager.setCurrentUser(user);
                 startActivity(intent);
             } else {

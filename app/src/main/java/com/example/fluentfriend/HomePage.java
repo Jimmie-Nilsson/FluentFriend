@@ -48,6 +48,7 @@ public class HomePage extends AppCompatActivity {
     private TextView welcomeText;
     private SwitchCompat activeSwitch;
     private ProgressDialog dialog;
+    private User currentUser;
     private double latitude;
     private double longitude;
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
@@ -58,20 +59,23 @@ public class HomePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_page);
-
         btnProfile = (Button) findViewById(R.id.homepage_btn_profile);
         welcomeText = (TextView) findViewById(R.id.homepage_welcomeText);
         btnMatch = (Button) findViewById(R.id.matchPageReturnBack);
         btnMessage = (Button) findViewById(R.id.homepage_messagesbtn);
         activeSwitch = (SwitchCompat) findViewById(R.id.homepage_activeSwitch);
 
+        // Get current user and set welcome text.
+        currentUser = UserManager.getCurrentUser();
+        welcomeText.setText(String.format("Welcome %s %s", currentUser.getFirstName(), currentUser.getLastName()));
+
+        // Get location settings
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(5000);
         locationRequest.setFastestInterval(2000);
 
-
-        // THIS SHOULD BE CHANGED TO BE IN SWITCH CLICK LISTERNER
+        // Load location and show a loading wheel for the user.
         getCurrentLocation();
         dialog = new ProgressDialog(this); // this = YourActivity
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -80,24 +84,20 @@ public class HomePage extends AppCompatActivity {
         dialog.setIndeterminate(true);
         dialog.setCanceledOnTouchOutside(false);
         dialog.show();
-        // MatchPage is not loaded yet so can't check if userIsActive should switch be on or off?
 
-        //END OF END IN CLICK LISTERNER
+        // Fetch all the active users.
         fetchActiveUsersAndCollectInList();
 
-
+        // If switch is on the user is in at activelist of users and can get matched with other users.
         activeSwitch.setOnClickListener(view -> {
             if (activeSwitch.isChecked()) {
                 UserLocation userLoc = new UserLocation(UserManager.getCurrentUser().getEmail(), latitude, longitude);
                 MatchPage page = new MatchPage();
                 page.addUserActive(userLoc);
-
             } else if (!activeSwitch.isChecked()) {
                 new MatchPage().removeUserActive(UserManager.getCurrentUser());
             }
         });
-        Intent intent = getIntent();
-        welcomeText.setText(String.format("Welcome %s %s", intent.getStringExtra("firstName"), intent.getStringExtra("lastName")));
 
         btnProfile.setOnClickListener(view -> {
             Intent intentTwo = new Intent(HomePage.this, UserProfilePage.class);
@@ -118,7 +118,6 @@ public class HomePage extends AppCompatActivity {
         });
     }
     private void fetchActiveUsersAndCollectInList() {
-
         activeUsersRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -132,7 +131,6 @@ public class HomePage extends AppCompatActivity {
                     }
                     // Log for debugging
 
-
                 }
                 Log.d("ActiveUsers","Active users count: " + activeUsers.size()); // Log for debugging
                 // set active switch to ON if user is active
@@ -144,7 +142,6 @@ public class HomePage extends AppCompatActivity {
                 // Handle errors
             }
         });
-
     }
     protected static boolean userIsActive(User user) {
         for (int i = 0; i < activeUsers.size(); i++) {
@@ -258,10 +255,6 @@ public class HomePage extends AppCompatActivity {
 
     }
 
-    protected boolean isUserActive() {
-        return activeSwitch.isChecked();
-    }
-
     private boolean isGPSEnabled() {
         LocationManager locationManager = null;
         boolean isEnabled = false;
@@ -273,7 +266,6 @@ public class HomePage extends AppCompatActivity {
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
     }
-
 }
 
 
