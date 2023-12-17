@@ -8,13 +8,14 @@
         tools:context=".MatchPage" android:background="@color/_bg__first_ek2_color">
 
     <TextView
-            android:layout_width="366dp"
-            android:layout_height="52dp" android:id="@+id/matchPageNameText"
+            android:layout_width="370dp"
+            android:layout_height="55dp" android:id="@+id/matchPageNameText"
             android:textSize="24sp" android:textStyle="bold" android:fontFamily="monospace"
             android:textAlignment="center"
-            android:layout_marginEnd="20dp"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/matchPageImageView"
-            android:layout_marginBottom="26dp" app:layout_constraintBottom_toTopOf="@+id/scrollView5"/>
+            app:layout_constraintTop_toBottomOf="@+id/matchPageImageView" android:layout_marginBottom="3dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/scrollView5"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="20dp" android:layout_marginEnd="20dp"/>
     <Button
             android:id="@+id/matchPageReturnBack"
             android:layout_width="300dp"
@@ -51,14 +52,14 @@
             android:layout_marginStart="16dp" app:layout_constraintBottom_toBottomOf="@+id/matchmatchPageBtnDecline"
             android:layout_marginEnd="79dp"/>
     <ScrollView
-            android:layout_width="372dp"
-            android:layout_height="233dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:fillViewport="true"
             android:id="@+id/scrollView5"
             app:layout_constraintTop_toBottomOf="@+id/matchPageNameText" android:layout_marginBottom="9dp"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/matchPageReturnBack"
             app:layout_constraintStart_toStartOf="parent"
-            android:layout_marginStart="20dp" android:layout_marginEnd="20dp">
+            android:layout_marginStart="19dp" android:layout_marginEnd="19dp">
         <TextView
                 android:text="TextView"
                 android:textAlignment="textStart"
@@ -82,10 +83,10 @@
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="20dp" android:layout_marginEnd="20dp"/>
     <ImageView
-            android:layout_width="178dp"
-            android:layout_height="165dp" app:srcCompat="@drawable/_60152224_acb6_4f98_a275_c9d7e1cae641"
-            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_width="172dp"
+            android:layout_height="178dp" app:srcCompat="@drawable/_61e9c924_b485_4247_9df4_89c621790e1d"
             android:id="@+id/matchPageImageView"
-            app:layout_constraintHorizontal_bias="0.498" app:layout_constraintTop_toBottomOf="@+id/matchPageTextTop"
-            android:layout_marginBottom="20dp" app:layout_constraintBottom_toTopOf="@+id/matchPageNameText"/>
+            app:layout_constraintTop_toBottomOf="@+id/matchPageTextTop" android:layout_marginBottom="25dp"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toTopOf="@+id/matchPageNameText"
+            app:layout_constraintStart_toStartOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
