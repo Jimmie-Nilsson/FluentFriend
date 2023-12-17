@@ -63,5 +63,11 @@ public class User implements java.io.Serializable {
     public boolean isFikaChecked() {return this.fika;}
     public boolean isMuseumChecked() {return this.museum;}
     public boolean isBarChecked() {return this.bar;}
+    public String getImageURL(){
+        return imageURL;
+    }
+    public void setImageURL(String image){
+        imageURL = image;
+    }
     public boolean isCityWalksChecked() {return this.cityWalks;}
 }

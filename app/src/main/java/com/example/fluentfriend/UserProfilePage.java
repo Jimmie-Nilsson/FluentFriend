@@ -1,15 +1,21 @@
 package com.example.fluentfriend;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.widget.*;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -38,6 +44,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
     private DatabaseReference usersRef = db.getReference().child("users");
     private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
     private FirebaseStorage storage = FirebaseStorage.getInstance("gs://fluent-friend-dad39.appspot.com");
+    private StorageReference storageRef = storage.getReference();
     private ImageView userImage;
 
     @Override
@@ -47,6 +54,8 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
 
         //loads the current user
         currentUser = UserManager.getCurrentUser();
+
+
 
         //displays the current user's name
         displayUserName = findViewById(R.id.displayUserNameTextView);
@@ -64,18 +73,18 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
 
         userImage = findViewById(R.id.imageView);
 
-        String profileImagePath = "fluent-friend-dad39.appspot.com/userimages" + currentUser.getEmail() + ".jpg";
-        // Get a reference to the Firebase Storage
-        String defaultImage = "fluent-friend-dad39.appspot.com/userimages/_0e85e3bc_a57f_4623_92c3_f2c2c78b33eb.jpg";
 
-        // Create a storage reference
-        StorageReference storageRef = storage.getReference();
-
-        // Create a reference to the image file
-        StorageReference imageRef = storageRef.child(profileImagePath);
+        String imageURL = UserManager.getCurrentUser().getImageURL();
+        Picasso.get().load(imageURL).placeholder(R.drawable._95cb4738_0cd5_47de_abc7_091916a074d2).error(R.drawable._3d0d656a_5f2b_4a78_bb27_477367edb14d).into(userImage);
 
 
-        Picasso.get().load(imageRef.getPath()).placeholder(R.drawable._95cb4738_0cd5_47de_abc7_091916a074d2).error(R.drawable._3d0d656a_5f2b_4a78_bb27_477367edb14d).into(userImage);
+        userImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openGallery();
+            }
+        });
+
         //connects the checkboxes graphic to variables in this class so we can use them
         //connects graphic elements in the xml code so we can change it in java code
         cityWalksCheckBox = findViewById(R.id.cityWalksCheckBox);
@@ -248,5 +257,46 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
             this.learnLanguages = learnLanguages;
             spinner.setItemsSelected(this.learnLanguages, LanguageManager.AVAILABLE_LANGUAGES);
         }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("Image","MADE IT TO ACTIVITY RESULT" );
+
+        if (resultCode == RESULT_OK) {
+            // Get the selected image URI
+            Uri imageUri = data.getData();
+            Picasso.get().load(imageUri).placeholder(R.drawable._95cb4738_0cd5_47de_abc7_091916a074d2).error(R.drawable._3d0d656a_5f2b_4a78_bb27_477367edb14d).into(userImage);
+            // Upload the image to Firebase Storage
+            uploadImage(imageUri);
+        }
+    }
+
+    private void uploadImage(Uri imageUri) {
+        // Replace "profile_images" with the actual folder in your Firebase Storage where profile images should be stored
+        String profileImagePath = "userimages/" + currentUser.getEmail() + ".jpg";
+
+        // Create a reference to the image file
+        StorageReference imageRef = storageRef.child(profileImagePath);
+        // Upload the image
+        imageRef.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                // Image uploaded successfully
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri downloadUri) {
+                        // Save the download URL to the user's profile
+                        UserManager.getCurrentUser().setImageURL(downloadUri.toString());
+                        Toast.makeText(UserProfilePage.this, "Image uploaded successfully", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void openGallery(){
+        ImagePicker.with(this).galleryOnly().start();
     }
 }
