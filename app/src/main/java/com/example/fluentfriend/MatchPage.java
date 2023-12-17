@@ -157,19 +157,18 @@ public class MatchPage extends AppCompatActivity {
                 calcDistanceBetweenUsers();
                 matchingalgorithm();
 
-                StringBuilder sb = new StringBuilder();
-                for (Double d : distanceList.keySet()) {
-
-                    for (String s : distanceList.get(d)) {
-                        User user = MainActivity.getUser(s);
-
-                        sb.append(user.getFirstName() +"  " + d  + "\n");
-                    }
-                }
-
                 // If don't find any matches
                 if (similarityScore.isEmpty()) {
-                    setFrameForNoMatches(" " ,sb.toString());
+                    StringBuilder sb = new StringBuilder();
+                    for (Double d : distanceList.keySet()) {
+
+                        for (String s : distanceList.get(d)) {
+                            User user = MainActivity.getUser(s);
+
+                            sb.append(user.getFirstName() +"  " + d  + "\n");
+                        }
+                    }
+                    setFrameForNoMatches("No match found" ,sb.toString());
                 } else {
                     showUser();
                 }
@@ -227,7 +226,7 @@ public class MatchPage extends AppCompatActivity {
 
     private void matchingalgorithm() {
         // Define how far out users can match
-        final double maxDistance = 2000; // Meters
+        final double maxDistance = 200; // Meters
 
         // Define weights (summing to 1.0)
         final double weightBio = 0.0;
@@ -251,9 +250,9 @@ public class MatchPage extends AppCompatActivity {
         for (Double d : distanceList.keySet()) {
 
             // Check if the other user is to far away
-           // if (d > maxDistance) {
-             //   break;
-           // }
+            if (d > maxDistance) {
+                break;
+            }
 
             for (String s  : distanceList.get(d)) {
                 User otherUser = MainActivity.getUser(s);
