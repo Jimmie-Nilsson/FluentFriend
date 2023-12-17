@@ -1,28 +1,16 @@
 package com.example.fluentfriend;
 
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import android.widget.ImageView;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-
 import android.os.Bundle;
-
-
 import android.widget.TextView;
-
-
-import com.google.android.gms.location.LocationRequest;
 import com.google.firebase.database.*;
 import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
-
-
 import java.util.*;
 
 public class MatchPage extends AppCompatActivity {
@@ -72,7 +60,7 @@ public class MatchPage extends AppCompatActivity {
         btnAccept.setOnClickListener(view -> {
             // Open new frame where we show cafe suggestions etc,
             Intent i = new Intent(this, LocationSuggestion.class);
-            i.putExtra("email",similarityScore.get(similarityScore.firstKey()).getEmail());
+            i.putExtra("matchedUser",similarityScore.get(similarityScore.firstKey()));
             startActivity(i);
         });
 
@@ -80,7 +68,7 @@ public class MatchPage extends AppCompatActivity {
             similarityScore.remove(similarityScore.firstKey());
 
             if(similarityScore.isEmpty()) {
-                setFrameForNoMatches("No moore matches :(", "Comeback later and test your luck.\n\nHave a nice day!");
+                setFrameForNoMatches("No more matches :(", "Comeback later and test your luck.\n\nHave a nice day!");
             } else {
                 showUser();
             }
@@ -92,7 +80,7 @@ public class MatchPage extends AppCompatActivity {
     }
 
     private void showUser() {
-        // Fix so it doesnt run showUser if Matches is empty.
+        // Fix so it doesn't run showUser if Matches is empty. JN
         textScroll.scrollTo(0,0);
         double d = similarityScore.firstKey();
         User u = similarityScore.get(d);
@@ -177,7 +165,7 @@ public class MatchPage extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors
+                // Handle errors JN
             }
         });
     }

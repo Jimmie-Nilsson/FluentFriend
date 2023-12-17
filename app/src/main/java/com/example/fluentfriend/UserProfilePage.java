@@ -1,11 +1,10 @@
 package com.example.fluentfriend;
 
-import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.*;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,9 +17,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class UserProfilePage extends AppCompatActivity implements MultiSpinner.MultiSpinnerListener {

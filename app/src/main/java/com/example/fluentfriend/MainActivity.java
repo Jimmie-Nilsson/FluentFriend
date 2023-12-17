@@ -8,10 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
 import com.google.firebase.database.*;
-
-
 import java.util.HashMap;
 import java.util.Set;
 
@@ -99,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
 
     protected static User getUser(String email){
         for (User user : userList.values()){
-            if (user.getEmail().equals(email)){
+            if (user.getEmail().equalsIgnoreCase(email)){
                 return user;
             }
         }

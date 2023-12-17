@@ -15,7 +15,6 @@ import com.google.maps.PlacesApi;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -46,7 +45,7 @@ public class LocationSuggestion extends AppCompatActivity {
         //gets the two User objects for the two users that have matched /G
         this.user1 = UserManager.getCurrentUser();
         Intent intent = getIntent();
-        this.user2 = MainActivity.getUser(intent.getStringExtra("email"));
+        this.user2 = (User) intent.getSerializableExtra("matchedUser");
 
         //saves the UserLocation object for the two users that have matched (they are in the DB active list) /G
         user1Location = getActiveUser(user1);

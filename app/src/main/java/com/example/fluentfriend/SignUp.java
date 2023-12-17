@@ -43,6 +43,7 @@ public class SignUp extends AppCompatActivity {
                 sendErrorMessage("Passwords do not match");
                 return;
             }
+            // If we can create a new user then start MainActivity JN
             if (writeNewUser()) {
                 Intent intent = new Intent(SignUp.this, MainActivity.class);
                 startActivity(intent);
@@ -61,12 +62,16 @@ public class SignUp extends AppCompatActivity {
         return true;
     }
 
+    private String normalizeString(String string){
+        return string.substring(0,1).toUpperCase() + string.substring(1).toLowerCase();
+    }
+
     private void sendErrorMessage(String message) {
         Toast.makeText(SignUp.this, message, Toast.LENGTH_LONG).show();
     }
 
     private boolean writeNewUser() {
-        User user = new User(firstName.getText().toString(), lastName.getText().toString(), email.getText().toString(), password.getText().toString());
+        User user = new User(normalizeString(firstName.getText().toString()), normalizeString(lastName.getText().toString()), email.getText().toString().toLowerCase(), password.getText().toString());
         Set<String> users = MainActivity.getRegisteredUsers();
         if (!users.contains(user.getEmail())) {
             myRef.child("users").child(user.getEmail()).setValue(user);
