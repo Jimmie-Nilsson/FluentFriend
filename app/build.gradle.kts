@@ -50,6 +50,7 @@ dependencies {
     implementation ("com.github.dhaval2404:imagepicker:2.1")
 
 
+    implementation ("de.hdodenhof:circleimageview:3.1.0")
     implementation("com.google.firebase:firebase-storage")
     implementation(platform("com.google.firebase:firebase-bom:32.6.0"))
     implementation("com.google.firebase:firebase-analytics")

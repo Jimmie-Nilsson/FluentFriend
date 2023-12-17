@@ -20,7 +20,8 @@ public class User implements java.io.Serializable {
     private boolean bar;
     private String imageURL;
 
-    public User() {}
+    public User() {
+    }
     public User(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

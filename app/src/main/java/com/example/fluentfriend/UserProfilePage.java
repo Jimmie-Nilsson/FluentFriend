@@ -17,6 +17,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
     private DatabaseReference activeUsersRef = db.getReference().child("activeusers");
     private FirebaseStorage storage = FirebaseStorage.getInstance("gs://fluent-friend-dad39.appspot.com");
     private StorageReference storageRef = storage.getReference();
-    private ImageView userImage;
+    private CircleImageView userImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +76,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
 
 
         String imageURL = UserManager.getCurrentUser().getImageURL();
-        Picasso.get().load(imageURL).placeholder(R.drawable._95cb4738_0cd5_47de_abc7_091916a074d2).error(R.drawable._3d0d656a_5f2b_4a78_bb27_477367edb14d).into(userImage);
+        Picasso.get().load(imageURL).placeholder(R.drawable.default_profile_picture).error(R.drawable.default_profile_picture).into(userImage);
 
 
         userImage.setOnClickListener(new View.OnClickListener() {
