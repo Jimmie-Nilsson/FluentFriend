@@ -5,6 +5,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,12 +29,14 @@ public class MatchPage extends AppCompatActivity {
     private List<User> users = new ArrayList<>();
     private TreeMap<Double, User> similarityScore = new TreeMap<>(Comparator.reverseOrder());
     private HashMap<User, String> userInfo = new HashMap<>();
-    private LocationRequest locationRequest;
     private Button btnAccept;
     private Button btnDecline;
     private Button btnReturn;
     private TextView textProfile;
     private TextView textBoxHeader;
+    private TextView textName;
+    private ScrollView textScroll;
+    private ImageView profilePicture;
     private User currentUser;
     private UserLocation currentUserLoc;
     private FirebaseDatabase db = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
@@ -48,6 +52,9 @@ public class MatchPage extends AppCompatActivity {
         btnAccept = findViewById(R.id.matchmatchPageBtnAccept);
         btnDecline = findViewById(R.id.matchmatchPageBtnDecline);
         btnReturn = findViewById(R.id.matchPageReturnBack);
+        textName = findViewById(R.id.matchPageNameText);
+        profilePicture = findViewById(R.id.matchPageImageView);
+        textScroll = findViewById(R.id.scrollView5);
 
         // loads the current user
         currentUser = UserManager.getCurrentUser();
@@ -83,10 +90,12 @@ public class MatchPage extends AppCompatActivity {
     }
 
     private void showUser() {
+        textScroll.scrollTo(0,0);
         double d = similarityScore.firstKey();
         User u = similarityScore.get(d);
         String s = userInfo.get(u);
 
+        textName.setText(u.getFirstName() +" " + u.getLastName());
         textBoxHeader.setText(distanceList.size() + " - " + similarityScore.size() + "  Score: "+ d);
         textProfile.setText(s);
     }
@@ -313,6 +322,7 @@ public class MatchPage extends AppCompatActivity {
     } // End of matchingalgorithm
 
     private void setFrameForNoMatches(String header, String txtProfile) {
+        textName.setText(null);
         textBoxHeader.setText(header);
         textProfile.setText(txtProfile);
         btnAccept.setClickable(false);
