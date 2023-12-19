@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.maps.GeoApiContext;
 import com.google.maps.PlacesApi;
 import com.google.maps.model.LatLng;
-import com.google.maps.model.Photo;
 import com.google.maps.model.PlaceType;
 import com.google.maps.model.PlacesSearchResult;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.example.fluentfriend.MatchPage.getActiveUser;
 
@@ -37,6 +37,9 @@ public class LocationSuggestion extends AppCompatActivity {
     private String query = "";
     private List<String> commonInterests = new ArrayList<>();
     private StringBuilder queryBuilder = new StringBuilder();
+
+    private static final int LOCATION_RADIUS_DISTANCE_METERS = 1000;
+    Locale swedenLocale = new Locale("sv", "SE");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +74,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
         //button that runs the method for finding nearby places /G
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
-        findNearbyPlacesButton.setOnClickListener(view -> {fetchNearbyPlaces();});
+        findNearbyPlacesButton.setOnClickListener(view -> {fetchNearbyPlaces(commonInterests);});
 
         //Displays results from fetchNearbyPlaces() /G
         resultView = findViewById(R.id.resultTextView);
@@ -176,44 +179,80 @@ public class LocationSuggestion extends AppCompatActivity {
             Toast.makeText(this, "Google Maps is not installed.", Toast.LENGTH_LONG).show();
         }
     }
-    //elaborate on this method and comments in it
-    private void fetchNearbyPlaces() {
+
+    private void fetchNearbyPlaces(List<String> interestTypes) {
         //explanation about threads
         new Thread(() -> {
             try {
+                //for debugging
                 Log.d("Before UI thread", "STARTING THREAD");
+
                 LatLng location = new LatLng(midpoint.getLatitude(), midpoint.getLongitude());
-                PlacesSearchResult[] results = PlacesApi.nearbySearchQuery(context, location)
-                        .radius(1000) // in meters
-                        .type(PlaceType.CAFE) //change this to also get museum and cafe
-                        .await()
-                        .results;
-                // handle the results on the UI thread
-                Log.d("Before UI thread", "WE ARE BEFORE UI THREAD");
+                List<PlacesSearchResult> combinedResults = new ArrayList<>();
+
+                for (String interestType : interestTypes) {
+                    PlaceType placeType;
+                    switch (interestType.toLowerCase()) {
+                        case "bars":
+                            placeType = PlaceType.BAR;
+                            break;
+                        case "museums":
+                            placeType = PlaceType.MUSEUM;
+                            break;
+                        case "fika":
+                            placeType = PlaceType.CAFE;
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    PlacesSearchResult[] results = PlacesApi.nearbySearchQuery(context, location)
+                            .radius(LOCATION_RADIUS_DISTANCE_METERS) // distance in meters
+                            .type(placeType)
+                            .await()
+                            .results;
+
+                    Collections.addAll(combinedResults, results);
+                }
+
+                combinedResults.sort(Comparator.comparing(result -> getDistance(location, result.geometry.location)));
+
+                List<PlacesSearchResult> closestResults = combinedResults.stream().limit(3).collect(Collectors.toList());
+
+                for (PlacesSearchResult result : closestResults) {
+                   // String placeId = result.placeId;
+                    //String openingHours = fetchOpeningHours(placeId);
+                }
                 runOnUiThread(() -> {
-                    if (results.length > 0) {
-                        Log.d("GotResults", "Results" + results[0].name);
-                        // Update your UI with the results here
-                        // e.g., display the name of the first result in a TextView
+                    if (!closestResults.isEmpty()) {
                         StringBuilder suggestion = new StringBuilder();
-                        for (int i = 0; i < results.length; i++) {
-                            suggestion.append(results[i].name);
-                            suggestion.append("\n");
-                            Photo[] photo = results[i].photos;
-
+                        for (PlacesSearchResult result : closestResults) {
+                            suggestion.append(result.name).append("\n");
                         }
-                        resultView.setText(suggestion);
-
+                        resultView.setText(suggestion.toString());
                     } else {
-                        Log.d("No Results", "NO RESULTS");
-                        // Show a message if no results were found
-                        Toast.makeText(this, "No nearby cafes found.", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "No nearby places found.", Toast.LENGTH_LONG).show();
                     }
                 });
             } catch (Exception e) {
                 e.printStackTrace();
-                // Handle the error appropriately
             }
         }).start();
+    }
+
+    private String formatDistance(float distance) {
+        if (distance < 1000) {
+            return String.format(swedenLocale, "%d meter", (int) distance);
+        } else {
+            return String.format(swedenLocale, "%.2f km", distance / 1000);
+        }
+    }
+    private float getDistance(LatLng currentLocation, LatLng placeLocation) {
+        float[] results = new float[1];
+        Location.distanceBetween(
+                currentLocation.lat, currentLocation.lng,
+                placeLocation.lat, placeLocation.lng,
+                results);
+        return results[0]; // distance in meters
     }
 }
