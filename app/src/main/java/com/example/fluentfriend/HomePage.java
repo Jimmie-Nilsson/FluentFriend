@@ -86,6 +86,10 @@ public class HomePage extends AppCompatActivity {
 
         // If switch is on the user is in at activelist of users and can get matched with other users.
         activeSwitch.setOnClickListener(view -> {
+            if (UserManager.getCurrentUser().getLanguagesSpeak() == null || UserManager.getCurrentUser().getLanguagesToLearn() == null ||UserManager.getCurrentUser().getLanguagesSpeak().isEmpty() || UserManager.getCurrentUser().getLanguagesToLearn().isEmpty()){
+                Toast.makeText(this, "You need to have a profile with at least 1 language you speak and 1 language you want to learn", Toast.LENGTH_LONG).show();
+                return;
+            }
             if (activeSwitch.isChecked()) {
                 UserLocation userLoc = new UserLocation(UserManager.getCurrentUser().getEmail(), latitude, longitude);
                 MatchPage page = new MatchPage();
