@@ -1,6 +1,7 @@
 package com.example.fluentfriend;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,11 +11,14 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.maps.GeoApiContext;
-import com.google.maps.PlacesApi;
-import com.google.maps.model.LatLng;
-import com.google.maps.model.PlaceType;
-import com.google.maps.model.PlacesSearchResult;
+import androidx.core.app.ActivityCompat;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.api.model.PlaceLikelihood;
+import com.google.android.libraries.places.api.net.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -22,8 +26,10 @@ import java.util.stream.Collectors;
 import static com.example.fluentfriend.MatchPage.getActiveUser;
 
 public class LocationSuggestion extends AppCompatActivity {
+
     private static final String API_KEY = BuildConfig.API_KEY;
-    private GeoApiContext context;
+    private static final String TAG = "";
+    private PlacesClient placesClient;
     private Location midpoint;
     private User user1;
     private User user2;
@@ -64,17 +70,27 @@ public class LocationSuggestion extends AppCompatActivity {
         //calculates the middle point between the two users based on their respective locations /G
         midpoint = getMiddleDistanceBetweenUsers(user1lat, user1long, user2lat, user2long);
 
-        //what does this do? /G
-        context = new GeoApiContext.Builder()
-                .apiKey(API_KEY)
-                .build();
+        // Initialize the Places SDK
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), API_KEY);
+        }
+
+        this.placesClient = Places.createClient(this);
+
+        //Replace the contents of this method with the appropriate calls to the Places SDK for Android.
+        // The SDK provides the PlacesClient class, which you should use to fetch nearby places:
+//        context = new GeoApiContext.Builder()
+//                .apiKey(API_KEY)
+//                .build();
 
         //displays to the user what interests they have in common in a textview /G
         displayCommonInterests();
 
         //button that runs the method for finding nearby places /G
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
-        findNearbyPlacesButton.setOnClickListener(view -> {fetchNearbyPlaces(commonInterests);});
+        findNearbyPlacesButton.setOnClickListener(view -> {
+            fetchNearbyPlaces(commonInterests);
+        });
 
         //Displays results from fetchNearbyPlaces() /G
         resultView = findViewById(R.id.resultTextView);
@@ -92,19 +108,24 @@ public class LocationSuggestion extends AppCompatActivity {
             }
         });
     }
+
     private void sendMessageToUser() { //this needs to be added when Firebasemessaging is up
         //code for message request to server if this is implemented
     }
+
     //these methods check what interests the users have in common /G
     private boolean doBothLikeFika() {
         return user1.isFikaChecked() && user2.isFikaChecked();
     }
+
     private boolean doBothLikeMuseum() {
         return user1.isMuseumChecked() && user2.isMuseumChecked();
     }
+
     private boolean doBothLikeBar() {
         return user1.isBarChecked() && user2.isBarChecked();
     }
+
     private boolean doBothLikeCityWalk() {
         return user1.isCityWalksChecked() && user2.isCityWalksChecked();
     }
@@ -124,6 +145,7 @@ public class LocationSuggestion extends AppCompatActivity {
         textViewCommonInterests.setText(interestsText);
 
     }
+
     //finds the common interests of both users and adds them to a list of Strings that can be shown to the user,
     //as well as to a querybuilder that is formatted for Google search queries to be used by the Google Maps query /G
     private void findCommonInterests() {
@@ -181,64 +203,62 @@ public class LocationSuggestion extends AppCompatActivity {
     }
 
     private void fetchNearbyPlaces(List<String> interestTypes) {
-        //explanation about threads
-        new Thread(() -> {
-            try {
-                //for debugging
-                Log.d("Before UI thread", "STARTING THREAD");
+        if (!Places.isInitialized()) {
+            Places.initialize(getApplicationContext(), API_KEY);
+        }
 
-                LatLng location = new LatLng(midpoint.getLatitude(), midpoint.getLongitude());
-                List<PlacesSearchResult> combinedResults = new ArrayList<>();
+        PlacesClient placesClient = Places.createClient(this);
+        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES, Place.Field.LAT_LNG, Place.Field.OPENING_HOURS);
+        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
-                for (String interestType : interestTypes) {
-                    PlaceType placeType;
-                    switch (interestType.toLowerCase()) {
-                        case "bars":
-                            placeType = PlaceType.BAR;
-                            break;
-                        case "museums":
-                            placeType = PlaceType.MUSEUM;
-                            break;
-                        case "fika":
-                            placeType = PlaceType.CAFE;
-                            break;
-                        default:
-                            continue;
-                    }
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // ActivityCompat#requestPermissions logic here...
+            return;
+        }
 
-                    PlacesSearchResult[] results = PlacesApi.nearbySearchQuery(context, location)
-                            .radius(LOCATION_RADIUS_DISTANCE_METERS) // distance in meters
-                            .type(placeType)
-                            .await()
-                            .results;
+        Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+        placeResponse.addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                FindCurrentPlaceResponse response = task.getResult();
 
-                    Collections.addAll(combinedResults, results);
+                List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
+                        .map(PlaceLikelihood::getPlace)
+                        .filter(place -> place.getLatLng() != null)
+                        .filter(place -> isWithinRadius(place.getLatLng(), midpoint, LOCATION_RADIUS_DISTANCE_METERS))
+                        .filter(place -> place.getTypes() != null && place.getTypes().stream()
+                                .anyMatch(type -> interestTypes.contains(type.name())))
+                        .collect(Collectors.toList());
+
+                nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(place.getLatLng())));
+                List<Place> closestPlaces = nearbyPlaces.stream().limit(3).collect(Collectors.toList());
+
+                List<Task<FetchPlaceResponse>> fetchPlaceTasks = new ArrayList<>();
+                for (Place place : closestPlaces) {
+                    FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(place.getId(), Collections.singletonList(Place.Field.OPENING_HOURS));
+                    fetchPlaceTasks.add(placesClient.fetchPlace(detailRequest));
                 }
 
-                combinedResults.sort(Comparator.comparing(result -> getDistance(location, result.geometry.location)));
-
-                List<PlacesSearchResult> closestResults = combinedResults.stream().limit(3).collect(Collectors.toList());
-
-                for (PlacesSearchResult result : closestResults) {
-                   // String placeId = result.placeId;
-                    //String openingHours = fetchOpeningHours(placeId);
-                }
-                runOnUiThread(() -> {
-                    if (!closestResults.isEmpty()) {
-                        StringBuilder suggestion = new StringBuilder();
-                        for (PlacesSearchResult result : closestResults) {
-                            suggestion.append(result.name).append("\n");
-                        }
-                        resultView.setText(suggestion.toString());
-                    } else {
-                        Toast.makeText(this, "No nearby places found.", Toast.LENGTH_LONG).show();
+                Tasks.whenAllSuccess(fetchPlaceTasks).addOnSuccessListener(placesWithDetails -> {
+                    StringBuilder suggestion = new StringBuilder();
+                    for (Object responseObj : placesWithDetails) {
+                        FetchPlaceResponse fetchPlaceResponse = (FetchPlaceResponse) responseObj;
+                        Place detailedPlace = fetchPlaceResponse.getPlace();
+                        String openingHoursText = detailedPlace.getOpeningHours() != null ? detailedPlace.getOpeningHours().toString() : "Opening hours not available";
+                        suggestion.append(detailedPlace.getName()).append(" - ").append(openingHoursText).append("\n");
                     }
+                    runOnUiThread(() -> resultView.setText(suggestion.toString()));
+                }).addOnFailureListener(exception -> {
+                    Log.e(TAG, "Error fetching place details: " + exception.getMessage());
                 });
-            } catch (Exception e) {
-                e.printStackTrace();
+            } else {
+                Log.e(TAG, "Task failed: " + task.getException());
             }
-        }).start();
+        }).addOnFailureListener((exception) -> {
+            Log.e(TAG, "Error finding current places: " + exception.getMessage());
+        });
     }
+
+
 
     private String formatDistance(float distance) {
         if (distance < 1000) {
@@ -247,11 +267,22 @@ public class LocationSuggestion extends AppCompatActivity {
             return String.format(swedenLocale, "%.2f km", distance / 1000);
         }
     }
-    private float getDistance(LatLng currentLocation, LatLng placeLocation) {
+    private boolean isWithinRadius(LatLng placeLatLng, Location midpoint, int radius) {
         float[] results = new float[1];
-        Location.distanceBetween(
-                currentLocation.lat, currentLocation.lng,
-                placeLocation.lat, placeLocation.lng,
+        Location.distanceBetween(midpoint.getLatitude(), midpoint.getLongitude(),
+                placeLatLng.latitude, placeLatLng.longitude, results);
+        return results[0] <= radius;
+    }
+    private float getDistanceFromMidpoint(LatLng placeLatLng) {
+        Location placeLocation = new Location(""); // provider is not needed here
+        placeLocation.setLatitude(placeLatLng.latitude);
+        placeLocation.setLongitude(placeLatLng.longitude);
+        return getDistance(midpoint, placeLocation);
+    }
+    private float getDistance(Location originLocation, Location targetLocation) {
+        float[] results = new float[1];
+        Location.distanceBetween(originLocation.getLatitude(), originLocation.getLongitude(),
+                targetLocation.getLatitude(), targetLocation.getLongitude(),
                 results);
         return results[0]; // distance in meters
     }
