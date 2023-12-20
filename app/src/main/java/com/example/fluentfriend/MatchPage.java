@@ -91,7 +91,7 @@ public class MatchPage extends AppCompatActivity {
         Picasso.get().load(imageURL).placeholder(R.drawable.default_profile_picture).error(R.drawable.default_profile_picture).into(profilePicture);
 
         textName.setText(u.getFirstName() + " " + u.getLastName());
-        textBoxHeader.setText(activeUsers.size() + " - " + similarityScore.size() + "  Score: " + d);
+        textBoxHeader.setText("Match!!!");
         textProfile.setText(s);
     }
 
@@ -148,16 +148,8 @@ public class MatchPage extends AppCompatActivity {
 
                 // If don't find any matches
                 if (similarityScore.isEmpty()) {
-                    StringBuilder sb = new StringBuilder();
-                    for (Double d : distanceList.keySet()) {
 
-                        for (String s : distanceList.get(d)) {
-                            User user = MainActivity.getUser(s);
-
-                            sb.append(user.getFirstName() + "  " + d + "\n");
-                        }
-                    }
-                    setFrameForNoMatches("No match found", sb.toString());
+                    setFrameForNoMatches("No match found :(", "Currently no other users nearby you. Please try again later!");
                 } else {
                     showUser();
                 }
@@ -215,7 +207,7 @@ public class MatchPage extends AppCompatActivity {
 
     private void matchingalgorithm() {
         // Define how far out users can match
-        final double maxDistance = 2000; // Meters
+        final double maxDistance = 20000; // Meters
 
         // Define weights (summing to 1.0)
         final double weightBio = 0.0;
@@ -292,22 +284,22 @@ public class MatchPage extends AppCompatActivity {
 
                 // Check for common checkbox interest.
                 if (currentUser.isFikaChecked() && otherUser.isFikaChecked()) {
-                    sb.append("Fika is a common interest!\n");
+                    sb.append("Fika is a common interest!\n\\n");
                     checkboxSimilarity += numberCheckBox;
                     checkThree = true;
                 }
                 if (currentUser.isBarChecked() && otherUser.isBarChecked()) {
-                    sb.append("Bar is a common interest!\n");
+                    sb.append("Bar is a common interest!\n\n");
                     checkboxSimilarity += numberCheckBox;
                     checkThree = true;
                 }
                 if (currentUser.isCityWalksChecked() && otherUser.isCityWalksChecked()) {
-                    sb.append("City walks is a common interest!\n");
+                    sb.append("City walks is a common interest!\n\n");
                     checkboxSimilarity += numberCheckBox;
                     checkThree = true;
                 }
                 if (currentUser.isMuseumChecked() && otherUser.isMuseumChecked()) {
-                    sb.append("Museum is a common interest!\n");
+                    sb.append("Museum is a common interest!\n\n");
                     checkboxSimilarity += numberCheckBox;
                     checkThree = true;
                 }
