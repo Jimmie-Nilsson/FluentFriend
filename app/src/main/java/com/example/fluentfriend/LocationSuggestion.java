@@ -70,22 +70,20 @@ public class LocationSuggestion extends AppCompatActivity {
         }
         placesClient = Places.createClient(this);
 
-        //displays to the user what interests they have in common in a textview /G
+        findCommonInterests();
         displayCommonInterests();
+
+        resultView = findViewById(R.id.resultTextView);
 
         //button that runs the method for finding nearby places /G
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
         findNearbyPlacesButton.setOnClickListener(view -> {
-            fetchNearbyPlaces(commonInterestsAPIFormat);
+            fetchNearbyPlaces();
         });
 
         //button that leaves the app and opens Google Maps with a search query based on location and interests /G
         Button openGoogleMapsButton = findViewById(R.id.open_google_maps);
         openGoogleMapsButton.setOnClickListener(view -> openGoogleMaps(midpoint));
-
-        //button for messaging the other user that you've matched with
-        Button messageUserButton = findViewById(R.id.message_user_button);
-
     }
 
     //these methods check what interests the users have in common /G
@@ -107,7 +105,6 @@ public class LocationSuggestion extends AppCompatActivity {
 
     //displays the common interests in the textView /G
     private void displayCommonInterests() {
-        findCommonInterests();
         String interestsText = "";
         if (!commonInterests.isEmpty()) {
             // Joins common interests in a single string separated by commas
@@ -126,18 +123,18 @@ public class LocationSuggestion extends AppCompatActivity {
     private void findCommonInterests() {
         if (doBothLikeFika()) {
             commonInterests.add("Fika");
-            commonInterestsAPIFormat.add("Cafe");
+            commonInterestsAPIFormat.add("cafe");
             queryBuilder.append("Cafes");
         }
         if (doBothLikeMuseum()) {
             commonInterests.add("Museums");
-            commonInterestsAPIFormat.add("Museum");
+            commonInterestsAPIFormat.add("museum");
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Museums");
         }
         if (doBothLikeBar()) {
             commonInterests.add("Bars");
-            commonInterestsAPIFormat.add("Bar");
+            commonInterestsAPIFormat.add("bar");
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Bars");
         }
@@ -180,9 +177,9 @@ public class LocationSuggestion extends AppCompatActivity {
         }
     }
 
-    private void fetchNearbyPlaces(List<String> providedList) {
+    private void fetchNearbyPlaces() {
 
-        for (String commonInterest : providedList) {
+        for (String commonInterest : commonInterestsAPIFormat) {
             Log.d(TAG, "Your common interests are: " + commonInterest);
         }
 
@@ -214,14 +211,16 @@ public class LocationSuggestion extends AppCompatActivity {
 
                 List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
                         .map(PlaceLikelihood::getPlace)
+
                         .filter(place -> place.getLatLng() != null)
 
-                        //denna rad gör att man inte får några resultat i textview:en, därför bortkommenterad
+                        //this filter does not work, when enabled = no results in textview
                         //.filter(place -> isWithinRadius(place.getLatLng(), midpoint))
 
-                        //även något fel med denna, därför bortkommenterad
-                        //.filter(place -> place.getTypes() != null && place.getTypes().stream()
-                              // .anyMatch(type -> providedList.contains(type.name())))
+                        //only returns 1 result (1 cafe) for some reason
+                        .filter(place -> place.getPlaceTypes() != null && place.getPlaceTypes().stream()
+                                .anyMatch(typeString -> commonInterestsAPIFormat.contains(typeString.toLowerCase())))
+
                         //collects all the places that passed the filters into a list
                         .collect(Collectors.toList());
 
