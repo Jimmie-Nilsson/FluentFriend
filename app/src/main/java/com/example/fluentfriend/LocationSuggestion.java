@@ -225,30 +225,46 @@ public class LocationSuggestion extends AppCompatActivity {
                 List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
                         .map(PlaceLikelihood::getPlace)
                         .filter(place -> place.getLatLng() != null)
-                        .filter(place -> isWithinRadius(place.getLatLng(), midpoint, LOCATION_RADIUS_DISTANCE_METERS))
+
+                        //denna rad gör att man inte får några resultat i textview:en, därför bortkommenterad
+                        //.filter(place -> isWithinRadius(place.getLatLng(), midpoint, LOCATION_RADIUS_DISTANCE_METERS))
+
                         //avoids nullpointerexception if a place doesnt have a type associated to it
                         //uses a stream to process the list of types for each place.
                         //anyMatch returns true if any of the places types match any of the strings in the provided list
                         //type.name() gets the name of the type
                         //commonInterestsAPIFormat.contains(type.name()) checks if this name is in list of common interests
-                        .filter(place -> place.getTypes() != null && place.getTypes().stream()
-                                .anyMatch(type -> providedList.contains(type.name())))
+
+                        //även något fel med denna, därför bortkommenterad
+                        //.filter(place -> place.getTypes() != null && place.getTypes().stream()
+                              // .anyMatch(type -> providedList.contains(type.name())))
                         //collects all the places that passed the filters into a list
                         .collect(Collectors.toList());
 
                 //checks if any places were added to the list
-                if (nearbyPlaces.isEmpty()) {Log.d(TAG, "Nearby places list is empty");}
+                if (nearbyPlaces.isEmpty()) {
+                    Log.d(TAG, "Nearby places list is empty after filtering");
+                }
 
-                //Shows what places were added before sorting
-                for (Place place : nearbyPlaces) {
-                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                if (!nearbyPlaces.isEmpty()) {
+                    //Shows what places were added before sorting
+                    for (Place place : nearbyPlaces) {
+                        Log.d(TAG, "These are the places in the nearbyPlaces list before sorting");
+                        Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                    }
                 }
 
                 nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(place.getLatLng())));
 
-                for (Place place : nearbyPlaces) {
-                    Log.d(TAG, "The nearbyPlaces list is now sorted and contains:");
-                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                if (nearbyPlaces.isEmpty()) {
+                    Log.d(TAG, "Nearby places list is still empty after being sorted");
+                }
+
+                if (!nearbyPlaces.isEmpty()) {
+                    for (Place place : nearbyPlaces) {
+                        Log.d(TAG, "The nearbyPlaces list is now sorted and contains:");
+                        Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                    }
                 }
 
                 List<Place> closestPlaces = nearbyPlaces.stream()
@@ -259,7 +275,6 @@ public class LocationSuggestion extends AppCompatActivity {
                     Log.d(TAG, "The 3 closest places have now been found and are: ");
                     Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
                 }
-
 
                 List<Task<FetchPlaceResponse>> fetchPlaceTasks = new ArrayList<>();
                 for (Place place : closestPlaces) {
@@ -277,7 +292,7 @@ public class LocationSuggestion extends AppCompatActivity {
                         String openingHoursText = detailedPlace.getOpeningHours() != null ? detailedPlace.getOpeningHours().toString() : "Opening hours not available";
                         suggestion.append(detailedPlace.getName()).append(" - ").append(openingHoursText).append("\n");
                     }
-                    Log.d(TAG, "Suggestion StringBuilder Content: " + suggestion.toString());
+                    Log.d(TAG, "Data to be presented in TextView: " + suggestion);
                     runOnUiThread(() -> resultView.setText(suggestion.toString()));
                 }).addOnFailureListener(exception -> {
                     Log.e(TAG, "Error fetching place details: " + exception.getMessage());
