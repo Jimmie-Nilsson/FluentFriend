@@ -229,7 +229,7 @@ public class LocationSuggestion extends AppCompatActivity {
                     for (Place place : nearbyPlaces) {
                         Log.d(TAG, "These are the places left after filtering:");
                         Log.d(TAG, place.getName() + " at " + getDistanceFromMidpoint(place.getLatLng())
-                                + "meters from the midpoint");
+                                + " meters from the midpoint");
                     }
 
                     Log.d(TAG, "List is now being sorted based on distance from midpoint...");
@@ -277,9 +277,6 @@ public class LocationSuggestion extends AppCompatActivity {
             }
         });
     }
-
-
-
     private float getDistanceFromMidpoint(LatLng placeLatLng) {
         Location placeLocation = new Location(""); // provider is not needed here
         placeLocation.setLatitude(placeLatLng.latitude);
