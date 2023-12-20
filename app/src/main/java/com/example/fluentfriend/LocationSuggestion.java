@@ -61,20 +61,13 @@ public class LocationSuggestion extends AppCompatActivity {
         user1Location = getActiveUser(user1);
         user2Location = getActiveUser(user2);
 
-        //gets the lat/long values from the UserLocation object for the two users /G
-        this.user1lat = user1Location.getLatitude();
-        this.user1long = user1Location.getLongitude();
-        this.user2lat = user2Location.getLatitude();
-        this.user2long = user2Location.getLongitude();
-
         //calculates the middle point between the two users based on their respective locations /G
-        midpoint = getMiddleDistanceBetweenUsers(user1lat, user1long, user2lat, user2long);
+        midpoint = getMiddleDistanceBetweenUsers();
 
         // Initialize the Places SDK
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), API_KEY);
         }
-
         placesClient = Places.createClient(this);
 
         //displays to the user what interests they have in common in a textview /G
@@ -85,9 +78,6 @@ public class LocationSuggestion extends AppCompatActivity {
         findNearbyPlacesButton.setOnClickListener(view -> {
             fetchNearbyPlaces(commonInterestsAPIFormat);
         });
-
-        //Displays results from fetchNearbyPlaces() /G
-        resultView = findViewById(R.id.resultTextView);
 
         //button that leaves the app and opens Google Maps with a search query based on location and interests /G
         Button openGoogleMapsButton = findViewById(R.id.open_google_maps);
@@ -157,9 +147,9 @@ public class LocationSuggestion extends AppCompatActivity {
     }
 
     //finds the lat/long middle point between the two users, returns as Location object /G
-    private Location getMiddleDistanceBetweenUsers(double user1lat, double user1long, double user2lat, double user2long) {
-        double lat = (user1lat + user2lat) / 2;
-        double longitude = (user1long + user2long) / 2;
+    private Location getMiddleDistanceBetweenUsers() {
+        double lat = (user1Location.getLatitude() + user2Location.getLatitude()) / 2;
+        double longitude = (user1Location.getLongitude() + user2Location.getLongitude()) / 2;
         Location midpoint = new Location("");
         midpoint.setLatitude(lat);
         midpoint.setLongitude(longitude);
@@ -225,30 +215,40 @@ public class LocationSuggestion extends AppCompatActivity {
                 List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
                         .map(PlaceLikelihood::getPlace)
                         .filter(place -> place.getLatLng() != null)
-                        .filter(place -> isWithinRadius(place.getLatLng(), midpoint, LOCATION_RADIUS_DISTANCE_METERS))
-                        //avoids nullpointerexception if a place doesnt have a type associated to it
-                        //uses a stream to process the list of types for each place.
-                        //anyMatch returns true if any of the places types match any of the strings in the provided list
-                        //type.name() gets the name of the type
-                        //commonInterestsAPIFormat.contains(type.name()) checks if this name is in list of common interests
-                        .filter(place -> place.getTypes() != null && place.getTypes().stream()
-                                .anyMatch(type -> providedList.contains(type.name())))
+
+                        //denna rad gör att man inte får några resultat i textview:en, därför bortkommenterad
+                        //.filter(place -> isWithinRadius(place.getLatLng(), midpoint))
+
+                        //även något fel med denna, därför bortkommenterad
+                        //.filter(place -> place.getTypes() != null && place.getTypes().stream()
+                              // .anyMatch(type -> providedList.contains(type.name())))
                         //collects all the places that passed the filters into a list
                         .collect(Collectors.toList());
 
                 //checks if any places were added to the list
-                if (nearbyPlaces.isEmpty()) {Log.d(TAG, "Nearby places list is empty");}
+                if (nearbyPlaces.isEmpty()) {
+                    Log.d(TAG, "Nearby places list is empty after filtering");
+                }
 
-                //Shows what places were added before sorting
-                for (Place place : nearbyPlaces) {
-                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                if (!nearbyPlaces.isEmpty()) {
+                    //Shows what places were added before sorting
+                    for (Place place : nearbyPlaces) {
+                        Log.d(TAG, "These are the places in the nearbyPlaces list before sorting");
+                        Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                    }
                 }
 
                 nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(place.getLatLng())));
 
-                for (Place place : nearbyPlaces) {
-                    Log.d(TAG, "The nearbyPlaces list is now sorted and contains:");
-                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                if (nearbyPlaces.isEmpty()) {
+                    Log.d(TAG, "Nearby places list is still empty after being sorted");
+                }
+
+                if (!nearbyPlaces.isEmpty()) {
+                    for (Place place : nearbyPlaces) {
+                        Log.d(TAG, "The nearbyPlaces list is now sorted and contains:");
+                        Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                    }
                 }
 
                 List<Place> closestPlaces = nearbyPlaces.stream()
@@ -259,7 +259,6 @@ public class LocationSuggestion extends AppCompatActivity {
                     Log.d(TAG, "The 3 closest places have now been found and are: ");
                     Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
                 }
-
 
                 List<Task<FetchPlaceResponse>> fetchPlaceTasks = new ArrayList<>();
                 for (Place place : closestPlaces) {
@@ -277,7 +276,7 @@ public class LocationSuggestion extends AppCompatActivity {
                         String openingHoursText = detailedPlace.getOpeningHours() != null ? detailedPlace.getOpeningHours().toString() : "Opening hours not available";
                         suggestion.append(detailedPlace.getName()).append(" - ").append(openingHoursText).append("\n");
                     }
-                    Log.d(TAG, "Suggestion StringBuilder Content: " + suggestion.toString());
+                    Log.d(TAG, "Data to be presented in TextView: " + suggestion);
                     runOnUiThread(() -> resultView.setText(suggestion.toString()));
                 }).addOnFailureListener(exception -> {
                     Log.e(TAG, "Error fetching place details: " + exception.getMessage());
@@ -289,19 +288,11 @@ public class LocationSuggestion extends AppCompatActivity {
             Log.e(TAG, "Places API call encountered an error: " + exception.getMessage());
         });
     }
-
-    private String formatDistance(float distance) {
-        if (distance < 1000) {
-            return String.format(swedenLocale, "%d meter", (int) distance);
-        } else {
-            return String.format(swedenLocale, "%.2f km", distance / 1000);
-        }
-    }
-    private boolean isWithinRadius(LatLng placeLatLng, Location midpoint, int radius) {
+    private boolean isWithinRadius(LatLng placeLatLng, Location midpoint) {
         float[] results = new float[1];
         Location.distanceBetween(midpoint.getLatitude(), midpoint.getLongitude(),
                 placeLatLng.latitude, placeLatLng.longitude, results);
-        return results[0] <= radius;
+        return results[0] <= LocationSuggestion.LOCATION_RADIUS_DISTANCE_METERS;
     }
     private float getDistanceFromMidpoint(LatLng placeLatLng) {
         Location placeLocation = new Location(""); // provider is not needed here
@@ -315,5 +306,14 @@ public class LocationSuggestion extends AppCompatActivity {
                 targetLocation.getLatitude(), targetLocation.getLongitude(),
                 results);
         return results[0]; // distance in meters
+    }
+
+    //method for formatting distance printout if needed
+    private String formatDistance(float distance) {
+        if (distance < 1000) {
+            return String.format(swedenLocale, "%d meter", (int) distance);
+        } else {
+            return String.format(swedenLocale, "%.2f km", distance / 1000);
+        }
     }
 }
