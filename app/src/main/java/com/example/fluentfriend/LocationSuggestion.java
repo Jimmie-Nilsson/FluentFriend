@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
@@ -34,10 +35,6 @@ public class LocationSuggestion extends AppCompatActivity {
     private User user2;
     private UserLocation user1Location;
     private UserLocation user2Location;
-    private double user1lat;
-    private double user1long;
-    private double user2lat;
-    private double user2long;
     private TextView resultView;
     private String query = "";
     private List<String> commonInterests = new ArrayList<>();
@@ -123,18 +120,18 @@ public class LocationSuggestion extends AppCompatActivity {
     private void findCommonInterests() {
         if (doBothLikeFika()) {
             commonInterests.add("Fika");
-            commonInterestsAPIFormat.add("cafe");
+            commonInterestsAPIFormat.add("cafe".toLowerCase());
             queryBuilder.append("Cafes");
         }
         if (doBothLikeMuseum()) {
             commonInterests.add("Museums");
-            commonInterestsAPIFormat.add("museum");
+            commonInterestsAPIFormat.add("museum".toLowerCase());
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Museums");
         }
         if (doBothLikeBar()) {
             commonInterests.add("Bars");
-            commonInterestsAPIFormat.add("bar");
+            commonInterestsAPIFormat.add("bar".toLowerCase());
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Bars");
         }
@@ -179,8 +176,12 @@ public class LocationSuggestion extends AppCompatActivity {
 
     private void fetchNearbyPlaces() {
 
+        String closestPlaceName = "";
+
+        //for debugging
+        Log.d(TAG, "Your common interests are: ");
         for (String commonInterest : commonInterestsAPIFormat) {
-            Log.d(TAG, "Your common interests are: " + commonInterest);
+            Log.d(TAG, commonInterest);
         }
 
         List<Place.Field> placeFields = Arrays.asList(
@@ -191,6 +192,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
+        //user must allow
         if (ActivityCompat.checkSelfPermission(
                 this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED &&
@@ -200,69 +202,65 @@ public class LocationSuggestion extends AppCompatActivity {
             // ActivityCompat#requestPermissions logic here...
             return;
         }
+
+        //debugging
         Log.d(TAG, "Making Places API call...");
+
         Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
 
         placeResponse.addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 Log.d(TAG, "Places API call was successful.");
-
                 FindCurrentPlaceResponse response = task.getResult();
 
+                //debugging
+                Log.d(TAG,"This was returned by the API call:");
+                for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
+                    Place place = placeLikelihood.getPlace();
+                    Log.d(TAG, "Place: " + place.getName() + " " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng()))+ ", Types: " + place.getPlaceTypes());
+                }
+                Log.d(TAG,"List is now being filtered");
                 List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
                         .map(PlaceLikelihood::getPlace)
-
                         .filter(place -> place.getLatLng() != null)
-
-                        //this filter does not work, when enabled = no results in textview
-                        //.filter(place -> isWithinRadius(place.getLatLng(), midpoint))
-
-                        //only returns 1 result (1 cafe) for some reason
                         .filter(place -> place.getPlaceTypes() != null && place.getPlaceTypes().stream()
                                 .anyMatch(typeString -> commonInterestsAPIFormat.contains(typeString.toLowerCase())))
-
-                        //collects all the places that passed the filters into a list
+                        //.filter(place -> isWithinRadius(place.getLatLng(), midpoint))
                         .collect(Collectors.toList());
 
-                //checks if any places were added to the list
+                //debugging checks if any places were added to the list
                 if (nearbyPlaces.isEmpty()) {
-                    Log.d(TAG, "Nearby places list is empty after filtering");
-                }
-
-                if (!nearbyPlaces.isEmpty()) {
-                    //Shows what places were added before sorting
+                    Log.d(TAG, "List is empty after filtering");
+                } else {
+                    //Shows what places were added after filtering
                     for (Place place : nearbyPlaces) {
-                        Log.d(TAG, "These are the places in the nearbyPlaces list before sorting");
-                        Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                        Log.d(TAG, "These are the places left after filtering:");
+                        Log.d(TAG, place.getName() + " at " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng())));
                     }
                 }
-
-                nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(place.getLatLng())));
+                Log.d(TAG, "List is now being sorted based on distance from midpoint");
+                nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng()))));
 
                 if (nearbyPlaces.isEmpty()) {
                     Log.d(TAG, "Nearby places list is still empty after being sorted");
-                }
-
-                if (!nearbyPlaces.isEmpty()) {
+                } else {
                     for (Place place : nearbyPlaces) {
-                        Log.d(TAG, "The nearbyPlaces list is now sorted and contains:");
-                        Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                        Log.d(TAG, "List is now sorted and contains, in order:");
+                        Log.d(TAG, place.getName() + " at distance: " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng())) + "meters from midpoint.");
                     }
                 }
 
                 List<Place> closestPlaces = nearbyPlaces.stream()
-                        .limit(3)
+                        .limit(1)
                         .collect(Collectors.toList());
 
-                for (Place place : closestPlaces) {
-                    Log.d(TAG, "The 3 closest places have now been found and are: ");
-                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
-                }
+                Log.d(TAG, "The closest place has been found and is: ");
+                Log.d(TAG, closestPlaces.get(0).getName() + " at " + closestPlaces.get(0).getLatLng());
 
                 List<Task<FetchPlaceResponse>> fetchPlaceTasks = new ArrayList<>();
                 for (Place place : closestPlaces) {
                     List<Place.Field> detailFields = Collections.singletonList(Place.Field.OPENING_HOURS);
-                    FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(place.getId(), detailFields);
+                    FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(Objects.requireNonNull(place.getId()), detailFields);
                     fetchPlaceTasks.add(placesClient.fetchPlace(detailRequest));
                 }
 
@@ -271,11 +269,19 @@ public class LocationSuggestion extends AppCompatActivity {
                     StringBuilder suggestion = new StringBuilder();
                     for (Object responseObj : placesWithDetails) {
                         FetchPlaceResponse fetchPlaceResponse = (FetchPlaceResponse) responseObj;
-                        Place detailedPlace = fetchPlaceResponse.getPlace();
-                        String openingHoursText = detailedPlace.getOpeningHours() != null ? detailedPlace.getOpeningHours().toString() : "Opening hours not available";
-                        suggestion.append(detailedPlace.getName()).append(" - ").append(openingHoursText).append("\n");
+                        Place closestPlace = fetchPlaceResponse.getPlace();
+                        String openingHoursText = "Opening hours not available";
+
+                        if (closestPlace.getOpeningHours() != null) {
+                            List<String> weekdayTexts = closestPlace.getOpeningHours().getWeekdayText();
+                            if (weekdayTexts != null && !weekdayTexts.isEmpty()) {
+                                openingHoursText = TextUtils.join("\n", weekdayTexts);
+                            }
+                        }
+
+                        suggestion.append(closestPlace.getName()).append(":kk\n").append(openingHoursText).append("\n\n");
                     }
-                    Log.d(TAG, "Data to be presented in TextView: " + suggestion);
+                    Log.d(TAG, "Result to be presented in TextView:\n " + suggestion);
                     runOnUiThread(() -> resultView.setText(suggestion.toString()));
                 }).addOnFailureListener(exception -> {
                     Log.e(TAG, "Error fetching place details: " + exception.getMessage());
