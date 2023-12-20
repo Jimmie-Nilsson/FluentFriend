@@ -14,11 +14,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.tasks.Tasks;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
 import com.google.android.libraries.places.api.model.PlaceLikelihood;
-import com.google.android.libraries.places.api.net.*;
+import com.google.android.libraries.places.api.net.FetchPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceRequest;
+import com.google.android.libraries.places.api.net.FindCurrentPlaceResponse;
+import com.google.android.libraries.places.api.net.PlacesClient;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -36,12 +38,9 @@ public class LocationSuggestion extends AppCompatActivity {
     private UserLocation user1Location;
     private UserLocation user2Location;
     private TextView resultView;
-    private String query = "";
-    private List<String> commonInterests = new ArrayList<>();
-    private List<String> commonInterestsAPIFormat = new ArrayList<>();
-    private StringBuilder queryBuilder = new StringBuilder();
-
-    private static final int LOCATION_RADIUS_DISTANCE_METERS = 1000;
+    private final List<String> commonInterests = new ArrayList<>();
+    private final List<String> commonInterestsAPIFormat = new ArrayList<>();
+    private final StringBuilder queryBuilder = new StringBuilder();
     Locale swedenLocale = new Locale("sv", "SE");
 
     @Override
@@ -153,7 +152,7 @@ public class LocationSuggestion extends AppCompatActivity {
     //When Google Maps button is pressed, Google Maps opens with a search for the common interests /G
     private void openGoogleMaps(Location location) {
         //sets the query depending on the common interests
-        this.query = queryBuilder.toString();
+        String query = queryBuilder.toString();
 
         // Create a Uri from an intent string. Use the result to create an Intent.
         //write easier-to-understand comment what this does /G
@@ -175,9 +174,6 @@ public class LocationSuggestion extends AppCompatActivity {
     }
 
     private void fetchNearbyPlaces() {
-
-        String closestPlaceName = "";
-
         //for debugging
         Log.d(TAG, "Your common interests are: ");
         for (String commonInterest : commonInterestsAPIFormat) {
@@ -214,10 +210,10 @@ public class LocationSuggestion extends AppCompatActivity {
                 FindCurrentPlaceResponse response = task.getResult();
 
                 //debugging
-                Log.d(TAG,"This was returned by the API call:");
+                Log.d(TAG,"Places returned by the API call:");
                 for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
                     Place place = placeLikelihood.getPlace();
-                    Log.d(TAG, "Place: " + place.getName() + " " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng()))+ ", Types: " + place.getPlaceTypes());
+                    Log.d(TAG, place.getName() + " " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng()))+ ", Types: " + place.getPlaceTypes());
                 }
                 Log.d(TAG,"List is now being filtered");
                 List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
@@ -225,80 +221,65 @@ public class LocationSuggestion extends AppCompatActivity {
                         .filter(place -> place.getLatLng() != null)
                         .filter(place -> place.getPlaceTypes() != null && place.getPlaceTypes().stream()
                                 .anyMatch(typeString -> commonInterestsAPIFormat.contains(typeString.toLowerCase())))
-                        //.filter(place -> isWithinRadius(place.getLatLng(), midpoint))
                         .collect(Collectors.toList());
 
                 //debugging checks if any places were added to the list
-                if (nearbyPlaces.isEmpty()) {
-                    Log.d(TAG, "List is empty after filtering");
-                } else {
+                if (!nearbyPlaces.isEmpty()) {
                     //Shows what places were added after filtering
                     for (Place place : nearbyPlaces) {
                         Log.d(TAG, "These are the places left after filtering:");
-                        Log.d(TAG, place.getName() + " at " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng())));
+                        Log.d(TAG, place.getName() + " at " + getDistanceFromMidpoint(place.getLatLng())
+                                + "meters from the midpoint");
                     }
-                }
-                Log.d(TAG, "List is now being sorted based on distance from midpoint");
-                nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng()))));
 
-                if (nearbyPlaces.isEmpty()) {
-                    Log.d(TAG, "Nearby places list is still empty after being sorted");
-                } else {
-                    for (Place place : nearbyPlaces) {
-                        Log.d(TAG, "List is now sorted and contains, in order:");
-                        Log.d(TAG, place.getName() + " at distance: " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng())) + "meters from midpoint.");
-                    }
-                }
+                    Log.d(TAG, "List is now being sorted based on distance from midpoint...");
+                    nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(place.getLatLng())));
 
-                List<Place> closestPlaces = nearbyPlaces.stream()
-                        .limit(1)
-                        .collect(Collectors.toList());
+                    Place firstPlace = nearbyPlaces.get(0);
+                    String firstPlaceDistance = formatDistance(getDistanceFromMidpoint(firstPlace.getLatLng()));
 
-                Log.d(TAG, "The closest place has been found and is: ");
-                Log.d(TAG, closestPlaces.get(0).getName() + " at " + closestPlaces.get(0).getLatLng());
+                    Log.d(TAG, "The list has been sorted and the closest place is: ");
+                    Log.d(TAG, firstPlace.getName() + " at distance: " + firstPlaceDistance + " from midpoint.");
 
-                List<Task<FetchPlaceResponse>> fetchPlaceTasks = new ArrayList<>();
-                for (Place place : closestPlaces) {
-                    List<Place.Field> detailFields = Collections.singletonList(Place.Field.OPENING_HOURS);
-                    FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(Objects.requireNonNull(place.getId()), detailFields);
-                    fetchPlaceTasks.add(placesClient.fetchPlace(detailRequest));
-                }
+                    // Check if the first place has a non-null ID
+                    if (firstPlace.getId() != null) {
+                        List<Place.Field> detailFields = Collections.singletonList(Place.Field.OPENING_HOURS);
+                        FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(firstPlace.getId(), detailFields);
 
-                Tasks.whenAllSuccess(fetchPlaceTasks).addOnSuccessListener(placesWithDetails -> {
+                        // Fetch the details for the first place
+                        placesClient.fetchPlace(detailRequest).addOnSuccessListener(responseTwo -> {
+                            Place placeDetails = responseTwo.getPlace(); // Detailed place object for the first place
+                            String openingHoursText = "Opening hours not available";
 
-                    StringBuilder suggestion = new StringBuilder();
-                    for (Object responseObj : placesWithDetails) {
-                        FetchPlaceResponse fetchPlaceResponse = (FetchPlaceResponse) responseObj;
-                        Place closestPlace = fetchPlaceResponse.getPlace();
-                        String openingHoursText = "Opening hours not available";
-
-                        if (closestPlace.getOpeningHours() != null) {
-                            List<String> weekdayTexts = closestPlace.getOpeningHours().getWeekdayText();
-                            if (weekdayTexts != null && !weekdayTexts.isEmpty()) {
-                                openingHoursText = TextUtils.join("\n", weekdayTexts);
+                            if (placeDetails.getOpeningHours() != null) {
+                                List<String> weekdayTexts = placeDetails.getOpeningHours().getWeekdayText();
+                                if (weekdayTexts != null && !weekdayTexts.isEmpty()) {
+                                    openingHoursText = TextUtils.join("\n", weekdayTexts);
+                                }
                             }
-                        }
 
-                        suggestion.append(closestPlace.getName()).append(":kk\n").append(openingHoursText).append("\n\n");
+                            // Update the UI with the opening hours of the first place
+                            final String placeInfo = firstPlace.getName() + ", " + firstPlaceDistance + " away :\n" + openingHoursText + "\n\n";
+                            runOnUiThread(() -> resultView.setText(placeInfo));
+                        }).addOnFailureListener(exception -> {
+                            Log.e(TAG, "Error fetching place details: " + exception.getMessage());
+                        });
+                    } else {
+                        Log.d(TAG, "First place has a null ID");
+                        runOnUiThread(() -> resultView.setText("First place has a null ID"));
                     }
-                    Log.d(TAG, "Result to be presented in TextView:\n " + suggestion);
-                    runOnUiThread(() -> resultView.setText(suggestion.toString()));
-                }).addOnFailureListener(exception -> {
-                    Log.e(TAG, "Error fetching place details: " + exception.getMessage());
-                });
+                } else {
+                    Log.d(TAG, "No nearby places found");
+                    runOnUiThread(() -> resultView.setText("No nearby places found"));
+                    }
             } else {
-                Log.e(TAG, "Places API call failed " + task.getException());
+                //handle cases where task is not successful
             }
-        }).addOnFailureListener((exception) -> {
-            Log.e(TAG, "Places API call encountered an error: " + exception.getMessage());
         });
     }
-    private boolean isWithinRadius(LatLng placeLatLng, Location midpoint) {
-        float[] results = new float[1];
-        Location.distanceBetween(midpoint.getLatitude(), midpoint.getLongitude(),
-                placeLatLng.latitude, placeLatLng.longitude, results);
-        return results[0] <= LocationSuggestion.LOCATION_RADIUS_DISTANCE_METERS;
-    }
+
+
+
     private float getDistanceFromMidpoint(LatLng placeLatLng) {
         Location placeLocation = new Location(""); // provider is not needed here
         placeLocation.setLatitude(placeLatLng.latitude);
