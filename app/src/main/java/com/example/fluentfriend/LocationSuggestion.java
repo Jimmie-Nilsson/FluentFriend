@@ -6,7 +6,6 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,7 +27,7 @@ import static com.example.fluentfriend.MatchPage.getActiveUser;
 public class LocationSuggestion extends AppCompatActivity {
 
     private static final String API_KEY = BuildConfig.API_KEY;
-    private static final String TAG = "";
+    private static final String TAG = "Debug: ";
     private PlacesClient placesClient;
     private Location midpoint;
     private User user1;
@@ -77,12 +76,6 @@ public class LocationSuggestion extends AppCompatActivity {
 
         this.placesClient = Places.createClient(this);
 
-        //Replace the contents of this method with the appropriate calls to the Places SDK for Android.
-        // The SDK provides the PlacesClient class, which you should use to fetch nearby places:
-//        context = new GeoApiContext.Builder()
-//                .apiKey(API_KEY)
-//                .build();
-
         //displays to the user what interests they have in common in a textview /G
         displayCommonInterests();
 
@@ -101,16 +94,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
         //button for messaging the other user that you've matched with
         Button messageUserButton = findViewById(R.id.message_user_button);
-        messageUserButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                sendMessageToUser();
-            }
-        });
-    }
 
-    private void sendMessageToUser() { //this needs to be added when Firebasemessaging is up
-        //code for message request to server if this is implemented
     }
 
     //these methods check what interests the users have in common /G
@@ -208,17 +192,30 @@ public class LocationSuggestion extends AppCompatActivity {
         }
 
         PlacesClient placesClient = Places.createClient(this);
-        List<Place.Field> placeFields = Arrays.asList(Place.Field.ID, Place.Field.NAME, Place.Field.TYPES, Place.Field.LAT_LNG, Place.Field.OPENING_HOURS);
+        List<Place.Field> placeFields = Arrays.asList(
+                Place.Field.ID,
+                Place.Field.NAME,
+                Place.Field.TYPES,
+                Place.Field.LAT_LNG);
+
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(
+                this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                        this, android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED) {
             // ActivityCompat#requestPermissions logic here...
             return;
         }
-
+        Log.d(TAG, "Making Places API call...");
         Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
+
         placeResponse.addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
+                Log.d(TAG, "Places API call was successful.");
+
                 FindCurrentPlaceResponse response = task.getResult();
 
                 List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
@@ -229,16 +226,40 @@ public class LocationSuggestion extends AppCompatActivity {
                                 .anyMatch(type -> interestTypes.contains(type.name())))
                         .collect(Collectors.toList());
 
+                //checks if any places were added to the list
+                if (nearbyPlaces.isEmpty()) {Log.d(TAG, "nearby places list is empty");}
+
+                //Shows what places were added before sorting
+                for (Place place : nearbyPlaces) {
+                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                }
+
                 nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(place.getLatLng())));
-                List<Place> closestPlaces = nearbyPlaces.stream().limit(3).collect(Collectors.toList());
+
+                for (Place place : nearbyPlaces) {
+                    Log.d(TAG, "The nearbyPlaces list is now sorted and contains:");
+                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                }
+
+                List<Place> closestPlaces = nearbyPlaces.stream()
+                        .limit(3)
+                        .collect(Collectors.toList());
+
+                for (Place place : closestPlaces) {
+                    Log.d(TAG, "The 3 closest places have now been found and are: ");
+                    Log.d(TAG, "Place found: " + place.getName() + " at " + place.getLatLng());
+                }
+
 
                 List<Task<FetchPlaceResponse>> fetchPlaceTasks = new ArrayList<>();
                 for (Place place : closestPlaces) {
-                    FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(place.getId(), Collections.singletonList(Place.Field.OPENING_HOURS));
+                    List<Place.Field> detailFields = Collections.singletonList(Place.Field.OPENING_HOURS);
+                    FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(place.getId(), detailFields);
                     fetchPlaceTasks.add(placesClient.fetchPlace(detailRequest));
                 }
 
                 Tasks.whenAllSuccess(fetchPlaceTasks).addOnSuccessListener(placesWithDetails -> {
+
                     StringBuilder suggestion = new StringBuilder();
                     for (Object responseObj : placesWithDetails) {
                         FetchPlaceResponse fetchPlaceResponse = (FetchPlaceResponse) responseObj;
@@ -246,19 +267,18 @@ public class LocationSuggestion extends AppCompatActivity {
                         String openingHoursText = detailedPlace.getOpeningHours() != null ? detailedPlace.getOpeningHours().toString() : "Opening hours not available";
                         suggestion.append(detailedPlace.getName()).append(" - ").append(openingHoursText).append("\n");
                     }
+                    Log.d(TAG, "Suggestion StringBuilder Content: " + suggestion.toString());
                     runOnUiThread(() -> resultView.setText(suggestion.toString()));
                 }).addOnFailureListener(exception -> {
                     Log.e(TAG, "Error fetching place details: " + exception.getMessage());
                 });
             } else {
-                Log.e(TAG, "Task failed: " + task.getException());
+                Log.e(TAG, "Places API call failed " + task.getException());
             }
         }).addOnFailureListener((exception) -> {
-            Log.e(TAG, "Error finding current places: " + exception.getMessage());
+            Log.e(TAG, "Places API call encountered an error: " + exception.getMessage());
         });
     }
-
-
 
     private String formatDistance(float distance) {
         if (distance < 1000) {
