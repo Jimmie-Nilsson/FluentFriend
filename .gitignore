@@ -19,5 +19,5 @@ local.properties
 *.keystore
 
 #does not send the Local gradle properties file to the repository so that the passwords are protected
-gradle.properties
+.properties
 google-services.json

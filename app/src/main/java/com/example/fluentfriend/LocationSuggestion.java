@@ -27,7 +27,7 @@ import static com.example.fluentfriend.MatchPage.getActiveUser;
 public class LocationSuggestion extends AppCompatActivity {
 
     private static final String API_KEY = BuildConfig.API_KEY;
-    private static final String TAG = "Debug: ";
+    private static final String TAG = "NearbyPlacesDebug";
     private PlacesClient placesClient;
     private Location midpoint;
     private User user1;
