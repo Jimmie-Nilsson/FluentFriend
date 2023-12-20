@@ -184,7 +184,9 @@ public class LocationSuggestion extends AppCompatActivity {
                 Place.Field.ID,
                 Place.Field.NAME,
                 Place.Field.TYPES,
-                Place.Field.LAT_LNG);
+                Place.Field.LAT_LNG,
+                Place.Field.RATING,
+                Place.Field.PRICE_LEVEL);
 
         FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
 
