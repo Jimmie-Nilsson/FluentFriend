@@ -41,6 +41,7 @@ public class LocationSuggestion extends AppCompatActivity {
     private TextView resultView;
     private String query = "";
     private List<String> commonInterests = new ArrayList<>();
+    private List<String> commonInterestsAPIFormat = new ArrayList<>();
     private StringBuilder queryBuilder = new StringBuilder();
 
     private static final int LOCATION_RADIUS_DISTANCE_METERS = 1000;
@@ -74,7 +75,7 @@ public class LocationSuggestion extends AppCompatActivity {
             Places.initialize(getApplicationContext(), API_KEY);
         }
 
-        this.placesClient = Places.createClient(this);
+        placesClient = Places.createClient(this);
 
         //displays to the user what interests they have in common in a textview /G
         displayCommonInterests();
@@ -82,7 +83,7 @@ public class LocationSuggestion extends AppCompatActivity {
         //button that runs the method for finding nearby places /G
         Button findNearbyPlacesButton = findViewById(R.id.find_nearby_places);
         findNearbyPlacesButton.setOnClickListener(view -> {
-            fetchNearbyPlaces(commonInterests);
+            fetchNearbyPlaces(commonInterestsAPIFormat);
         });
 
         //Displays results from fetchNearbyPlaces() /G
@@ -135,15 +136,18 @@ public class LocationSuggestion extends AppCompatActivity {
     private void findCommonInterests() {
         if (doBothLikeFika()) {
             commonInterests.add("Fika");
+            commonInterestsAPIFormat.add("Cafe");
             queryBuilder.append("Cafes");
         }
         if (doBothLikeMuseum()) {
             commonInterests.add("Museums");
+            commonInterestsAPIFormat.add("Museum");
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Museums");
         }
         if (doBothLikeBar()) {
             commonInterests.add("Bars");
+            commonInterestsAPIFormat.add("Bar");
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Bars");
         }
@@ -186,12 +190,12 @@ public class LocationSuggestion extends AppCompatActivity {
         }
     }
 
-    private void fetchNearbyPlaces(List<String> interestTypes) {
-        if (!Places.isInitialized()) {
-            Places.initialize(getApplicationContext(), API_KEY);
+    private void fetchNearbyPlaces(List<String> providedList) {
+
+        for (String commonInterest : providedList) {
+            Log.d(TAG, "Your common interests are: " + commonInterest);
         }
 
-        PlacesClient placesClient = Places.createClient(this);
         List<Place.Field> placeFields = Arrays.asList(
                 Place.Field.ID,
                 Place.Field.NAME,
@@ -222,12 +226,18 @@ public class LocationSuggestion extends AppCompatActivity {
                         .map(PlaceLikelihood::getPlace)
                         .filter(place -> place.getLatLng() != null)
                         .filter(place -> isWithinRadius(place.getLatLng(), midpoint, LOCATION_RADIUS_DISTANCE_METERS))
+                        //avoids nullpointerexception if a place doesnt have a type associated to it
+                        //uses a stream to process the list of types for each place.
+                        //anyMatch returns true if any of the places types match any of the strings in the provided list
+                        //type.name() gets the name of the type
+                        //commonInterestsAPIFormat.contains(type.name()) checks if this name is in list of common interests
                         .filter(place -> place.getTypes() != null && place.getTypes().stream()
-                                .anyMatch(type -> interestTypes.contains(type.name())))
+                                .anyMatch(type -> providedList.contains(type.name())))
+                        //collects all the places that passed the filters into a list
                         .collect(Collectors.toList());
 
                 //checks if any places were added to the list
-                if (nearbyPlaces.isEmpty()) {Log.d(TAG, "nearby places list is empty");}
+                if (nearbyPlaces.isEmpty()) {Log.d(TAG, "Nearby places list is empty");}
 
                 //Shows what places were added before sorting
                 for (Place place : nearbyPlaces) {
