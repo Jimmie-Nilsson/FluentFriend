@@ -232,7 +232,9 @@ public class LocationSuggestion extends AppCompatActivity {
                     for (int i = 0; i < results.length(); i++) {
                         JSONObject place = results.getJSONObject(i);
                         String name = place.getString("name");
-                        // Filter types to only include the ones you're interested in
+
+
+                        // can we filter more here?
                         JSONArray typesJsonArray = place.getJSONArray("types");
                         String placeType = null;
                         for (int j = 0; j < typesJsonArray.length(); j++) {
@@ -269,10 +271,10 @@ public class LocationSuggestion extends AppCompatActivity {
                     resultView.setText(placesBuilder.toString());
                 } catch (JSONException e) {
                     e.printStackTrace();
-                    // Handle the error appropriately
+                    //code for error handling here
                 }
             } else {
-                // Handle the case where result is null
+                //code where result is null
             }
         }
     }
