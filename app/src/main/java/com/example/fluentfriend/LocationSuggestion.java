@@ -184,13 +184,10 @@ public class LocationSuggestion extends AppCompatActivity {
         Log.d(TAG, "Common interests are" + commonInterestsAPIFormat);
 
         for (String type : commonInterestsAPIFormat) {
-            String fields = "opening_hours";
             String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
                     "?location=" + location +
                     "&radius=" + SEARCH_RADIUS_IN_METERS +
                     "&type=" + type +
-                    "&fields=" + fields +
-                    //"&open_now=true" + // This will filter the results to only include places that are currently open
                     "&key=" + API_KEY;
             new PlacesFetchTask().execute(url);
         }
@@ -253,24 +250,19 @@ public class LocationSuggestion extends AppCompatActivity {
                         float distanceFromUserToLocation = getDistanceBetweenTwoPoints(user1Location.getLatitude(),
                                 user1Location.getLongitude(), placeLat, placeLng);
 
-                        String openingHoursText = "Opening hours not available";
+                        String isOpenNowText = "Open status not available";
                         if (place.has("opening_hours")) {
                             JSONObject openingHours = place.getJSONObject("opening_hours");
-                            if (openingHours.has("weekday_text")) {
-                                JSONArray weekdayText = openingHours.getJSONArray("weekday_text");
-                                openingHoursText = "";
-                                for (int j = 0; j < weekdayText.length(); j++) {
-                                    openingHoursText += weekdayText.getString(j) + "\n";
-                                }
-                            }
+                            boolean isOpenNow = openingHours.optBoolean("open_now", false);
+                            isOpenNowText = isOpenNow ? "It's open! :)" : "It's closed :(";
                         }
 
-                        // Append the place name, type (if found), distance, and opening hours to the StringBuilder
-                        placesBuilder.append(name)
+                        placesBuilder.append("Name: ").append(name)
                                 .append(placeType != null ? "\nType: " + placeType.toUpperCase() : "")
-                                .append("\nDistance from center point between users: ").append(formatDistance(distanceFromFixedPoint))
+                                .append("\nDistance from middle of users: ").append(formatDistance(distanceFromFixedPoint))
                                 .append("\nDistance from you: ").append(formatDistance(distanceFromUserToLocation))
-                                .append("\n").append(openingHoursText).append("\n\n");
+                                .append("\n").append("Status: ").append(isOpenNowText).append("\n\n");
+
                     }
 
                     // Update the UI with the fetched details
@@ -297,9 +289,9 @@ public class LocationSuggestion extends AppCompatActivity {
     //method for formatting distance printout if needed
     private String formatDistance(float distance) {
         if (distance < 1000) {
-            return String.format(swedenLocale, "%d meter", (int) distance);
+            return String.format(swedenLocale, "%d meters", (int) distance);
         } else {
-            return String.format(swedenLocale, "%.2f km", distance / 1000);
+            return String.format(swedenLocale, "%.2f kilometers", distance / 1000);
         }
     }
 }
