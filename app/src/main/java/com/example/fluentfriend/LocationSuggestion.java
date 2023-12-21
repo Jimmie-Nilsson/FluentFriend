@@ -182,10 +182,12 @@ public class LocationSuggestion extends AppCompatActivity {
         String location = latitude + "," + longitude;
 
         for (String type : commonInterestsAPIFormat) {
+            String fields = "opening_hours";
             String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
                     "?location=" + location +
                     "&radius=" + SEARCH_RADIUS_IN_METERS +
                     "&type=" + type +
+                    "&fields=" + fields +
                     //"&open_now=true" + // This will filter the results to only include places that are currently open
                     "&key=" + API_KEY;
 
