@@ -66,7 +66,7 @@ public class LocationSuggestion extends AppCompatActivity {
         if (!Places.isInitialized()) {
             Places.initialize(getApplicationContext(), API_KEY);
         }
-        placesClient = Places.createClient(this);
+            placesClient = Places.createClient(this);
 
         findCommonInterests();
         displayCommonInterests();
@@ -289,7 +289,6 @@ public class LocationSuggestion extends AppCompatActivity {
         return results[0]; // distance in meters
     }
 
-    //method for formatting distance printout if needed
     private String formatDistance(float distance) {
         if (distance < 1000) {
             return String.format(swedenLocale, "%d meters", (int) distance);
