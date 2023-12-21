@@ -5,6 +5,7 @@ import android.location.Location;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -180,6 +181,7 @@ public class LocationSuggestion extends AppCompatActivity {
         double longitude = midpoint.getLongitude();
 
         String location = latitude + "," + longitude;
+        Log.d(TAG, "Common interests are" + commonInterestsAPIFormat);
 
         for (String type : commonInterestsAPIFormat) {
             String fields = "opening_hours";
@@ -190,7 +192,6 @@ public class LocationSuggestion extends AppCompatActivity {
                     "&fields=" + fields +
                     //"&open_now=true" + // This will filter the results to only include places that are currently open
                     "&key=" + API_KEY;
-
             new PlacesFetchTask().execute(url);
         }
     }
@@ -224,6 +225,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            Log.d("API Response", result != null ? result : "Response was null");
             if (result != null) {
                 try {
                     JSONObject jsonObject = new JSONObject(result);
