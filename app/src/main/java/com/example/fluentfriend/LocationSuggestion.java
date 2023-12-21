@@ -198,6 +198,7 @@ public class LocationSuggestion extends AppCompatActivity {
         protected String doInBackground(String... urls) {
             Log.d(TAG, "Now in doInBackGround");
             try {
+
                 URL url = new URL(urls[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
@@ -235,7 +236,6 @@ public class LocationSuggestion extends AppCompatActivity {
                         JSONObject place = results.getJSONObject(i);
                         String name = place.getString("name");
 
-
                         // can we filter more here?
                         JSONArray typesJsonArray = place.getJSONArray("types");
                         String placeType = null;
@@ -266,7 +266,6 @@ public class LocationSuggestion extends AppCompatActivity {
                                 .append("\nDistance from middle of users: ").append(formatDistance(distanceFromFixedPoint))
                                 .append("\nDistance from you: ").append(formatDistance(distanceFromUserToLocation))
                                 .append("\n").append("Status: ").append(isOpenNowText).append("\n\n");
-
                     }
 
                     // Update the UI with the fetched details
