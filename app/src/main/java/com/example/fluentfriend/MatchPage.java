@@ -207,7 +207,7 @@ public class MatchPage extends AppCompatActivity {
 
     private void matchingalgorithm() {
         // Define how far out users can match
-        final double maxDistance = 20000; // Meters
+        final double maxDistance = 2000; // Meters
 
         // Define weights (summing to 1.0)
         final double weightBio = 0.0;

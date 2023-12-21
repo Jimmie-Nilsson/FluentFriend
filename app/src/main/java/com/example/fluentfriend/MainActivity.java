@@ -1,6 +1,7 @@
 package com.example.fluentfriend;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,8 +21,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView email;
     private TextView password;
     private User user;
-    private FirebaseDatabase database = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
-    private DatabaseReference userRef = database.getReference().child("users");
+    private FirebaseDatabase database;
+    private DatabaseReference userRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +35,32 @@ public class MainActivity extends AppCompatActivity {
 
         // Get users som the DB
         FirebaseApp.initializeApp(this);
-        fetchUsersAndCollectInList();
+        database = FirebaseDatabase.getInstance("https://fluent-friend-dad39-default-rtdb.firebaseio.com/");
+        database.setPersistenceEnabled(true);
+        userRef = database.getReference().child("users");
+        userRef.keepSynced(true);
+
+
+        userRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Log.d("Database","In Update method"); // logging for debugging
+                for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
+                    String userId = userSnapshot.getKey();
+                    User user = userSnapshot.getValue(User.class);
+                    Log.d("Database",userId + "Added from database"); // logging for debugging
+                    if (userId != null && user != null) {
+                        userList.put(userId, user);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                // Handle errors
+                Log.d("Database", "ERROR FROM DATABASE"); // logging for debugging
+            }
+        });
 
         btnCreateAccount.setOnClickListener(view -> {
             Intent intent = new Intent(MainActivity.this, SignUp.class);
@@ -74,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void fetchUsersAndCollectInList() {
-        userRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
