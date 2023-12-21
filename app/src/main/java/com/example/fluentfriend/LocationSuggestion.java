@@ -176,12 +176,12 @@ public class LocationSuggestion extends AppCompatActivity {
     }
 
     private void fetchNearbyPlaces() {
-
+        Log.d(TAG, "Button has been pressed");
         double latitude = midpoint.getLatitude();
         double longitude = midpoint.getLongitude();
 
         String location = latitude + "," + longitude;
-        Log.d(TAG, "Common interests are" + commonInterestsAPIFormat);
+        Log.d(TAG, "Common interests for API call are: " + commonInterestsAPIFormat);
 
         for (String type : commonInterestsAPIFormat) {
             String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json" +
@@ -196,6 +196,7 @@ public class LocationSuggestion extends AppCompatActivity {
     private class PlacesFetchTask extends AsyncTask<String, Void, String> {
         @Override
         protected String doInBackground(String... urls) {
+            Log.d(TAG, "Now in doInBackGround");
             try {
                 URL url = new URL(urls[0]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -222,6 +223,7 @@ public class LocationSuggestion extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
+            Log.d(TAG, "Now in onPostExecute");
             Log.d("API Response", result != null ? result : "Response was null");
             if (result != null) {
                 try {
