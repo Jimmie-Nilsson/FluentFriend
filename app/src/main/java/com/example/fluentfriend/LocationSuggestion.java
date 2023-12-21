@@ -59,7 +59,7 @@ public class LocationSuggestion extends AppCompatActivity {
         user2Location = getActiveUser(user2);
 
         //calculates the middle point between the two users based on their respective locations /G
-        midpoint = getMiddleDistanceBetweenUsers();
+        midpoint = getMidPointBetweenUsers();
 
         // Initialize the Places SDK
         if (!Places.isInitialized()) {
@@ -141,7 +141,7 @@ public class LocationSuggestion extends AppCompatActivity {
     }
 
     //finds the lat/long middle point between the two users, returns as Location object /G
-    private Location getMiddleDistanceBetweenUsers() {
+    private Location getMidPointBetweenUsers() {
         double lat = (user1Location.getLatitude() + user2Location.getLatitude()) / 2;
         double longitude = (user1Location.getLongitude() + user2Location.getLongitude()) / 2;
         Location midpoint = new Location("");
@@ -247,7 +247,9 @@ public class LocationSuggestion extends AppCompatActivity {
                         JSONObject location = place.getJSONObject("geometry").getJSONObject("location");
                         double placeLat = location.getDouble("lat");
                         double placeLng = location.getDouble("lng");
-                        float distanceFromFixedPoint = getDistanceFromMidpoint(placeLat, placeLng);
+                        float distanceFromFixedPoint = getDistanceFromMidpointToLocation(placeLat, placeLng);
+                        float distanceFromUserToLocation = getDistanceBetweenTwoPoints(user1Location.getLatitude(),
+                                user1Location.getLongitude(), placeLat, placeLng);
 
                         String openingHoursText = "Opening hours not available";
                         if (place.has("opening_hours")) {
@@ -263,8 +265,9 @@ public class LocationSuggestion extends AppCompatActivity {
 
                         // Append the place name, type (if found), distance, and opening hours to the StringBuilder
                         placesBuilder.append(name)
-                                .append(placeType != null ? "\nType: " + placeType : "")
-                                .append("\nDistance from fixed point: ").append(distanceFromFixedPoint).append(" meters")
+                                .append(placeType != null ? "\nType: " + placeType.toUpperCase() : "")
+                                .append("\nDistance from center point between users: ").append(formatDistance(distanceFromFixedPoint))
+                                .append("\nDistance from you: ").append(formatDistance(distanceFromUserToLocation))
                                 .append("\n").append(openingHoursText).append("\n\n");
                     }
 
@@ -280,123 +283,12 @@ public class LocationSuggestion extends AppCompatActivity {
         }
     }
 
-//    private void fetchNearbyPlaces() {
-//        //for debugging
-//        Log.d(TAG, "Your common interests are: ");
-//        for (String commonInterest : commonInterestsAPIFormat) {
-//            Log.d(TAG, commonInterest);
-//        }
-//
-//        List<Place.Field> placeFields = Arrays.asList(
-//                Place.Field.ID,
-//                Place.Field.NAME,
-//                Place.Field.TYPES,
-//                Place.Field.LAT_LNG,
-//                Place.Field.RATING,
-//                Place.Field.PRICE_LEVEL);
-//
-//        FindCurrentPlaceRequest request = FindCurrentPlaceRequest.newInstance(placeFields);
-//
-//        //user must allow
-//        if (ActivityCompat.checkSelfPermission(
-//                this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
-//                PackageManager.PERMISSION_GRANTED &&
-//                ActivityCompat.checkSelfPermission(
-//                        this, android.Manifest.permission.ACCESS_COARSE_LOCATION) !=
-//                        PackageManager.PERMISSION_GRANTED) {
-//            // ActivityCompat#requestPermissions logic here...
-//            return;
-//        }
-//
-//        //debugging
-//        Log.d(TAG, "Making Places API call...");
-//
-//        Task<FindCurrentPlaceResponse> placeResponse = placesClient.findCurrentPlace(request);
-//
-//        placeResponse.addOnCompleteListener(task -> {
-//            if (task.isSuccessful() && task.getResult() != null) {
-//                Log.d(TAG, "Places API call was successful.");
-//                FindCurrentPlaceResponse response = task.getResult();
-//
-//                //debugging
-//                Log.d(TAG,"Places returned by the API call:");
-//                for (PlaceLikelihood placeLikelihood : response.getPlaceLikelihoods()) {
-//                    Place place = placeLikelihood.getPlace();
-//                    Log.d(TAG, place.getName() + " " + getDistanceFromMidpoint(Objects.requireNonNull(place.getLatLng()))+ ", Types: " + place.getPlaceTypes());
-//                }
-//                Log.d(TAG,"List is now being filtered");
-//                List<Place> nearbyPlaces = response.getPlaceLikelihoods().stream()
-//                        .map(PlaceLikelihood::getPlace)
-//                        .filter(place -> place.getLatLng() != null)
-//                        .filter(place -> place.getPlaceTypes() != null && place.getPlaceTypes().stream()
-//                                .anyMatch(typeString -> commonInterestsAPIFormat.contains(typeString.toLowerCase())))
-//                        .collect(Collectors.toList());
-//
-//                //debugging checks if any places were added to the list
-//                if (!nearbyPlaces.isEmpty()) {
-//                    //Shows what places were added after filtering
-//                    for (Place place : nearbyPlaces) {
-//                        Log.d(TAG, "These are the places left after filtering:");
-//                        Log.d(TAG, place.getName() + " at " + getDistanceFromMidpoint(place.getLatLng())
-//                                + " meters from the midpoint");
-//                    }
-//
-//                    Log.d(TAG, "List is now being sorted based on distance from midpoint...");
-//                    nearbyPlaces.sort(Comparator.comparing(place -> getDistanceFromMidpoint(place.getLatLng())));
-//
-//                    Place firstPlace = nearbyPlaces.get(0);
-//                    String firstPlaceDistance = formatDistance(getDistanceFromMidpoint(firstPlace.getLatLng()));
-//
-//                    Log.d(TAG, "The list has been sorted and the closest place is: ");
-//                    Log.d(TAG, firstPlace.getName() + " at distance: " + firstPlaceDistance + " from midpoint.");
-//
-//                    // Check if the first place has a non-null ID
-//                    if (firstPlace.getId() != null) {
-//                        List<Place.Field> detailFields = Collections.singletonList(Place.Field.OPENING_HOURS);
-//                        FetchPlaceRequest detailRequest = FetchPlaceRequest.newInstance(firstPlace.getId(), detailFields);
-//
-//                        // Fetch the details for the first place
-//                        placesClient.fetchPlace(detailRequest).addOnSuccessListener(responseTwo -> {
-//                            Place placeDetails = responseTwo.getPlace(); // Detailed place object for the first place
-//                            String openingHoursText = "Opening hours not available";
-//
-//                            if (placeDetails.getOpeningHours() != null) {
-//                                List<String> weekdayTexts = placeDetails.getOpeningHours().getWeekdayText();
-//                                if (weekdayTexts != null && !weekdayTexts.isEmpty()) {
-//                                    openingHoursText = TextUtils.join("\n", weekdayTexts);
-//                                }
-//                            }
-//
-//                            // Update the UI with the opening hours of the first place
-//                            final String placeInfo = firstPlace.getName() + ", " + firstPlaceDistance + " away :\n" + openingHoursText + "\n\n";
-//                            runOnUiThread(() -> resultView.setText(placeInfo));
-//                        }).addOnFailureListener(exception -> {
-//                            Log.e(TAG, "Error fetching place details: " + exception.getMessage());
-//                        });
-//                    } else {
-//                        Log.d(TAG, "First place has a null ID");
-//                        runOnUiThread(() -> resultView.setText("First place has a null ID"));
-//                    }
-//                } else {
-//                    Log.d(TAG, "No nearby places found");
-//                    runOnUiThread(() -> resultView.setText("No nearby places found"));
-//                    }
-//            } else {
-//                //handle cases where task is not successful
-//            }
-//        });
-//    }
-    private float getDistanceFromMidpoint(double lat, double lng) {
-        Location placeLocation = new Location("");
-        placeLocation.setLatitude(lat);
-        placeLocation.setLongitude(lng);
-        return getDistance(midpoint, placeLocation);
+    private float getDistanceFromMidpointToLocation(double lat, double lng) {
+        return getDistanceBetweenTwoPoints(midpoint.getLatitude(), midpoint.getLongitude(), lat, lng);
     }
-    private float getDistance(Location originLocation, Location targetLocation) {
+    private float getDistanceBetweenTwoPoints(double lat1, double lng1, double lat2, double lng2) {
         float[] results = new float[1];
-        Location.distanceBetween(originLocation.getLatitude(), originLocation.getLongitude(),
-                targetLocation.getLatitude(), targetLocation.getLongitude(),
-                results);
+        Location.distanceBetween(lat1, lng1, lat2, lng2, results);
         return results[0]; // distance in meters
     }
 
