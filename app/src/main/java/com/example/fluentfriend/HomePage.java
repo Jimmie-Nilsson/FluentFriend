@@ -128,13 +128,8 @@ public class HomePage extends AppCompatActivity {
                     UserLocation userLoc = userSnapshot.getValue(UserLocation.class);
                     if (!activeUsers.contains(userLoc)) {
                         activeUsers.add(userLoc);
-                        Log.d("ActiveUsers", "Added User: " + userLoc.getEmail() + userLoc.getLongitude() + " " + userLoc.getLatitude());
-                        Log.d("ActiveUsers", "Added User: " + activeUsers.contains(userLoc));
                     }
-                    // Log for debugging
-
                 }
-                Log.d("ActiveUsers", "Active users count: " + activeUsers.size()); // Log for debugging
                 // set active switch to ON if user is active
                 activeSwitch.setChecked(userIsActive(UserManager.getCurrentUser()));
             }
@@ -142,6 +137,7 @@ public class HomePage extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
+                Log.d("Database", "ERROR FROM DATABASE: " + databaseError.toString()); // logging for debugging
             }
         });
     }

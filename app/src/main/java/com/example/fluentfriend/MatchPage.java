@@ -1,6 +1,7 @@
 package com.example.fluentfriend;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
@@ -116,6 +117,7 @@ public class MatchPage extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
+                Log.d("Database", "ERROR FROM DATABASE: " + databaseError.toString()); // logging for debugging
             }
         });
     }
@@ -147,7 +149,6 @@ public class MatchPage extends AppCompatActivity {
 
                 // If don't find any matches
                 if (similarityScore.isEmpty()) {
-
                     setFrameForNoMatches("No match found :(", "Currently no other users nearby you. Please try again later!");
                 } else {
                     showUser();
@@ -157,7 +158,8 @@ public class MatchPage extends AppCompatActivity {
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-                // Handle errors JN
+                // Handle errors
+                Log.d("Database", "ERROR FROM DATABASE: " + databaseError.toString()); // logging for debugging
             }
         });
     }

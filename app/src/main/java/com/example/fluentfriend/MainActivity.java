@@ -44,11 +44,10 @@ public class MainActivity extends AppCompatActivity {
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Log.d("Database","In Update method"); // logging for debugging
                 for (DataSnapshot userSnapshot : dataSnapshot.getChildren()) {
                     String userId = userSnapshot.getKey();
                     User user = userSnapshot.getValue(User.class);
-                    Log.d("Database",userId + "Added from database"); // logging for debugging
+
                     if (userId != null && user != null) {
                         userList.put(userId, user);
                     }
@@ -58,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
-                Log.d("Database", "ERROR FROM DATABASE"); // logging for debugging
+                Log.d("Database", "ERROR FROM DATABASE: " + databaseError.toString()); // logging for debugging
             }
         });
 
@@ -115,6 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 // Handle errors
+                Log.d("Database", "ERROR FROM DATABASE: " + databaseError.toString()); // logging for debugging
             }
         });
     }
