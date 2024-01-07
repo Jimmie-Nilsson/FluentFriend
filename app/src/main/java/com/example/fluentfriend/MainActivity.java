@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         userRef = database.getReference().child("users");
         userRef.keepSynced(true);
 
-
         userRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

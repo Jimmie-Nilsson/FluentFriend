@@ -153,7 +153,6 @@ public class MatchPage extends AppCompatActivity {
                 } else {
                     showUser();
                 }
-
             }
 
             @Override
