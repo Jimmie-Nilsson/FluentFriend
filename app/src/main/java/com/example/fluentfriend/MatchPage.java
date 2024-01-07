@@ -173,15 +173,6 @@ public class MatchPage extends AppCompatActivity {
         return null; // If the user is not active. We return null.
     }
 
-    protected static boolean userIsActive(User user) {
-        for (int i = 0; i < activeUsers.size(); i++) {
-            if (activeUsers.get(i).getEmail().equals(user.getEmail())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     protected void removeUserActive(User user) {
         activeUsersRef.child(user.getEmail()).removeValue();
 
