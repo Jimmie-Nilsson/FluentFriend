@@ -35,9 +35,9 @@ public class LocationSuggestion extends AppCompatActivity {
     private PlacesClient placesClient;
     private Location midpoint;
     private User currentUser;
-    private User user2;
-    private UserLocation user1Location;
-    private UserLocation user2Location;
+    private User matchedUser;
+    private UserLocation currentUserLocation;
+    private UserLocation matchedUserLocation;
     private TextView resultView;
     private final List<String> commonInterests = new ArrayList<>();
     private final List<String> commonInterestsAPIFormat = new ArrayList<>();
@@ -52,10 +52,10 @@ public class LocationSuggestion extends AppCompatActivity {
 
         this.currentUser = UserManager.getCurrentUser();
         Intent intent = getIntent();
-        this.user2 = (User) intent.getSerializableExtra("matchedUser");
+        this.matchedUser = (User) intent.getSerializableExtra("matchedUser");
 
-        user1Location = getActiveUser(currentUser);
-        user2Location = getActiveUser(user2);
+        currentUserLocation = getActiveUser(currentUser);
+        matchedUserLocation = getActiveUser(matchedUser);
 
         midpoint = getMidPointBetweenUsers();
 
@@ -81,19 +81,19 @@ public class LocationSuggestion extends AppCompatActivity {
 
     //these methods check what interests the users have in common
     private boolean doBothLikeFika() {
-        return currentUser.isFikaChecked() && user2.isFikaChecked();
+        return currentUser.isFikaChecked() && matchedUser.isFikaChecked();
     }
 
     private boolean doBothLikeMuseum() {
-        return currentUser.isMuseumChecked() && user2.isMuseumChecked();
+        return currentUser.isMuseumChecked() && matchedUser.isMuseumChecked();
     }
 
     private boolean doBothLikeBar() {
-        return currentUser.isBarChecked() && user2.isBarChecked();
+        return currentUser.isBarChecked() && matchedUser.isBarChecked();
     }
 
     private boolean doBothLikeCityWalk() {
-        return currentUser.isCityWalksChecked() && user2.isCityWalksChecked();
+        return currentUser.isCityWalksChecked() && matchedUser.isCityWalksChecked();
     }
 
     //displays the common interests in the textView
@@ -135,8 +135,8 @@ public class LocationSuggestion extends AppCompatActivity {
 
     //finds the lat/long middle point between the two users, returns as Location object
     private Location getMidPointBetweenUsers() {
-        double lat = (user1Location.getLatitude() + user2Location.getLatitude()) / 2;
-        double longitude = (user1Location.getLongitude() + user2Location.getLongitude()) / 2;
+        double lat = (currentUserLocation.getLatitude() + matchedUserLocation.getLatitude()) / 2;
+        double longitude = (currentUserLocation.getLongitude() + matchedUserLocation.getLongitude()) / 2;
         Location midpoint = new Location("");
         midpoint.setLatitude(lat);
         midpoint.setLongitude(longitude);
@@ -239,8 +239,8 @@ public class LocationSuggestion extends AppCompatActivity {
                         double placeLat = location.getDouble("lat");
                         double placeLng = location.getDouble("lng");
                         float distanceFromFixedPoint = getDistanceFromMidpointToLocation(placeLat, placeLng);
-                        float distanceFromUserToLocation = getDistanceBetweenTwoPoints(user1Location.getLatitude(),
-                                user1Location.getLongitude(), placeLat, placeLng);
+                        float distanceFromUserToLocation = getDistanceBetweenTwoPoints(currentUserLocation.getLatitude(),
+                                currentUserLocation.getLongitude(), placeLat, placeLng);
 
                         String isOpenNowText = "Open status not available";
                         if (place.has("opening_hours")) {
