@@ -34,7 +34,7 @@ public class LocationSuggestion extends AppCompatActivity {
     private static final String TAG = "NearbyPlacesDebug";
     private PlacesClient placesClient;
     private Location midpoint;
-    private User user1;
+    private User currentUser;
     private User user2;
     private UserLocation user1Location;
     private UserLocation user2Location;
@@ -50,11 +50,11 @@ public class LocationSuggestion extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_suggestion);
 
-        this.user1 = UserManager.getCurrentUser();
+        this.currentUser = UserManager.getCurrentUser();
         Intent intent = getIntent();
         this.user2 = (User) intent.getSerializableExtra("matchedUser");
 
-        user1Location = getActiveUser(user1);
+        user1Location = getActiveUser(currentUser);
         user2Location = getActiveUser(user2);
 
         midpoint = getMidPointBetweenUsers();
@@ -81,19 +81,19 @@ public class LocationSuggestion extends AppCompatActivity {
 
     //these methods check what interests the users have in common
     private boolean doBothLikeFika() {
-        return user1.isFikaChecked() && user2.isFikaChecked();
+        return currentUser.isFikaChecked() && user2.isFikaChecked();
     }
 
     private boolean doBothLikeMuseum() {
-        return user1.isMuseumChecked() && user2.isMuseumChecked();
+        return currentUser.isMuseumChecked() && user2.isMuseumChecked();
     }
 
     private boolean doBothLikeBar() {
-        return user1.isBarChecked() && user2.isBarChecked();
+        return currentUser.isBarChecked() && user2.isBarChecked();
     }
 
     private boolean doBothLikeCityWalk() {
-        return user1.isCityWalksChecked() && user2.isCityWalksChecked();
+        return currentUser.isCityWalksChecked() && user2.isCityWalksChecked();
     }
 
     //displays the common interests in the textView

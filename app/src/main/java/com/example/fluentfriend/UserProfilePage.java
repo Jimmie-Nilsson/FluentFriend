@@ -61,7 +61,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
 
         //loads the current user's biography
         editTextBiography = findViewById(R.id.bioEditText);
-        buttonSave = findViewById(R.id.saveSettingsButton); //vad gör denna /G
+        buttonSave = findViewById(R.id.saveSettingsButton);
         loadBiography();
 
         languagesToLearnSpinner = (MultiSpinner) findViewById(R.id.languagesToLearnSpinner);
