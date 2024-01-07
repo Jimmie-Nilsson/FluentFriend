@@ -88,6 +88,7 @@ public class HomePage extends AppCompatActivity {
         activeSwitch.setOnClickListener(view -> {
             if (UserManager.getCurrentUser().getLanguagesSpeak() == null || UserManager.getCurrentUser().getLanguagesToLearn() == null ||UserManager.getCurrentUser().getLanguagesSpeak().isEmpty() || UserManager.getCurrentUser().getLanguagesToLearn().isEmpty()){
                 Toast.makeText(this, "You need to have a profile with at least 1 language you speak and 1 language you want to learn", Toast.LENGTH_LONG).show();
+                activeSwitch.setChecked(false);
                 return;
             }
             if (activeSwitch.isChecked()) {
