@@ -81,7 +81,6 @@ public class MatchPage extends AppCompatActivity {
     }
 
     private void showUser() {
-        // Fix so it doesn't run showUser if Matches is empty. JN
         textScroll.scrollTo(0, 0);
         double d = similarityScore.firstKey();
         User u = similarityScore.get(d);

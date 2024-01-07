@@ -164,7 +164,6 @@ public class HomePage extends AppCompatActivity {
 
                 if (isGPSEnabled()) {
                     getCurrentLocation();
-
                 } else {
                     turnOnGPS();
                 }
@@ -178,7 +177,6 @@ public class HomePage extends AppCompatActivity {
 
         if (requestCode == 2) {
             if (resultCode == Activity.RESULT_OK) {
-
                 getCurrentLocation();
             }
         }
@@ -250,6 +248,7 @@ public class HomePage extends AppCompatActivity {
 
                         case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
                             //Device does not have location
+                            Toast.makeText(HomePage.this, "Device does not have location", Toast.LENGTH_SHORT).show();
                             break;
                     }
                 }
@@ -265,7 +264,6 @@ public class HomePage extends AppCompatActivity {
         if (locationManager == null) {
             locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         }
-
         isEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         return isEnabled;
     }
