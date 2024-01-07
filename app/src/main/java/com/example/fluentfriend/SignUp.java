@@ -34,7 +34,6 @@ public class SignUp extends AppCompatActivity {
         repeatPassword = findViewById(R.id.signup_RepeatPassword);
         signUpBtn = findViewById(R.id.signup_btnSignUp);
 
-        // Read from the database
         signUpBtn.setOnClickListener(view -> {
             if (!isInputCorrect()) {
                 sendErrorMessage("All fields must be filled");
@@ -56,7 +55,8 @@ public class SignUp extends AppCompatActivity {
         return password.getText().toString().equals(repeatPassword.getText().toString());
     }
 
-    private boolean isInputCorrect() { // make a method for the toString().trim().isEmpty() checks
+    private boolean isInputCorrect() {
+        // this checks if the user has entered information in all required fields
         if (firstName.getText().toString().trim().isEmpty() || lastName.getText().toString().trim().isEmpty() || email.getText().toString().trim().isEmpty() || password.getText().toString().trim().isEmpty() || repeatPassword.getText().toString().trim().isEmpty()) {
             return false;
         }
