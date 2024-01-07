@@ -173,7 +173,7 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
                 // uploads to database / JN
                 usersRef.child(UserManager.getCurrentUser().getEmail()).setValue(UserManager.getCurrentUser());
                 Toast.makeText(UserProfilePage.this, "Saved Successfully", Toast.LENGTH_SHORT).show();
-                finish(); // Går tillbaka till därifrån man kom / KB
+                finish(); // return / KB
             }
         });
 
@@ -231,7 +231,6 @@ public class UserProfilePage extends AppCompatActivity implements MultiSpinner.M
             languagesISpeakSpinner.setItemsSelected(speakLanguages, LanguageManager.AVAILABLE_LANGUAGES);
         }
     }
-
 
     // this is the MultiSpinner classes clickHandler / JN
     @Override
