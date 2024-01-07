@@ -336,58 +336,5 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setVisibility(View.VISIBLE);
         btnReturn.setClickable(true);
     }
-
-
-    // This code is for adding Random "Mock" users to the database so we can test matching and location suggesting JN.
-//    private void addTestUsers(){
-//        ArrayList<String> firstName = new ArrayList<>();
-//        String[] firstNames = {
-//                "Ethan", "Olivia", "Liam", "Ava", "Noah", "Sophia",
-//                "Jackson", "Emma", "Aiden", "Mia", "Lucas", "Isabella", "Caleb"};
-//        String[] lastNames = {
-//                "Turner", "Martinez", "Thompson", "Rodriguez", "Wilson", "Wright",
-//                "Taylor", "Anderson", "Clark", "Davis", "Baker", "Murphy", "Hall"
-//        };
-//        for (int i = 0; i < firstNames.length; i++){
-//            User user = new User();
-//            user.setFirstName(firstNames[i]);
-//            user.setLastName(lastNames[i]);
-//            user.setEmail(firstNames[i] + "examplecom");
-//            user.setPassword("password" + lastNames[i]);
-//            user.setLanguagesToLearn(getRandomLanguageList());
-//            user.setLanguagesSpeak(getRandomLanguageList());
-//            user.setUserBiography("This is the biography for User: " + firstNames[i] + " " + lastNames[i]);
-//            user.setGender(getRandomBoolean() ? "Male" : "Female");
-//            user.setFikaChecked(getRandomBoolean());
-//            user.setMuseumChecked(getRandomBoolean());
-//            user.setCityWalksChecked(getRandomBoolean());
-//            user.setBarChecked(getRandomBoolean());
-//            usersRef.child(user.getEmail()).setValue(user);
-//            users.add(user);
-//            double baseLatitude = 59.40172;
-//            double baseLongitude = 17.9552;
-//
-//                double offset = 0.0008 * i;  // Adjust this offset based on your needs
-//                double userLatitude = baseLatitude + offset;
-//                double userLongitude = baseLongitude + offset;
-//                UserLocation userLocation = new UserLocation(user.getEmail(), userLatitude, userLongitude);
-//                activeUsersRef.child(userLocation.getEmail()).setValue(userLocation);
-//        }
-//    }
-//    private static boolean getRandomBoolean() {
-//        return new Random().nextBoolean();
-//    }
-//    private static List<String> getRandomLanguageList() {
-//        Random random = new Random();
-//        List<String> languages = new ArrayList<>();
-//        int numberOfLanguages = random.nextInt(3) + 1; // Random number between 1 and 3
-//        for (int i = 0; i < numberOfLanguages; i++) {
-//             int r = random.nextInt(LanguageManager.AVAILABLE_LANGUAGES.size());
-//             if (!languages.contains(LanguageManager.AVAILABLE_LANGUAGES.get(r))) {
-//                 languages.add(LanguageManager.AVAILABLE_LANGUAGES.get(r));
-//             }
-//        }
-//        return languages;
-//    }
 }
 
