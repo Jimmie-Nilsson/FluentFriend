@@ -10,7 +10,6 @@ android {
 
     signingConfigs {
         create("release") {
-            //prevents nullpointerexception with the ?:
             storeFile = File(project.property("MYAPP_RELEASE_STORE_FILE") as String)
             storePassword = project.property("MYAPP_RELEASE_STORE_PASSWORD") as String
             keyAlias = project.property("MYAPP_RELEASE_KEY_ALIAS") as String
