@@ -116,17 +116,17 @@ public class LocationSuggestion extends AppCompatActivity {
             commonInterestsAPIFormat.add("cafe".toLowerCase());
             queryBuilder.append("Cafes");
         }
-        if (doBothLikeMuseum()) {
-            commonInterests.add("Museums");
-            commonInterestsAPIFormat.add("museum".toLowerCase());
-            if (queryBuilder.length() > 0) queryBuilder.append(" or ");
-            queryBuilder.append("Museums");
-        }
         if (doBothLikeBar()) {
             commonInterests.add("Bars");
             commonInterestsAPIFormat.add("bar".toLowerCase());
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Bars");
+        }
+        if (doBothLikeMuseum()) {
+            commonInterests.add("Museums");
+            commonInterestsAPIFormat.add("museum".toLowerCase());
+            if (queryBuilder.length() > 0) queryBuilder.append(" or ");
+            queryBuilder.append("Museums");
         }
         if (doBothLikeCityWalk()) {
             commonInterests.add("City Walks");
@@ -149,7 +149,7 @@ public class LocationSuggestion extends AppCompatActivity {
         String query = queryBuilder.toString();
 
         // Create a Uri from an intent string. Use the result to create an Intent.
-        Uri gmmIntentUri = Uri.parse("geo:" + location.getLatitude() + "," + location.getLongitude() + "?q=" + Uri.encode(query));
+        Uri gmmIntentUri = Uri.parse("geo:" + location.getLatitude() + "," + location.getLongitude() + "?q=" + Uri.encode(query) + "&radius=" + SEARCH_RADIUS_IN_METERS);
 
         // Create an Intent to open Google Maps at the specified location
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
