@@ -116,17 +116,17 @@ public class LocationSuggestion extends AppCompatActivity {
             commonInterestsAPIFormat.add("cafe".toLowerCase());
             queryBuilder.append("Cafes");
         }
-        if (doBothLikeBar()) {
-            commonInterests.add("Bars");
-            commonInterestsAPIFormat.add("bar".toLowerCase());
-            if (queryBuilder.length() > 0) queryBuilder.append(" or ");
-            queryBuilder.append("Bars");
-        }
         if (doBothLikeMuseum()) {
             commonInterests.add("Museums");
             commonInterestsAPIFormat.add("museum".toLowerCase());
             if (queryBuilder.length() > 0) queryBuilder.append(" or ");
             queryBuilder.append("Museums");
+        }
+        if (doBothLikeBar()) {
+            commonInterests.add("Bars");
+            commonInterestsAPIFormat.add("bar".toLowerCase());
+            if (queryBuilder.length() > 0) queryBuilder.append(" or ");
+            queryBuilder.append("Bars");
         }
         if (doBothLikeCityWalk()) {
             commonInterests.add("City Walks");
