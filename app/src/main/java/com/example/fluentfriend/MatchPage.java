@@ -275,7 +275,7 @@ public class MatchPage extends AppCompatActivity {
 
                 // Check for common checkbox interest.
                 if (currentUser.isFikaChecked() && otherUser.isFikaChecked()) {
-                    sb.append("Fika is a common interest!\n\\n");
+                    sb.append("Fika is a common interest!\n\n");
                     checkboxSimilarity += numberCheckBox;
                     checkThree = true;
                 }
@@ -326,5 +326,6 @@ public class MatchPage extends AppCompatActivity {
         btnReturn.setVisibility(View.VISIBLE);
         btnReturn.setClickable(true);
     }
+
 }
 
